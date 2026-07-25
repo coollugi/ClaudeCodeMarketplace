@@ -4,24 +4,8 @@ Rytass Claude Code Plugin Marketplace — a multi-plugin repository providing fu
 
 ## Project Structure
 
-```
-ClaudeCodeMarketplace/
-├── .claude-plugin/
-│   └── marketplace.json          # Plugin registry (source of truth)
-├── plugins/                      # All plugins live here
-│   ├── project-rule/             # Full-stack architecture patterns
-│   ├── mezzanine-ui/             # Mezzanine-UI skills (React + Angular) + sync
-│   ├── mezzanine-ui-icon-creator/# Custom SVG icon authoring for Mezzanine
-│   ├── protoforge/               # Admin prototype generator
-│   ├── boilerplate/              # Project bootstrapper
-│   ├── react-performance/        # React/Next.js perf rules
-│   └── google-workspace-cli/     # Google Workspace CLI ops
-├── .mcp.json                     # MCP server registration (architecture-inspector)
-├── README.md                     # Marketplace installation guide
-└── CLAUDE.md                     # This file
-```
-
-Each plugin is **self-contained** under `plugins/<name>/` with its own `.claude-plugin/plugin.json` manifest.
+- `.claude-plugin/marketplace.json` is the plugin registry (source of truth); every plugin under `plugins/<name>/` must be registered there, otherwise Claude Code cannot discover it.
+- Each plugin is **self-contained** under `plugins/<name>/` with its own `.claude-plugin/plugin.json` manifest. The current plugin list is derivable from `plugins/` — no copy is maintained here.
 
 Versions are **not** listed here — read them from each plugin's `plugin.json`. Every plugin must also be registered in `.claude-plugin/marketplace.json`, otherwise Claude Code cannot discover it.
 
