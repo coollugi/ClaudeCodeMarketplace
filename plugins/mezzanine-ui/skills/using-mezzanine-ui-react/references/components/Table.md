@@ -119,7 +119,7 @@ interface TableColumnTitleMenu {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -141,7 +141,7 @@ interface TableDataSourceWithId {
 type TableDataSource = TableDataSourceWithKey | TableDataSourceWithId;
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -191,7 +191,7 @@ interface TableBulkActions<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -208,7 +208,7 @@ interface TableExpandable<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -264,7 +264,7 @@ interface TableActionItemDropdown<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -295,7 +295,7 @@ interface TableDraggable<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -310,7 +310,7 @@ interface TablePinnable<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -331,7 +331,7 @@ interface TableToggleable<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -352,7 +352,7 @@ interface TableCollectable<T> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -438,7 +438,7 @@ const {
 } = useTableRowSelection<T>({ getSubData });
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -668,7 +668,7 @@ function AnimatedTable() {
 />
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-table--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

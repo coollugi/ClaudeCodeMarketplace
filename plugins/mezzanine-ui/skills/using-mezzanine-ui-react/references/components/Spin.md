@@ -15,7 +15,7 @@ import { Spin } from '@mezzanine-ui/react';
 import type { SpinProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -193,7 +193,7 @@ function ConditionalLoading() {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -241,7 +241,7 @@ Wrapping children with a semi-transparent overlay when loading.
 </Spin>
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/feedback-spin--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

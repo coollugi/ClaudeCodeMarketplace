@@ -15,7 +15,7 @@ import { Anchor, AnchorGroup } from '@mezzanine-ui/react';
 import type { AnchorProps, AnchorGroupProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/others-anchor--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-anchor--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 > **Note**: `AnchorItemData` type is not exported from `@mezzanine-ui/react` main entry, only used internally.
 

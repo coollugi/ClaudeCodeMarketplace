@@ -47,7 +47,7 @@ import type {
 import type { DropdownLoadingPosition } from '@mezzanine-ui/core/dropdown';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/internal-dropdown--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-dropdown--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 > **Note**: The `scrollbar*` props in Dropdown are for internal dropdown scrolling configuration, backed internally by the `Scrollbar` component. `Scrollbar` still exists in the source tree in 1.4.1 but is **not exported** from the `@mezzanine-ui/react` package entrypoint — do not import or use it directly; configure scrolling exclusively through the `scrollbar*` props documented here.
 

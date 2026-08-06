@@ -17,7 +17,7 @@ import type { ResultStateProps, ResultStateActions } from '@mezzanine-ui/react';
 // import type { ResultStateType, ResultStateSize } from '@mezzanine-ui/core/result-state';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-result-state--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/feedback-resultstate--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

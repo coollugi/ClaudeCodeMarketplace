@@ -21,7 +21,7 @@ import { initializePortals } from '@mezzanine-ui/react/Portal';
 // import { getContainer, getRootElement, resetPortals, PortalLayer } from '@mezzanine-ui/react/Portal';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/utility-portal--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/others-portal--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

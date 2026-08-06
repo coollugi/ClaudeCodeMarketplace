@@ -22,7 +22,7 @@ import type {
 import type { InlineMessageSeverity } from '@mezzanine-ui/core/inline-message';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-inline-message--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-inline-messages--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -117,7 +117,7 @@ function FormFieldWithHint() {
 />
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-inline-message--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-inline-messages--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -157,7 +157,7 @@ import { InlineMessageGroup } from '@mezzanine-ui/react';
 />
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-inline-message--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-inline-messages--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

@@ -29,7 +29,7 @@ import type {
 
 > `PaginationItemType` is actually re-exported from `@mezzanine-ui/core/pagination`.
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-pagination--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-pagination--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

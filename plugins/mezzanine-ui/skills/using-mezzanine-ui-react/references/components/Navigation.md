@@ -39,7 +39,7 @@ import type {
 } from '@mezzanine-ui/react/Navigation';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/navigation-navigation--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-navigation--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

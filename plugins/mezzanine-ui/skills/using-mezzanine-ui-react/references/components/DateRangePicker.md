@@ -2,7 +2,7 @@
 
 > **Category**: Data Entry
 >
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-entry-daterangepicker--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-daterangepicker--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
 > **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateRangePicker) · Verified 1.4.1 (2026-07-01)
 

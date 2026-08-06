@@ -15,7 +15,7 @@ import { Stepper, Step, useStepper } from '@mezzanine-ui/react';
 import type { StepperProps, StepProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/navigation-stepper--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-stepper--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

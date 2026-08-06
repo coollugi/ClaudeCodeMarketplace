@@ -21,7 +21,7 @@ import type {
 } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -61,7 +61,7 @@ interface NotifierData extends Pick<NotifierConfig, 'duration'> {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -182,7 +182,7 @@ useEffect(() => {
 }, []);
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -219,7 +219,7 @@ const NotificationCenter = createNotifier<NotificationData>({
 });
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -246,7 +246,7 @@ const MessageWithSugar = {
 MessageWithSugar.success('Operation successful!');
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/feedback-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

@@ -25,7 +25,7 @@ import type {
 } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-description-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -59,7 +59,7 @@ The `size` prop on `Description` sets the default size for its child `Descriptio
 </Description>
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-description-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -171,7 +171,7 @@ type DescriptionContentVariant =
   | 'with-icon';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-description-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -369,7 +369,7 @@ function OrderDetail({ order }) {
 </div>
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-display-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-description-description--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 

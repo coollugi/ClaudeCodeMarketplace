@@ -2,7 +2,7 @@
 
 > **Category**: Internal
 >
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/internal-picker--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: 此元件在 Storybook 沒有獨立頁面（內部基底元件），請直接參考各 Picker 家族元件的 Storybook 頁面。
 >
 > **Source**: Verified 1.4.1 (2026-07-01) — Internal module. Directory exists at [packages/react/src/Picker](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Picker); there is no single `Picker.tsx` entry. Verified against PickerTrigger.tsx, PickerTriggerWithSeparator.tsx, RangePickerTrigger.tsx, usePickerValue.ts, usePickerDocumentEventClose.ts, and useTabKeyClose.ts.
 
