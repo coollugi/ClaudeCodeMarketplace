@@ -29,9 +29,9 @@ Ask the user for the page path, e.g., `cms/products`, `cms/categories`.
 
 Ask the user for the following information in order:
 
-1. **Page Title** (display name for `PageHeader`)
+1. **Page Title** (display name shown in the page header)
    - Examples: "Product Management", "Category Management"
-   - Used for the `PageHeader` `title` prop
+   - Used for the `title` prop of the `ContentHeader` inside `PageHeader` (`PageHeader` itself takes no `title` prop)
 
 2. **Data Entity Name** (English PascalCase)
    - Examples: `Product`, `Category`

@@ -1,5 +1,17 @@
 # Page Component and Table Template
 
+## Page Layout Contract (read before writing page.tsx)
+
+Mezzanine's `PageHeader` / `PageFooter` ship their **own** horizontal padding (`--mzn-spacing-padding-horizontal-spacious`, 16px) while `Layout.Main` ships none. Every page therefore uses the same three-layer structure — written out explicitly in each page, no wrapper component:
+
+1. `.page` root — **zero** horizontal padding, only `display: flex` + `row-gap`
+2. `PageHeader` / `PageFooter` — direct children of `.page`, flush to the edges
+3. `.content` — the only element carrying `padding-inline`, matching PageHeader's value
+
+Putting padding on `.page`, or nesting `PageHeader` / `PageFooter` inside `.content`, is the single most common layout bug — the header double-indents and the footer's `border-top` stops short on both sides.
+
+> Full rationale, padding table and anti-patterns: `using-mezzanine-ui-react` skill → **Page Layout Skeleton (必讀 — 版面 padding 契約)**.
+
 ## Page Component Template
 
 ```tsx
@@ -18,10 +30,10 @@ import {
   useDelete{Entity}Mutation,
 } from '@/graphql/generated/graphql';
 import type { Get{Entities}Query } from '@/graphql/generated/graphql';
+import styles from './page.module.scss';
 import { {Entity}Table } from './_components/{Entity}Table';
 import { {Entity}FormModal } from './_components/{Entity}FormModal';
 import { Delete{Entity}Dialog } from './_components/Delete{Entity}Dialog';
-import styles from './page.module.scss';
 
 const PAGE_SIZE = 15;
 
@@ -118,7 +130,9 @@ export default function {Entities}Page(): ReactNode {
   const total = data?.{entities}?.total ?? 0;
 
   return (
+    // Layer 1: page root — no horizontal padding, only vertical rhythm
     <div className={styles.page}>
+      {/* Layer 2a: PageHeader is a direct child, flush to the edges */}
       <PageHeader>
         <ContentHeader title="{pageTitle}">
           <Button icon={PlusIcon} iconType="leading" onClick={handleOpenCreate}>
@@ -127,7 +141,8 @@ export default function {Entities}Page(): ReactNode {
         </ContentHeader>
       </PageHeader>
 
-      <div className={styles.content}>
+      {/* Layer 2b: the only element carrying the horizontal gutter */}
+      <main className={styles.content}>
         <{Entity}Table
           items={items}
           loading={loading}
@@ -138,7 +153,7 @@ export default function {Entities}Page(): ReactNode {
           onEdit={handleOpenEdit}
           onDelete={handleOpenDelete}
         />
-      </div>
+      </main>
 
       <{Entity}FormModal
         open={formModalOpen}
@@ -160,40 +175,37 @@ export default function {Entities}Page(): ReactNode {
 }
 ```
 
+> Modals and dialogs render through a portal, so their JSX position is irrelevant — keeping them as siblings of `<main>` avoids implying they are page content.
+
 ## SCSS Module Template
 
 ### page.module.scss
 
 ```scss
-// Without filter
 .page {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  row-gap: 16px;
+  display: flex;
+  flex-direction: column;
+  // ❌ never add padding / padding-inline here — PageHeader already ships 16px
+  // horizontal padding, adding it again double-indents the header
+  row-gap: var(--mzn-spacing-gap-calm);
   width: 100%;
   height: 100%;
 }
 
 .content {
-  padding: 0 var(--mzn-spacing-padding-horizontal-spacious);
-}
-```
-
-```scss
-// With filter
-.page {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  row-gap: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.content {
-  padding: 16px var(--mzn-spacing-padding-horizontal-spacious);
+  // ✅ the only element carrying the horizontal gutter — same token as PageHeader
+  padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
+  padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 ```
+
+Filters, tabs and Sections are plain children of `.content` — they inherit the gutter and the `row-gap`, so no extra grid template or per-element padding is needed. If a `PageFooter` is used, put it **after** `</main>` as a sibling, never inside `.content`.
 
 ## Table Component Template
 

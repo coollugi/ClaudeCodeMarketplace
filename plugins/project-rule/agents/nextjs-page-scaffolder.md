@@ -66,6 +66,8 @@ If `pnpm codegen` is unavailable, try `npx graphql-codegen`.
 
 ### Step 5: Create Page Component and Styles (page.tsx + page.module.scss)
 
+**Page layout contract** — `PageHeader` / `PageFooter` ship their own horizontal padding while `Layout.Main` ships none. The `.page` root must have **zero** horizontal padding, `PageHeader` / `PageFooter` are its direct children, and only the `.content` wrapper carries `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`.
+
 **page.tsx** (refer to `scaffolding-nextjs-page` skill's PAGE_TEMPLATE.md):
 
 - `'use client'` directive
@@ -74,14 +76,14 @@ If `pnpm codegen` is unavailable, try `npx graphql-codegen`.
 - Modal/Dialog toggle state
 - Apollo `useQuery` hook to fetch list data
 - All handlers wrapped with `useCallback`
-- JSX structure: `PageHeader` → Filter (optional) → Table → FormModal → DeleteDialog (optional)
+- JSX structure: `.page` root → `PageHeader` → `<main className={styles.content}>` wrapping Filter (optional) + Table → FormModal → DeleteDialog (optional)
 - Loading and Error state handling
 
 **page.module.scss**:
 
-- Use grid layout
+- **Never** add horizontal padding to the page root — it double-indents `PageHeader`
 - Follow project's existing SCSS conventions
-- Use Mezzanine CSS variables (`--mzn-spacing-*`)
+- Use Mezzanine CSS variables (`--mzn-spacing-*`), not hardcoded px
 
 Refer to `plugin:mezzanine-ui:using-mezzanine-ui-react` skill for component usage.
 

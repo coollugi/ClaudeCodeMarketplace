@@ -35,8 +35,9 @@ Confirm the following items before starting scaffolding.
 
 ## Required Components
 
+- [ ] **Page layout contract**: `.page` root has no horizontal padding; `PageHeader` / `PageFooter` are its direct children; only `.content` carries `padding-inline`
 - [ ] **Mezzanine UI components**:
-  - `PageHeader` + `ContentHeader` (page title area)
+  - `PageHeader` + `ContentHeader` (page title area, direct child of the `.page` root)
   - `Table` + `TableColumn` (list)
   - `Modal` + `ModalHeader` + `ModalFooter` (form dialog)
   - `FormField` + `Input` (form)
