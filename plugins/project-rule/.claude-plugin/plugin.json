@@ -1,7 +1,7 @@
 {
   "name": "project-rule",
   "description": "Full-stack project architecture patterns. NestJS dual-layer modules, Next.js App Router, TypeORM, GraphQL Code-First, Mezzanine UI, Casbin RBAC, Nx monorepo, Quadrats editor. Includes scaffolding tools and pattern auditing.",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "license": "MIT",
   "keywords": [
     "nestjs",
