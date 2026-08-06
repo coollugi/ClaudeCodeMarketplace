@@ -15,7 +15,7 @@ import { FilterArea, FilterLine, Filter } from '@mezzanine-ui/react';
 import type { FilterAreaProps, FilterLineProps, FilterProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/data-entry-filter-area--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-filterarea--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -70,6 +70,25 @@ import type { FilterAreaProps, FilterLineProps, FilterProps } from '@mezzanine-u
 > - `FilterSpan = 1 | 2 | 3 | 4 | 5 | 6`
 
 ---
+
+## 版面 padding 契約 (重要 — size 決定是否貼邊)
+
+`FilterArea` 的 `size` **預設為 `'main'`**，而 `size="main"` 在 core SCSS 帶有自己的 gutter：
+
+```scss
+.mzn-filter-area--main {
+  padding-inline: var(--mzn-spacing-padding-horizontal-spacious); // 16px / compact 14px
+  padding-top: var(--mzn-spacing-padding-vertical-spacious);      // 16px / compact 12px
+}
+```
+
+與 `PageHeader` 同構（同樣沒有 bottom padding，靠 container `row-gap` 分隔）。因此：
+
+- **`size="main"`（頁面級 filter）** — 必須是 page container 的**直接子代**，與 `PageHeader` 同層貼齊版面。放進套了 `padding-inline` 的 body wrapper 會變成 16 + 16 = 32px 的雙層內縮。
+- **`size="sub"`（Section 內的 filter）** — 沒有任何 padding，由 `Section` 的 16px 負責。透過 `Section` 的 `filterArea` prop 傳入時，Section 會**自動**改寫成 `size="sub"`，不需手動指定。
+- 手動把 `FilterArea` 放進 `Section` 的 children（而非 `filterArea` prop）時，**要自己指定 `size="sub"`**，否則會多出 16px。
+
+詳見 SKILL.md → **Page Layout Skeleton (必讀 — 版面 padding 契約)**。
 
 ## Usage Examples
 

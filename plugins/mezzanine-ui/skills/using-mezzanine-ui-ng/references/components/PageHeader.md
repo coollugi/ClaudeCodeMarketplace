@@ -115,20 +115,30 @@ export class ProductEditComponent {
 
 1. **外層 container 不可加水平 padding** — `<header mznPageHeader>` 必須能貼齊版面邊緣。在外層加 `padding` / `padding-inline` 會造成 PageHeader 雙重內縮。
 2. **下方主要內容需用 wrapper 套上相同水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓表格 / 卡片 / 表單的左緣對齊 `MznContentHeader` 的標題文字。
+3. **`mznPageFooter` 與 `mznPageHeader` 同層** — footer 也自帶 padding（`8px / 16px`）與 `border-top`，必須滿版，不可放進上述 body wrapper 內。
+4. **垂直間距用 container 的 `row-gap`** — `padding-bottom` 是 `0`（刻意留給 container 分配），建議 `row-gap: var(--mzn-spacing-gap-calm)`；不要補 `margin-bottom`。
 
 ```html
 <!-- ✅ 正確 -->
-<div class="page">                          <!-- 無 padding -->
+<div class="page">                          <!-- 無水平 padding，row-gap 分隔區塊 -->
   <header mznPageHeader>...</header>        <!-- 自己貼邊 -->
-  <div class="page__body">                  <!-- 套水平 padding 對齊 -->
+  <main class="page__body">                 <!-- 套水平 padding 對齊 -->
     <div mznTable ...></div>
-  </div>
+  </main>
+  <div mznPageFooter>...</div>              <!-- 同層貼邊，border-top 滿版 -->
 </div>
 ```
 
 ```scss
+.page {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+}
+
 .page__body {
   padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
+  padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
 }
 ```
 

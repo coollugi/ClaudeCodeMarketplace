@@ -45,7 +45,7 @@ Sub-path additional exports:
 import type { LayoutHostProps } from '@mezzanine-ui/react/Layout';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/layout-layout--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/foundation-layout--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -240,6 +240,8 @@ function AppLayoutWithCustomWidth() {
 ---
 
 ## Best Practices
+
+> **版面 padding 契約**：`Layout` / `Layout.Main` / 側邊面板**完全不提供 padding**（原始碼只處理 flex、寬度與 overflow）。`Layout.Main` 裡的頁面骨架仍需遵守 PageHeader 契約 — page container 不加水平 padding，主要內容包一層 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)` 的 wrapper。詳見 [PATTERNS.md → Page Body Alignment with PageHeader](../PATTERNS.md#page-body-alignment-with-pageheader-重要--容易忽略)。
 
 ### 場景推薦
 

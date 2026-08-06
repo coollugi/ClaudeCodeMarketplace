@@ -1,6 +1,6 @@
 ---
 name: using-mezzanine-ui-ng
-description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.4, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
+description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.4, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Also defines the page layout padding contract (mznPageHeader / mznPageFooter / mznSection ship their own padding — page containers must not add horizontal padding). Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, laying out a page skeleton, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal, page layout, container padding, 版面對不齊, 雙層 padding. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
 ---
 
 # Mezzanine-UI Angular (`@mezzanine-ui/ng`)
@@ -38,7 +38,7 @@ yarn add @mezzanine-ui/ng@1.0.0-rc.4 @mezzanine-ui/core@1.0.4
 | Type                 | Resource                                                                | Purpose                                |
 | -------------------- | ----------------------------------------------------------------------- | -------------------------------------- |
 | **Frontend Package** | [GitHub — packages/ng](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/ng) | Angular component source       |
-| **Angular Storybook** | [storybook-ng.mezzanine-ui.org](https://storybook-ng.mezzanine-ui.org) | Angular component examples (if hosted) |
+| **Angular Storybook** | [storybook.mezzanine-ui.org/angular](https://storybook.mezzanine-ui.org/angular/) | Angular component examples（`storybook-ng.mezzanine-ui.org` 已無法解析，勿使用） |
 | **Figma Components** | [Component File](https://www.figma.com/design/gjGdP49GQZzOeQf0bNOFlt)   | Shared with React — canonical design   |
 
 ---
@@ -209,6 +209,166 @@ export class ExamplePage {
 ```
 
 > Equivalent of React's `<CalendarConfigProvider>`. Date internals use DayJS by default (no extra adapter wiring needed beyond the methods import).
+
+---
+
+## Page Layout Skeleton (必讀 — 版面 padding 契約)
+
+**建立任何頁面之前先讀這段。** Mezzanine 的頁面級 directive **自己內建 padding**，樣式全部來自 `@mezzanine-ui/core` 的 SCSS，**從 template / inputs 型別完全看不出來**（`MznPageHeader` 甚至沒有任何 input）。若照一般開發慣例「先給 page container 一圈 padding 再放元件」，`mznPageHeader` 會出現**兩層水平 padding**，標題與下方內容左緣錯開。
+
+### A. 滿版帶狀元件 — 自帶 gutter，必須是 page container 的直接子代
+
+以下 directive **沒有卡片底色**，它們的水平 padding 就是版面 gutter 本身。放進任何有 `padding-inline` 的 wrapper 都會多縮一次；`mznTabs` / `mznPageFooter` 的橫線也會斷在兩側。（數值皆核對自 `@mezzanine-ui/core` 原始 SCSS，Angular 與 React 共用同一份樣式。）
+
+| Directive         | 生效條件                                | host padding                                                             | default       | compact       | 備註                                              |
+| ----------------- | --------------------------------------- | ------------------------------------------------------------------------ | ------------- | ------------- | ------------------------------------------------- |
+| `[mznPageHeader]` | 無條件                                  | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` | **bottom 為 0**，區塊間距靠 container `row-gap`   |
+| `[mznPageFooter]` | 無條件                                  | `vertical-base horizontal-spacious`                                      | `8 / 16`      | `4 / 14`      | 另有 `border-top` 與底色，必須整條貼齊版面        |
+| `[mznFilterArea]` | `size="main"`（**預設值**）             | `padding-inline: horizontal-spacious` + `padding-top: vertical-spacious` | `16 / top 16` | `14 / top 12` | 與 PageHeader 同構，同樣沒有 bottom padding       |
+| `[mznTabs]`       | `size="main"`（**預設值**）+ horizontal | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` | 底線 `::before` 為 `inset: 0`，需滿版才不會被截斷 |
+| `[mznTabs]`       | `size="main"` + vertical                | `0 0 0 horizontal-spacious`                                              | `left 16`     | `left 14`     | 只有左側                                          |
+
+> **`size="main"` vs `size="sub"` 是判斷關鍵**：`main` = 直接放在頁面骨架、自帶 gutter；`sub` = 放在 `mznSection` 內、**沒有**外距（由 Section 的 padding 負責）。`mznSection` 會用 `> .mzn-tab--horizontal.mzn-tab--main { padding: 0 }` 把 main size 的 Tabs padding 歸零。**`mznFilterArea` 與 `mznTabs` 的 `size` input 預設值都是 `'main'`**（`filter-area.component.ts` / `tabs.component.ts`）— 放進 body wrapper 卻忘了改 `size="sub"`，就會出現 16 + 16 = 32px 的雙層內縮。
+
+### B. 卡片／內容元件 — 放進 body wrapper，由 wrapper 提供 gutter
+
+| Directive                         | host padding                            | default   | compact   | 備註                                                       |
+| --------------------------------- | --------------------------------------- | --------- | --------- | ---------------------------------------------------------- |
+| `[mznSection]`                    | `vertical-spacious horizontal-spacious` | `16 / 16` | `12 / 14` | 有底色圓角但**無 margin**，外側 gutter 仍要靠 wrapper 提供 |
+| `[mznTable]`                      | 無（padding 在儲存格上）                | —         | —         | host 本身沒有 padding                                      |
+| `[mznLayout]` / `[mznLayoutMain]` | 無                                      | —         | —         | app shell，完全不提供 padding                              |
+| `[mznContentHeader]`              | 無（只有 `gap: calm`）                  | —         | —         | 內距全由外層 `mznPageHeader` / `mznSection` 提供           |
+
+### C. 其他自帶 padding 的元件（與版面 gutter 無關，但同樣不要再包一層）
+
+`mznPagination` `8/12`、`mznAlertBanner` `block 12 / inline 24`、`mznNotificationCenter` `16/16`、`mznUpload` dropzone `24/24`、`mznMessage` `12/16`、`mznTooltip` `4/8`、`mznTimePanel`、`mznCard`、`mznCascader`、`mznSelectionCard`、`mznCalendar` 各自有 host padding。這些是元件自身的內距，不需要也不應該再外加 padding，但它們不負責頁面 gutter。
+
+### 四條規則
+
+1. **頁面最外層 container 不可有水平 padding**（`padding` / `padding-inline` / `padding-left|right` 一律不要）— 讓 A 組元件自己貼齊版面邊緣。
+2. **A 組元件直接放在最外層 column**，不要塞進有 padding 的 wrapper 內。若非得放在 body wrapper 內（例如 filter 屬於某個 Section 的一部分），改用 `size="sub"`。
+3. **B 組內容一律另包一層 body wrapper**，套上與 PageHeader 相同的水平 padding：`padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`。
+4. **垂直間距用 container 的 `row-gap`**（建議 `var(--mzn-spacing-gap-calm)`，12px / compact 10px），不要對 `mznPageHeader` 補 `margin-bottom` — 它的 bottom padding 就是刻意留 0 給 container 分配。
+
+```
++-------------------------------------------+   <- page container: 無水平 padding
+| mznPageHeader  (padding: 16 16 0)         |
+|       Breadcrumb / Title                  |   <- 標題文字內縮 16px
++-------------------------------------------+
+| mznTabs size="main" (padding: 16 16 0)    |   <- A 組：貼邊，底線才會滿版
++-------------------------------------------+
+        row-gap: var(--mzn-spacing-gap-calm)
++-------------------------------------------+
+| body wrapper (padding-inline: 16)         |
+|     +-------------------------------+     |
+|     | mznSection / mznTable         |     |
+|     +-------------------------------+     |   <- 卡片左緣同樣內縮 16px
++-------------------------------------------+
+| mznPageFooter  (padding: 8 16)            |   <- border-top 需滿版
++-------------------------------------------+
+```
+
+### Canonical page skeleton（每個頁面都照這個結構寫）
+
+Mezzanine **沒有**提供負責頁面 gutter 的容器 — `mznLayout` / `mznLayoutMain` 是 app shell（Navigation + 面板），只有 flex / min-width / overflow，**零 padding、也沒有任何 padding 相關 input**。所以 gutter 一定要由頁面自己處理，結構固定為三層：
+
+```html
+<!-- feature.page.html -->
+<!-- 第 1 層：page container — 無水平 padding，只負責垂直排列與 row-gap -->
+<div class="page">
+  <!-- 第 2 層 a：PageHeader 直接掛在 page container 底下，貼齊版面 -->
+  <header mznPageHeader>
+    <nav mznBreadcrumb [items]="breadcrumb()"></nav>
+    <header mznContentHeader title="商品管理" description="管理所有商品">
+      <div actions>
+        <button mznButton variant="base-primary" (click)="create()">新增</button>
+      </div>
+    </header>
+  </header>
+
+  <!-- 第 2 層 b：主要內容包一層 body wrapper，這裡才套水平 padding -->
+  <main class="page__body">
+    <div mznSection>
+      <header mznContentHeader title="區段標題" size="sub"></header>
+      <div mznTable [columns]="columns" [dataSource]="data()"></div>
+    </div>
+  </main>
+
+  <!-- 第 2 層 c：PageFooter 與 PageHeader 同層，border-top 才會滿版 -->
+  <div mznPageFooter type="standard">
+    <div actions>
+      <button mznButton variant="base-primary" (click)="save()">儲存</button>
+    </div>
+  </div>
+</div>
+```
+
+```scss
+// feature.page.scss
+.page {
+  display: flex;
+  flex-direction: column;
+  // ❌ 這裡永遠不加 padding-inline / padding-left / padding-right
+  row-gap: var(--mzn-spacing-gap-calm);
+  inline-size: 100%;
+  min-block-size: 100%;
+
+  &__body {
+    // ✅ 頁面裡唯一負責水平 gutter 的地方，值必須與 PageHeader 的水平 padding 相同
+    padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
+    padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--mzn-spacing-gap-calm);
+    flex: 1;
+    min-block-size: 0;
+  }
+}
+```
+
+逐層說明：
+
+- **`.page`（第 1 層）** — 只做「由上而下排列 + 區塊間距」。它**不能**有任何水平 padding，因為 `mznPageHeader` / `mznPageFooter` 自己已經有了；在這裡加就是雙層內縮的來源。`row-gap` 取代 `margin`，因為 PageHeader 的 `padding-bottom` 是 `0`，間距刻意留給 container 分配。
+- **`mznPageHeader` / `mznPageFooter`（第 2 層，直接子代）** — 必須是 `.page` 的直接子代。只要被任何有 `padding-inline` 的 wrapper 包住，header 會多縮一次、footer 的 `border-top` 與底色也會斷在兩側。
+- **`.page__body`（第 2 層）** — 唯一補 gutter 的地方，`padding-inline` 一律用 `--mzn-spacing-padding-horizontal-spacious`，與 PageHeader 同值，這樣表格 / 卡片 / 表單左緣才會對齊標題文字。內容之間的間距同樣用 `row-gap`，不要在子元素上加 `margin`。
+- **內容是 `mznSection` 時** — 要分清楚兩層 padding：**外側 gutter 仍由 `.page__body` 的 `padding-inline` 提供**（`mznSection` 是它的子元素，少了它卡片會貼齊版面邊緣、也不會與 PageHeader 標題左緣對齊）；**內側 16px 則是 `mznSection` 自帶的**，所以不要再對它本身或它的直接子元素補 padding。結果是：卡片左緣 = 標題文字左緣 = 16px，卡片內容再往內 16px。
+
+若頁面的 template 根節點就是這層 `.page`，也可以省掉外層 `<div>`、改用 `:host` 承擔第 1 層：
+
+```scss
+:host {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+  min-block-size: 100%;
+}
+```
+
+> 沒有設成 flex column 的話，`mznPageHeader` 與 body 之間就完全沒有間距（PageHeader 的 `padding-bottom` 是 `0`），兩塊會直接黏在一起。
+
+搭配 Layout 時，整個骨架原封不動放進 `mznLayoutMain`（它不提供 padding，也不需要）：
+
+```html
+<div mznLayout>
+  <nav mznNavigation>...</nav>
+  <main mznLayoutMain>
+    <div class="page"><!-- 同上結構 --></div>
+  </main>
+</div>
+```
+
+> 若專案頁面數量多、想避免每頁重抄這段 SCSS，可以抽成共用 mixin（例如 `styles/_page-layout.scss` 提供 `@mixin page-root` / `@mixin page-body`），template 結構仍照上面明確寫出來。**不要**把 `mznPageHeader` 包進自訂容器元件再用 content projection 轉一手 — 那會讓頁面結構變得不透明。
+
+### 自查清單（寫完頁面前逐項確認）
+
+- [ ] page container 沒有任何水平 padding？
+- [ ] `mznPageHeader` / `mznPageFooter` 是 page container 的**直接子代**，沒被 padded wrapper 包住？
+- [ ] 主要內容有獨立 wrapper 且 `padding-inline` 使用 `--mzn-spacing-padding-horizontal-spacious`（不是寫死 16px、也不是 24px）？
+- [ ] 區塊間距靠 `row-gap`，沒有對 `mznPageHeader` 加 `margin-bottom`？
+- [ ] 內容是 `mznSection` 時，它有放在套了 `padding-inline` 的 `.page__body` 裡（不是直接掛在 `.page` 下貼邊），且**沒有**再幫它自己補 padding？
+- [ ] 有用到 `mznFilterArea` / `mznTabs` 嗎？放在 `.page` 直接層就維持預設 `size="main"`（自帶 gutter）；放進 `.page__body` 或 `mznSection` 內就必須改 `size="sub"`，否則是 16 + 16 的雙層內縮？
+
+詳細範例與反例見 [references/PATTERNS.md → Page Body Alignment with MznPageHeader](references/PATTERNS.md#page-body-alignment-with-mznpageheader-重要--容易忽略)。
 
 ---
 

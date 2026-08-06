@@ -65,6 +65,25 @@ import type {
 
 No — `MznFilterArea` is a layout container. Use standard form controls (`formControl`, `ngModel`) on the input elements projected inside `mznFilter`.
 
+## 版面 padding 契約 (重要 — size 決定是否貼邊)
+
+`mznFilterArea` 的 `size` input **預設為 `'main'`**（`filter-area.component.ts`），而 `size="main"` 在 core SCSS 帶有自己的 gutter：
+
+```scss
+.mzn-filter-area--main {
+  padding-inline: var(--mzn-spacing-padding-horizontal-spacious); // 16px / compact 14px
+  padding-top: var(--mzn-spacing-padding-vertical-spacious);      // 16px / compact 12px
+}
+```
+
+與 `mznPageHeader` 同構（同樣沒有 bottom padding，靠 container `row-gap` 分隔）。因此：
+
+- **`size="main"`（頁面級 filter）** — 必須是 page container 的**直接子代**，與 `mznPageHeader` 同層貼齊版面。放進套了 `padding-inline` 的 body wrapper 會變成 16 + 16 = 32px 的雙層內縮。
+- **`size="sub"`（Section 內的 filter）** — 沒有任何 padding，由 `mznSection` 的 16px 負責。透過 `mznSection` 的 filter 插槽 傳入時，Section 會**自動**改寫成 `size="sub"`，不需手動指定。
+- 手動把 `mznFilterArea` 放進 `mznSection` 的 children（而非 `filterArea` prop）時，**要自己指定 `size="sub"`**，否則會多出 16px。
+
+詳見 SKILL.md → **Page Layout Skeleton (必讀 — 版面 padding 契約)**。
+
 ## Usage
 
 ```html

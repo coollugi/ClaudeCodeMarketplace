@@ -22,10 +22,26 @@ Common UI pattern implementation examples.
 
 ### Page Body Alignment with PageHeader (重要 — 容易忽略)
 
-`PageHeader` 內建水平/垂直 padding（CSS 為 `padding: spacious spacious 0`，對應 `--mzn-spacing-padding-horizontal-spacious`，預設 16px / compact 14px）。因此頁面骨架要遵循以下兩條規則，否則會出現「PageHeader 比下方內容還要內縮」或「下方內容貼齊邊緣但 PageHeader 多了 16px」這類視覺錯位：
+`PageHeader` 內建水平/垂直 padding（CSS 為 `padding: spacious spacious 0`，對應 `--mzn-spacing-padding-horizontal-spacious`，預設 16px / compact 14px）。因此頁面骨架要遵循以下四條規則，否則會出現「PageHeader 比下方內容還要內縮」或「下方內容貼齊邊緣但 PageHeader 多了 16px」這類視覺錯位：
 
 1. **頁面最外層 container 不可加水平 padding** — 讓 `PageHeader` 自己貼齊版面邊緣，padding 由元件內建提供。
-2. **下方主要內容必須包一層 wrapper，套用與 PageHeader 相同的水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓內容文字左緣對齊 PageHeader 的標題文字。
+2. **`PageHeader` / `PageFooter` 直接掛在最外層 column** — `PageFooter` 同樣自帶 padding（`vertical-base horizontal-spacious`，預設 8px / 16px）並帶 `border-top` 與底色，必須滿版，不可放進有 padding 的 wrapper。
+3. **下方主要內容必須包一層 wrapper，套用與 PageHeader 相同的水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓內容文字左緣對齊 PageHeader 的標題文字。
+4. **垂直間距靠 container 的 `row-gap`** — `PageHeader` 的 `padding-bottom` 刻意為 `0`，區塊分隔由 container 分配（建議 `var(--mzn-spacing-gap-calm)`）；不要對 `PageHeader` 補 `margin-bottom`。
+
+> 內容若使用 `Section`：**外側 gutter 仍要靠 body wrapper 的 `padding-inline`**（`Section` 沒有 margin，直接掛在無 padding 的 page container 下會貼齊版面邊緣）；`Section` 自帶的 `vertical-spacious horizontal-spacious`（16px）是**卡片內側**的 padding，因此不要再對 `Section` 本身或它的直接子元素補 padding。最終對齊：卡片左緣 = PageHeader 標題文字左緣（16px），卡片內容再內縮 16px。
+
+| 元件                     | 生效條件                                     | host padding                                                             | default       | compact       |
+| ------------------------ | -------------------------------------------- | ------------------------------------------------------------------------ | ------------- | ------------- |
+| `PageHeader`             | 無條件                                       | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` |
+| `PageFooter`             | 無條件                                       | `vertical-base horizontal-spacious`                                      | `8 / 16`      | `4 / 14`      |
+| `FilterArea`             | `size="main"`（預設）                        | `padding-inline: horizontal-spacious` + `padding-top: vertical-spacious` | `16 / top 16` | `14 / top 12` |
+| `Tab`                    | `size="main"`（預設）+ horizontal            | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` |
+| `Tab`                    | `size="main"` + vertical                     | `0 0 0 horizontal-spacious`                                              | `left 16`     | `left 14`     |
+| `Section`                | 無條件（**卡片**，需外層 wrapper 給 gutter） | `vertical-spacious horizontal-spacious`                                  | `16 / 16`     | `12 / 14`     |
+| `Layout` / `Layout.Main` | —                                            | 無                                                                       | —             | —             |
+
+> **`size="main"` = 頁面級、自帶 gutter、必須貼邊；`size="sub"` = 放在 `Section` 內、無外距。** `FilterArea` 與 `Tab` 的預設值都是 `main`，把它們放進套了 `padding-inline` 的 body wrapper 而沒改成 `sub`，就是 16 + 16 的雙層內縮。`Section` 會自動把 `contentHeader` / `filterArea` 改寫成 `sub`，並把 main size 的 `Tab` padding 歸零。
 
 ```tsx
 // ContentHeader 已於 1.4.1 從主入口移除，但 PageHeader / Section 仍要求其作為必要子元件，
@@ -43,10 +59,13 @@ function ProductListPage() {
         </ContentHeader>
       </PageHeader>
 
-      <div className={styles.body}>
+      <main className={styles.body}>
         <Table columns={columns} dataSource={data} />
         <Pagination {...pagination} />
-      </div>
+      </main>
+
+      {/* PageFooter 同樣自帶 padding，與 PageHeader 一樣掛在最外層貼齊版面 */}
+      <PageFooter actions={{ primaryButton: { children: 'Save' } }} />
     </div>
   );
 }
@@ -59,82 +78,121 @@ function ProductListPage() {
   // PageHeader 已內建水平 padding，這裡加會導致 PageHeader 雙重內縮
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  // ✅ PageHeader 的 padding-bottom 為 0，區塊分隔由這裡的 row-gap 負責
+  row-gap: var(--mzn-spacing-gap-calm);
+  min-height: 100%;
 }
 
 .body {
   // ✅ 對齊 PageHeader 的水平 padding，讓表格 / 卡片左緣對齊標題文字
   padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
-  padding-bottom: var(--mzn-spacing-padding-vertical-spacious);
+  padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+  flex: 1;
 }
 ```
 
 ```tsx
-// ❌ 反例：外層加了 padding，讓 PageHeader 雙重內縮
+// ❌ 反例 1：外層加了 padding，讓 PageHeader 雙重內縮
 <div style={{ padding: 24 }}>      {/* PageHeader 會被推進 24px + 內建 16px = 40px */}
   <PageHeader>...</PageHeader>
   <Table ... />
 </div>
+
+// ❌ 反例 2：外層拿掉 padding 了，但下方內容沒有 wrapper
+<div className={styles.page}>
+  <PageHeader>...</PageHeader>
+  <Table ... />                    {/* 表格貼齊版面，比 PageHeader 標題左緣少 16px */}
+</div>
+
+// ❌ 反例 3：PageFooter 被塞進有 padding 的 body wrapper
+<div className={styles.page}>
+  <PageHeader>...</PageHeader>
+  <div className={styles.body}>
+    <Table ... />
+    <PageFooter ... />             {/* border-top 沒有滿版，兩側各縮 16px */}
+  </div>
+</div>
+
+// ❌ 反例 4：用 margin 補間距
+<PageHeader style={{ marginBottom: 24 }}>...</PageHeader>  {/* 應改用 container row-gap */}
 ```
 
-> **為什麼這個 pattern 容易被忽略**：`PageHeader` 的 padding 由元件內部 CSS 注入，從 React props / TypeScript 型別上看不出來。代理或開發者不檢查 SCSS 原始碼時，自然會在外層 container 套上一致的 padding，反而造成視覺錯位。
+> **為什麼這個 pattern 容易被忽略**：`PageHeader` 的 padding 由元件內部 CSS 注入，從 React props / TypeScript 型別上看不出來。代理或開發者不檢查 SCSS 原始碼時，自然會在外層 container 套上一致的 padding，反而造成視覺錯位。**規則的心智模型**：水平 gutter 只有一個來源 — 頁面級元件自帶（`PageHeader` / `PageFooter` / `Section`），其餘內容由 body wrapper 補上同值 `padding-inline`。
 
-### Full Page Layout + Side Panel
+### Full Page Layout + Right Panel
+
+> `Layout` 只接受 `Navigation` / `Layout.LeftPanel` / `Layout.Main` / `Layout.RightPanel` 作為**直接子代**（多包一層 `<div>` 會被靜默丟棄）。`Layout.Main` **不提供任何 padding**，頁面骨架的 padding 契約完全由上一節的規則負責。
 
 ```tsx
-import { Layout } from '@mezzanine-ui/react';
-import { Navigation, NavigationHeader, NavigationOption, NavigationOptionCategory } from '@mezzanine-ui/react';
+import {
+  Layout,
+  Navigation,
+  NavigationHeader,
+  NavigationOption,
+  NavigationOptionCategory,
+  PageHeader,
+  Breadcrumb,
+  Button,
+  Table,
+} from '@mezzanine-ui/react';
+import ContentHeader from '@mezzanine-ui/react/ContentHeader';
 import { HomeIcon, SettingIcon } from '@mezzanine-ui/icons';
 import { useState } from 'react';
+import styles from './page.module.scss';
 
-function AppWithSidePanel() {
-  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+function AppWithRightPanel(): JSX.Element {
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DataItem | null>(null);
 
   const handleItemClick = (item: DataItem): void => {
     setSelectedItem(item);
-    setSidePanelOpen(true);
+    setRightPanelOpen(true);
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <Layout>
       <Navigation>
-        <NavigationHeader>
-          <img src="/logo.svg" alt="Logo" />
-        </NavigationHeader>
+        <NavigationHeader title="Mezzanine" />
         <NavigationOptionCategory title="Main Menu">
           <NavigationOption icon={HomeIcon} title="Home" />
           <NavigationOption icon={SettingIcon} title="Settings" />
         </NavigationOptionCategory>
       </Navigation>
 
-      <Layout>
-        <Layout.Main>
-          <PageHeader title="Item List" />
-          <Table
-            columns={columns}
-            dataSource={data}
-            onRow={(record) => ({
-              onClick: () => handleItemClick(record),
-            })}
-          />
-        </Layout.Main>
-        <Layout.SidePanel
-          open={sidePanelOpen}
-          defaultSidePanelWidth={400}
-        >
-          {selectedItem && (
-            <>
-              <h2>{selectedItem.name}</h2>
-              <p>{selectedItem.description}</p>
-              <Button onClick={() => setSidePanelOpen(false)}>
-                Close
-              </Button>
-            </>
-          )}
-        </Layout.SidePanel>
-      </Layout>
-    </div>
+      <Layout.Main>
+        {/* page container：無水平 padding，靠 row-gap 分隔區塊 */}
+        <div className={styles.page}>
+          <PageHeader>
+            <Breadcrumb items={[{ name: 'Home', href: '/' }, { name: 'Items' }]} />
+            <ContentHeader title="Item List">
+              <Button>Add Item</Button>
+            </ContentHeader>
+          </PageHeader>
+
+          {/* body wrapper：唯一負責水平 gutter 的地方 */}
+          <main className={styles.body}>
+            <Table
+              columns={columns}
+              dataSource={data}
+              onRow={(record) => ({ onClick: () => handleItemClick(record) })}
+            />
+          </main>
+        </div>
+      </Layout.Main>
+
+      <Layout.RightPanel open={rightPanelOpen} defaultWidth={400}>
+        {selectedItem && (
+          <div className={styles.panel}>
+            <h2>{selectedItem.name}</h2>
+            <p>{selectedItem.description}</p>
+            <Button onClick={() => setRightPanelOpen(false)}>Close</Button>
+          </div>
+        )}
+      </Layout.RightPanel>
+    </Layout>
   );
 }
 ```

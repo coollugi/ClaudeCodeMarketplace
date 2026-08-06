@@ -83,4 +83,5 @@ No.
 
 - `MznSection` has no inputs of its own — all styling is via projected children. This differs from the React counterpart which accepts `title` and `size` props directly on `<Section>`.
 - The default content slot is wrapped in a `<div class="mzn-section__content">` container; other slots are projected directly without an additional wrapper.
+- **版面 padding 契約**：`mznSection` 自帶 `padding: vertical-spacious horizontal-spacious`（預設 16px、compact 12/14px）、圓角與卡片底色，但**沒有 margin**。外側 gutter 仍要由 body wrapper 的 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)` 提供 — 直接掛在無水平 padding 的 page container 下會**貼齊版面邊緣**；內側 16px 由元件自己提供，**不要**再對它或它的直接子元素補 padding。對齊結果：卡片左緣 = `mznContentHeader` 標題文字左緣（16px），卡片內容再內縮 16px。詳見 [PATTERNS.md → Page Body Alignment with MznPageHeader](../PATTERNS.md#page-body-alignment-with-mznpageheader-重要--容易忽略)。
 - `MznSectionGroup` arranges multiple sections using CSS flexbox. The **default direction is `'vertical'`** (stacked). Pass `direction="horizontal"` to place sections side by side. The `direction` attribute is removed from the DOM host (set to `null`) — use the Angular input binding only.

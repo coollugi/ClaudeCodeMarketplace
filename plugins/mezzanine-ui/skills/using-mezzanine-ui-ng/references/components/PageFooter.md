@@ -124,3 +124,13 @@ export class EditPageComponent {
 - `supportingActionIcon` 在 input 層面沒有預設值。`DotHorizontalIcon` 的 fallback 僅在 `overflow` 渲染時由內部的 `resolvedSupportingActionIcon` computed 補上，不會透過 signal 傳遞。在 `standard` 模式下，若設定了 `supportingActionIcon`，圖示會渲染在按鈕文字左側（leading icon）。
 - `overflow` 模式通常搭配下拉選單使用，下拉選單需自行在 `(click)` 事件中開啟。
 - 右側 `[actions]` 插槽不受 `type` 影響，三種類型均可投射操作按鈕。
+
+## 版面 padding 契約 (重要)
+
+`MznPageFooter` 內建 `padding: vertical-base horizontal-spacious`（預設 `8px / 16px`、compact `4px / 14px`）、`width: 100%`、`border-top` 與底色。因此：
+
+- **必須與 `mznPageHeader` 同層**，放在頁面最外層 column，才能讓 `border-top` 與底色滿版。
+- **不可放進套了 `padding-inline` 的 body wrapper**，否則兩側各縮一個 gutter，分隔線會浮在半空中。
+- **不需要也不應該再外加 padding** — 內距由元件自己提供。
+
+詳見 [PATTERNS.md → Page Body Alignment with MznPageHeader](../PATTERNS.md#page-body-alignment-with-mznpageheader-重要--容易忽略)。

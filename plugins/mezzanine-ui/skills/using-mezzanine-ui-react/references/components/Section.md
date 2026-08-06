@@ -19,7 +19,7 @@ import { Section, SectionGroup } from '@mezzanine-ui/react';
 import type { SectionProps, SectionGroupProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/layout-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -260,7 +260,7 @@ function StyledSectionGroup() {
 }
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/layout-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -278,7 +278,7 @@ Passing non-matching components will output a console warning, e.g.:
 [Section] Invalid contentHeader type: <MyCustomHeader>. Only <ContentHeader /> component from @mezzanine-ui/react is allowed.
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/layout-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-display-section--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -306,6 +306,13 @@ Passing non-matching components will output a console warning, e.g.:
 - **在 SectionGroup 中混合不同的 direction**：SectionGroup 只支援單一 direction。若需複雜佈局，應嵌套多個 SectionGroup
 
 ## Best Practices
+
+> **版面 padding 契約**：`Section` 自帶 `padding: vertical-spacious horizontal-spacious`（預設 16px、compact 12/14px）、圓角與卡片底色，但**沒有 margin**。
+>
+> - **外側**：`Section` 必須放在套了 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)` 的 main content wrapper 內；直接掛在無水平 padding 的 page container 下會**貼齊版面邊緣**，且無法與 `PageHeader` 標題文字對齊。
+> - **內側**：卡片內距由元件自己提供，**不要**再對 `Section` 或它的直接子元素補 padding。
+>
+> 對齊結果：卡片左緣 = `PageHeader` 標題文字左緣（16px），卡片內容再內縮 16px。詳見 [PATTERNS.md → Page Body Alignment with PageHeader](../PATTERNS.md#page-body-alignment-with-pageheader-重要--容易忽略)。
 
 1. **Use designated components**: `contentHeader`, `filterArea`, `tab` only accept their corresponding Mezzanine components; do not pass custom components.
 2. **Automatic size adjustment**: Section automatically sets `contentHeader` and `filterArea` to `size="sub"`; no manual specification needed.

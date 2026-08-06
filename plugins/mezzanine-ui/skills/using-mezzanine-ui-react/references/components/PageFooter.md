@@ -15,7 +15,7 @@ import { PageFooter } from '@mezzanine-ui/react';
 import type { PageFooterProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/navigation-pagefooter--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-pagefooter--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 > **Note**: `PageFooterType` and `PageFooterActions` types are not exported from the main entry; only `PageFooterProps` is available from `@mezzanine-ui/react`.
 
@@ -242,6 +242,16 @@ function FormFooter({ isValid, onSubmit, onCancel, onReset }) {
 ---
 
 ## Best Practices (最佳實踐)
+
+### 版面 padding 契約 (重要)
+
+`PageFooter` 內建 `padding: vertical-base horizontal-spacious`（預設 `8px / 16px`、compact `4px / 14px`）、`width: 100%`、`border-top` 與底色。因此：
+
+- **必須與 `PageHeader` 同層**，掛在頁面最外層 column，才能讓 `border-top` 與底色滿版。
+- **不可放進套了 `padding-inline` 的 main content wrapper**，否則兩側各縮一個 gutter，分隔線會浮在半空中。
+- **不需要也不應該再外加 padding** — 內距由元件自己提供。
+
+詳見 [PATTERNS.md → Page Body Alignment with PageHeader](../PATTERNS.md#page-body-alignment-with-pageheader-重要--容易忽略)。
 
 ### 場景推薦 (Scenario Recommendations)
 

@@ -15,7 +15,7 @@ import { Tab, TabItem } from '@mezzanine-ui/react';
 import type { TabProps, TabItemProps, TabsChild } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/navigation-tab--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-tab--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -92,6 +92,23 @@ type TabsChild = ReactElement<TabItemProps>;
 | `icon`       | `IconDefinition` | -       | Tab icon                              |
 
 ---
+
+## 版面 padding 契約 (重要 — size 決定是否貼邊)
+
+`Tab` 的 `size` **預設為 `'main'`**，而 `size="main"` 在 core SCSS 帶有自己的 gutter：
+
+```scss
+.mzn-tab--horizontal.mzn-tab--main { padding: 16px 16px 0; }  // compact 12 / 14 / 0
+.mzn-tab--vertical.mzn-tab--main   { padding: 0 0 0 16px; }   // compact left 14
+```
+
+橫向 Tab 的底線是 `::before { inset: 0; border-bottom: ... }`，**必須滿版**才不會被截斷。因此：
+
+- **`size="main"`（頁面級分頁）** — 必須是 page container 的**直接子代**，與 `PageHeader` 同層貼齊版面。
+- **`size="sub"`（Section 內的分頁）** — host 無 padding，只有 `__item` 有較緊湊的內距。透過 `Section` 的 `tab` prop 傳入時，Section 另有 `> .mzn-tab--horizontal.mzn-tab--main { padding: 0 }` 會把 main size 的 padding 歸零。
+- 放進套了 `padding-inline` 的 body wrapper 時要改 `size="sub"`，否則是 16 + 16 的雙層內縮。
+
+詳見 SKILL.md → **Page Layout Skeleton (必讀 — 版面 padding 契約)**。
 
 ## Usage Examples
 

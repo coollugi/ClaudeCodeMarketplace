@@ -149,7 +149,23 @@ export const appConfig: ApplicationConfig = {
 `MznPageHeader` 內建水平/垂直 padding（核心 CSS 為 `padding: spacious spacious 0`，水平對應 `--mzn-spacing-padding-horizontal-spacious`，預設 16px / compact 14px）。`MznPageHeader` 沒有任何 inputs，這個 padding **完全來自元件內部 SCSS**，光看 template / 型別看不出來。因此頁面骨架要遵循：
 
 1. **頁面最外層 container 不可加水平 padding** — 讓 `<header mznPageHeader>` 自己貼齊版面邊緣，padding 由元件內建提供。
-2. **下方主要內容必須包一層 wrapper，套上相同的水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓表格 / 卡片 / 表單的左緣對齊 `MznContentHeader` 的標題文字。
+2. **`mznPageHeader` / `mznPageFooter` 直接放在最外層 column** — `MznPageFooter` 同樣自帶 padding（`vertical-base horizontal-spacious`，預設 8px / 16px）並帶 `border-top` 與底色，必須滿版，不可放進有 padding 的 wrapper。
+3. **下方主要內容必須包一層 wrapper，套上相同的水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓表格 / 卡片 / 表單的左緣對齊 `MznContentHeader` 的標題文字。
+4. **垂直間距靠 container 的 `row-gap`** — `mznPageHeader` 的 `padding-bottom` 刻意為 `0`，區塊分隔由 container 分配（建議 `var(--mzn-spacing-gap-calm)`）；不要對它補 `margin-bottom`。
+
+> 內容若使用 `mznSection`：**外側 gutter 仍要靠 body wrapper 的 `padding-inline`**（它沒有 margin，直接掛在無 padding 的 page container 下會貼齊版面邊緣）；自帶的 `vertical-spacious horizontal-spacious`（16px）是**卡片內側**的 padding，因此不要再對它本身或它的直接子元素補 padding。最終對齊：卡片左緣 = PageHeader 標題文字左緣（16px），卡片內容再內縮 16px。
+
+| 元件                              | 生效條件                                     | host padding                                                             | default       | compact       |
+| --------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------ | ------------- | ------------- |
+| `[mznPageHeader]`                 | 無條件                                       | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` |
+| `[mznPageFooter]`                 | 無條件                                       | `vertical-base horizontal-spacious`                                      | `8 / 16`      | `4 / 14`      |
+| `[mznFilterArea]`                 | `size="main"`（預設）                        | `padding-inline: horizontal-spacious` + `padding-top: vertical-spacious` | `16 / top 16` | `14 / top 12` |
+| `[mznTabs]`                       | `size="main"`（預設）+ horizontal            | `vertical-spacious horizontal-spacious 0`                                | `16 / 16 / 0` | `12 / 14 / 0` |
+| `[mznTabs]`                       | `size="main"` + vertical                     | `0 0 0 horizontal-spacious`                                              | `left 16`     | `left 14`     |
+| `[mznSection]`                    | 無條件（**卡片**，需外層 wrapper 給 gutter） | `vertical-spacious horizontal-spacious`                                  | `16 / 16`     | `12 / 14`     |
+| `[mznLayout]` / `[mznLayoutMain]` | —                                            | 無                                                                       | —             | —             |
+
+> **`size="main"` = 頁面級、自帶 gutter、必須貼邊；`size="sub"` = 放在 `[mznSection]` 內、無外距。** `[mznFilterArea]` 與 `[mznTabs]` 的 `size` input 預設值都是 `'main'`，把它們放進套了 `padding-inline` 的 body wrapper 而沒改成 `size="sub"`，就是 16 + 16 的雙層內縮。`[mznSection]` 另有 `> .mzn-tab--horizontal.mzn-tab--main { padding: 0 }`，會把投射進來的 main size Tabs padding 歸零。
 
 ```html
 <!-- ✅ 正確：外層無 padding，PageHeader 直接貼邊；body 用 wrapper 對齊 -->
@@ -163,10 +179,17 @@ export const appConfig: ApplicationConfig = {
     </header>
   </header>
 
-  <div class="page__body">
+  <main class="page__body">
     <div mznTable [columns]="columns" [dataSource]="data()"></div>
     <div mznPagination [total]="total()" [current]="page()"
          (pageChange)="onPageChange($event)"></div>
+  </main>
+
+  <!-- PageFooter 與 PageHeader 同層，貼齊版面 -->
+  <div mznPageFooter type="standard">
+    <div actions>
+      <button mznButton variant="base-primary" (click)="save()">儲存</button>
+    </div>
   </div>
 </div>
 ```
@@ -178,21 +201,42 @@ export const appConfig: ApplicationConfig = {
   // MznPageHeader 已內建水平 padding，外層再加會造成 PageHeader 雙重內縮
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  // ✅ PageHeader 的 padding-bottom 為 0，區塊分隔由這裡的 row-gap 負責
+  row-gap: var(--mzn-spacing-gap-calm);
+  min-block-size: 100%;
 
   &__body {
     // ✅ 對齊 MznPageHeader 的水平 padding，讓表格 / 卡片左緣對齊標題文字
     padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
-    padding-bottom: var(--mzn-spacing-padding-vertical-spacious);
+    padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--mzn-spacing-gap-calm);
+    flex: 1;
   }
 }
 ```
 
 ```html
-<!-- ❌ 反例：外層加了 padding，導致 PageHeader 雙重內縮 -->
+<!-- ❌ 反例 1：外層加了 padding，導致 PageHeader 雙重內縮 -->
 <div style="padding: 24px;">       <!-- PageHeader 比版面少 24px + 內建 16px = 40px -->
   <header mznPageHeader>...</header>
   <div mznTable ...></div>
+</div>
+
+<!-- ❌ 反例 2：外層拿掉 padding 了，但下方內容沒有 wrapper -->
+<div class="page">
+  <header mznPageHeader>...</header>
+  <div mznTable ...></div>         <!-- 表格貼齊版面，比標題左緣少 16px -->
+</div>
+
+<!-- ❌ 反例 3：PageFooter 被塞進有 padding 的 body wrapper -->
+<div class="page">
+  <header mznPageHeader>...</header>
+  <div class="page__body">
+    <div mznTable ...></div>
+    <div mznPageFooter>...</div>   <!-- border-top 沒有滿版，兩側各縮 16px -->
+  </div>
 </div>
 ```
 
@@ -228,22 +272,38 @@ export class FeaturePage {}
   PageHeader 內建水平 padding，下方內容必須套上相同 padding 才能對齊標題文字。
   詳見上方「Page Body Alignment with MznPageHeader」。
 -->
-<div class="feature-page__body">
+<main class="feature-page__body">
   <div mznSection>
     <header mznContentHeader title="區段標題" size="sub" description="區段說明。"></header>
     <!-- page content here -->
   </div>
-</div>
+</main>
 ```
 
 ```scss
 // feature.page.scss
+
+// component host 就是 page container：不加水平 padding，用 row-gap 分隔區塊
+:host {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+  min-block-size: 100%;
+}
+
 .feature-page {
   &__body {
     padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
+    padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
+    display: flex;
+    flex-direction: column;
+    row-gap: var(--mzn-spacing-gap-calm);
+    flex: 1;
   }
 }
 ```
+
+> 頁面元件的 host 若沒有設成 flex column，`mznPageHeader` 與 body 之間就沒有 `row-gap`（PageHeader 的 `padding-bottom` 是 `0`），兩塊會直接黏在一起。
 
 ### ContentHeader sizes
 

@@ -111,6 +111,8 @@ import {
 
 > 別忘記在 `standalone: true` component 的 `imports` 加入 `MznLayout` / `MznLayoutMain` / `MznLayoutLeftPanel` / `MznLayoutRightPanel` / `MznNavigation`，否則 selector 整個失效。
 
+> **版面 padding 契約**：`mznLayout` / `mznLayoutMain` / 側邊面板**完全不提供 padding**。`mznLayoutMain` 內的頁面骨架仍需遵守 PageHeader 契約 — page container 不加水平 padding，主要內容包一層 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)` 的 wrapper。詳見 [PATTERNS.md → Page Body Alignment with MznPageHeader](../PATTERNS.md#page-body-alignment-with-mznpageheader-重要--容易忽略)。
+
 ## ControlValueAccessor
 
 No.

@@ -15,7 +15,7 @@ import { PageHeader } from '@mezzanine-ui/react';
 import type { PageHeaderProps } from '@mezzanine-ui/react';
 ```
 
-> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/?path=/docs/navigation-pageheader--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+> **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/navigation-pageheader--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 
 ---
 
@@ -220,20 +220,30 @@ import ContentHeader from '@mezzanine-ui/react/ContentHeader';
 
 1. **外層 container 不可加水平 padding** — `PageHeader` 必須能貼齊版面邊緣。在外層加 `padding` / `padding-inline` 會造成 PageHeader 雙重內縮。
 2. **下方主要內容需用 wrapper 套上相同水平 padding** — 通常是 `padding-inline: var(--mzn-spacing-padding-horizontal-spacious)`，讓表格 / 卡片 / 表單的左緣對齊 PageHeader 的標題文字。
+3. **`PageFooter` 與 `PageHeader` 同層** — `PageFooter` 也自帶 padding（`8px / 16px`）與 `border-top`，必須滿版，不可放進上述 body wrapper 內。
+4. **垂直間距用 container 的 `row-gap`** — `PageHeader` 的 `padding-bottom` 是 `0`（刻意留給 container 分配），建議 `row-gap: var(--mzn-spacing-gap-calm)`；不要補 `margin-bottom`。
 
 ```tsx
 // ✅ 正確
-<div className={styles.page}>             {/* 無 padding */}
+<div className={styles.page}>             {/* 無水平 padding，row-gap 分隔區塊 */}
   <PageHeader>...</PageHeader>            {/* 自己貼邊 */}
-  <div className={styles.body}>           {/* 套水平 padding 對齊 */}
+  <main className={styles.body}>          {/* 套水平 padding 對齊 */}
     <Table ... />
-  </div>
+  </main>
+  <PageFooter ... />                      {/* 同層貼邊，border-top 滿版 */}
 </div>
 ```
 
 ```scss
+.page {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--mzn-spacing-gap-calm);
+}
+
 .body {
   padding-inline: var(--mzn-spacing-padding-horizontal-spacious);
+  padding-block-end: var(--mzn-spacing-padding-vertical-spacious);
 }
 ```
 
