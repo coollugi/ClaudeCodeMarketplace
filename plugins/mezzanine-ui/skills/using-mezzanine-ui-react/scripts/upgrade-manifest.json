@@ -3,20 +3,20 @@
     "framework": "react",
     "branch": "main",
     "packagePath": "packages/react/src",
-    "fromVersion": "1.1.0",
-    "toVersion": "1.4.1",
-    "generatedAt": "2026-07-01T08:39:33Z",
+    "fromVersion": "1.4.1",
+    "toVersion": "1.4.2",
+    "generatedAt": "2026-08-07T05:03:03Z",
     "description": "Mezzanine-UI upgrade work manifest. Consume this file to drive .md documentation updates."
   },
   "summary": {
     "componentsAdded": 0,
     "componentsRemoved": 4,
     "componentsUnchanged": 65,
-    "componentsWithPropChanges": 12,
+    "componentsWithPropChanges": 11,
     "componentsWithAngularChanges": 0,
-    "releasesCovered": 5,
-    "workItemsTotal": 16,
-    "workItemsHigh": 16,
+    "releasesCovered": 1,
+    "workItemsTotal": 15,
+    "workItemsHigh": 15,
     "workItemsMedium": 0,
     "workItemsLow": 0
   },
@@ -98,39 +98,11 @@
   },
   "changelog": [
     {
-      "tag": "@mezzanine-ui/react@1.4.1",
-      "name": "@mezzanine-ui/react@1.4.1",
-      "published": "2026-06-22T07:24:19Z",
-      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.4.1",
-      "body": "## `@mezzanine-ui/react@1.4.1`\r\n\r\n> Patch release fixing two bugs surfaced by React/Angular DOM parity checks: `Select`'s `error` prop was silently ignored, and a `Navigation` leaf whose only child is a `Badge` was misclassified as an expandable group.\r\n\r\n---\r\n\r\n### 🐛 Bug Fixes\r\n\r\n- **`Select`** — The `error` prop is now actually applied to the trigger. `SelectTrigger` forwarded `error={type === 'error'}` to `TextField`, but `type` is a `DropdownType` (`'default'` / `'tree'` / …) that is never `'error'`, so the `error` prop passed to `Select` was silently dropped and error-state selects never received the `mzn-text-field--error` class. The trigger now honours the real `error` prop (the legacy `type === 'error'` fallback is kept).\r\n- **`Navigation`** — A `NavigationOption` whose only child is a `Badge` is no longer misclassified as an expandable group. Previously every group-vs-leaf decision keyed off the raw `children` prop, so a leaf-with-badge rendered a group chevron, downgraded from an anchor to a plain `<div>` (losing `href` / router navigation), mounted an empty `Collapse`, and lost its `--basic` leaf styling. Those decisions now key off the actual sub-option count (`items.length`), and the badge still renders inline. Groups with real `NavigationOption` children are unaffected.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.4.0...@mezzanine-ui/react@1.4.1"
-    },
-    {
-      "tag": "@mezzanine-ui/react@1.4.0",
-      "name": "@mezzanine-ui/react@1.4.0",
-      "published": "2026-06-18T03:18:13Z",
-      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.4.0",
-      "body": "## `@mezzanine-ui/react@1.4.0`\r\n\r\n> Minor release rounding out viewport-aware menu flipping across the popper family: `Select` gains an opt-in `flip` prop, `Dropdown`'s flip now animates from the correct side, and `Popper` exposes an `onPlacementChange` callback.\r\n\r\n---\r\n\r\n### 🚀 Improvements\r\n\r\n- **`Select`** — New opt-in `flip?: boolean` prop (default `false`), forwarded to the underlying `Dropdown`. When enabled, the menu flips above the input near the bottom of the viewport while keeping its width and horizontal alignment with the anchor. A new story demonstrates the behaviour near the viewport bottom. Default `false` preserves the existing fixed `bottom-start` placement for current call sites.\r\n- **`Dropdown`** — When `flip` is enabled, the menu now flips along the **main axis only** (bottom ↔ top) using `fallbackAxisSideDirection: 'end'` with no shift/cross-axis movement, so a `sameWidth` menu keeps its horizontal alignment with the anchor. The enter transition now follows the placement floating-ui actually resolves to, so after a flip the menu slides in from the **correct side** instead of the static pre-flip side. (Builds on the `flip` prop added in `1.2.0`.)\r\n- **`Popper`** — New `onPlacementChange` callback fires with the placement resolved by floating-ui, including middleware-driven flips. This lets consumers react to the side a popper actually settles on — e.g. adjusting an enter-transition direction after a flip.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.3.1...@mezzanine-ui/react@1.4.0"
-    },
-    {
-      "tag": "@mezzanine-ui/react@1.3.1",
-      "name": "@mezzanine-ui/react@1.3.1",
-      "published": "2026-06-11T07:25:40Z",
-      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.3.1",
-      "body": "## `@mezzanine-ui/react@1.3.1`\r\n\r\n> Patch release: silences a spurious React 18 dev-mode `ref` warning emitted by every `Select` / `AutoComplete` trigger. No behaviour change — purely removes the console noise.\r\n\r\n---\r\n\r\n### 🐛 Bug Fixes\r\n\r\n- **`Dropdown` / `Select` / `AutoComplete`** — Fixes a `` Warning: SelectTrigger: `ref` is not a prop `` message that fired on every trigger render under **React 18 in dev mode**. `Dropdown`'s internal `getElementRef()` read `element.props.ref` before falling back to `element.ref`; on React 18, `props.ref` is a dev-only warning getter installed whenever an element was created with a `ref`, so simply touching it logged the warning. Functionality was never affected (the getter returns `undefined` and the code already fell back correctly), but the noise appeared on any React 18 consumer. The ref is now read from where it actually lives per React version — `element.ref` on React 18, `props.ref` on React 19 — by detecting React's `isReactWarning` getter flag, mirroring the approach used in `radix-ui/primitives`. The helper moved to `utils/getElementRef` with unit tests covering React 18/19 dev and production element shapes.\r\n\r\n### 🏗 Internal\r\n\r\n- **`Dropdown`** — Removes a deprecated `fullWidth` prop usage from the `AutoCompleteExample` story.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.3.0...@mezzanine-ui/react@1.3.1"
-    },
-    {
-      "tag": "@mezzanine-ui/react@1.3.0",
-      "name": "@mezzanine-ui/react@1.3.0",
-      "published": "2026-05-22T06:44:54Z",
-      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.3.0",
-      "body": "## `@mezzanine-ui/react@1.3.0`\r\n\r\n> Improves the column-resize UX on `Table`: a middle column now borrows space from the rightmost column first, keeping intermediate columns stable. This is a noticeable behaviour change at the interaction layer — QA may want to re-verify wide-table layouts before rolling out.\r\n\r\n---\r\n\r\n### 🚀 Improvements\r\n\r\n- **`Table`** — Reworks the resize donor strategy. Dragging a column edge now compensates against the **rightmost column** first, leaving every column between the drag target and the last column at their current widths. Only when the rightmost column reaches its `minWidth` does the algorithm fall back to the adjacent (`N+1`) column as donor. The previous behaviour — always borrowing from `N+1` — left the rightmost slack untouched until the user manually grew the last column, which felt unnecessary in wide tables with many narrow columns.\r\n\r\n  Each drag frame writes all three involved columns (`current`, `last`, `N+1`) so the return drag restores widths in LIFO order — i.e. when you drag a column wider and then drag it back narrower, the column that most recently donated space is the first to reclaim it, with no residual visual drift.\r\n\r\n  A refreshed `Resizable` Storybook story (six narrow columns plus a wide `Address` rightmost donor) demonstrates the new behaviour. No public API changes — existing `columns` configs and `minWidth` / `maxWidth` values keep working identically.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.2.0...@mezzanine-ui/react@1.3.0"
-    },
-    {
-      "tag": "@mezzanine-ui/react@1.2.0",
-      "name": "@mezzanine-ui/react@1.2.0",
-      "published": "2026-05-07T08:36:10Z",
-      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.2.0",
-      "body": "## `@mezzanine-ui/react@1.2.0`\r\n\r\n> Minor release built around three themes: a new JS-native **`Temporal`** calendar adapter (no third-party date library needed on modern runtimes), an opt-in **`flip`** prop on `Dropdown` for viewport-aware placement, and **CLDR-correct week math** in the Moment / Day.js adapters for non-ISO Monday-first locales — see Bug Fixes.\r\n\r\n---\r\n\r\n### 🚀 Improvements\r\n\r\n- **`CalendarConfigProviderTemporal`** — New tree-shake-friendly entry at `@mezzanine-ui/react/temporal`, mirroring the existing `dayjs` / `moment` / `luxon` providers. Wraps the JS-native `Temporal` API (ES2026, Stage 4) so apps on Chrome 144+ / Firefox 139+ / Edge 144+ can drop their date library entirely. On older runtimes, register `@js-temporal/polyfill` once (Vite/CRA: at app entry; Next.js App Router: inside a Client Component) — `Calendar.mdx` and `COMPONENTS.md` document both setup patterns *(via `core@1.1.0`)*.\r\n\r\n  ```tsx\r\n  import { CalendarConfigProviderTemporal } from '@mezzanine-ui/react/temporal';\r\n\r\n  <CalendarConfigProviderTemporal defaultDateFormat=\"YYYY-MM-DD\">\r\n    <DatePicker />\r\n  </CalendarConfigProviderTemporal>\r\n  ```\r\n\r\n- **`Dropdown`** — New opt-in `flip?: boolean` prop (default `false`). When enabled, the dropdown automatically flips to the opposite side (`bottom-start` → `top-start`) if it would overflow the viewport, using floating-ui's `flip` middleware with `fallbackStrategy: 'bestFit'` and `padding: 8`. Off by default to preserve existing placement behaviour for current call sites — opt in per dropdown that needs it.\r\n- **`Pagination`** — The page-size dropdown now sets `flip` so the menu pops upward when the table sits at the bottom of the viewport. Previously the menu would render below the trigger and clip against the viewport edge.\r\n- **`Calendar` documentation** — `Calendar.mdx` rewrites the \"Choosing a date adapter\" section as a four-row table covering Moment / Day.js / Luxon / Temporal, including separate Vite/CRA and Next.js App Router polyfill setup snippets. The multi-adapter Storybook playground also gains a Temporal column for visual parity verification.\r\n\r\n### 🐛 Bug Fixes\r\n\r\n- **`Calendar` / `DatePicker` / `DateRangePicker` / `MultipleDatePicker`** — Day.js and Moment adapters now compute `getWeek` / `getWeekYear` / `isSameWeek` correctly for **non-ISO Monday-first locales** (`en-AU`, `en-NZ`, `ro-RO`, `sl-SI`, `hr-HR`, `tr-TR`, `uk-UA`, `lv-LV`, `zh-CN`, etc.). Previously these locales were treated as ISO because they're Monday-first, but per CLDR they require `minimalDays=1` (not ISO's `4`). The adapters now check both axes via a stricter `usesISOWeekRules` helper. Apps targeting these locales should re-verify any UI showing week numbers — `2027-01-01` in `en-AU` may now show as `W1` instead of `W53` *(via `core@1.1.0`)*.\r\n- **`Calendar`** — Day.js and Moment adapters now apply the locale to the dayjs/moment instance before week-related operations (`.week()`, `.startOf('week')`, `.isSame(other, 'week')`). Without an explicit `.locale()` call, both libraries fell back to the global default (typically Sunday-first English), producing wrong week boundaries for non-default locales. This was a latent bug previously masked because all Sunday-first locales agree with the default and all Monday-first locales used to take the ISO fast-path *(via `core@1.1.0`)*.\r\n- **`Calendar`** — Day.js adapter's `getWeekYear` now matches `moment.weekYear()` at year-end. Day.js has no native locale `.weekYear()`, so the previous code returned `.year()` (calendar year), diverging from Moment for cases like `2025-12-28` in `en-US` (Moment: `2026`, Day.js: `2025`). The adapter now applies the same boundary heuristic Moment uses internally *(via `core@1.1.0`)*.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2. The `Temporal` adapter additionally requires either a runtime with native `Temporal` support (Chrome 144+, Firefox 139+, Edge 144+) or `@js-temporal/polyfill` ≥ 0.5 registered at startup.\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.1.0...@mezzanine-ui/react@1.2.0"
+      "tag": "@mezzanine-ui/react@1.4.2",
+      "name": "@mezzanine-ui/react@1.4.2",
+      "published": "2026-07-21T03:10:36Z",
+      "url": "https://github.com/Mezzanine-UI/mezzanine/releases/tag/%40mezzanine-ui/react%401.4.2",
+      "body": "## `@mezzanine-ui/react@1.4.2`\r\n\r\n> Patch release fixing `AutoComplete` option matching (now case-insensitive by default, aligning with Angular) and a `Dropdown` focus race that could select the wrong option in a filtered list.\r\n\r\n---\r\n\r\n### 🐛 Bug Fixes\r\n\r\n- **`AutoComplete`** — Option filtering is now **case-insensitive by default**. The filter built its `RegExp` without the `i` flag, so typing `vir` matched nothing even though `Virginia` was in the list. The Angular `AutoComplete` has always lowercased both sides, making React the outlier — this brings them back in line. The `addable` duplicate check runs through the same rule (via a new `isSameOptionName` helper), so if typing `colorado` surfaces `Colorado`, the create action no longer offers to create a duplicate. A new `caseSensitive` prop (default `false`) opts back into the previous case-sensitive matching for consumers that intentionally distinguish items by casing.\r\n- **`AutoComplete`** — The `caseSensitive` flag is now honoured by bulk-create dedup. `processBulkCreate` and `getPendingCreateList` hard-coded `toLowerCase()` when deduping pasted input against selected values and existing options, so with `caseSensitive` enabled a differently-cased entry (e.g. pasting `Apple` while a lowercase `apple` option exists) was silently dropped. Both dedup checks now route through a shared `normalizeOptionName` helper that respects the flag.\r\n- **`Dropdown` / `AutoComplete`** — Pressing an option no longer selects the wrong item in a filtered list. Option rows fire selection on `click` (mouseup), but nothing prevented the `mousedown` default, so pressing an option blurred the trigger input first. Consumers that reset search text on blur (notably `AutoComplete`) cleared the filter synchronously, re-rendering the full option list under the cursor — the following `click` then landed on whichever option had shifted into that row, selecting the wrong item or none. The listbox root now prevents the `mousedown` default so focus stays on the trigger; the header region is excluded so an `inputPosition=\"inside\"` input stays clickable.\r\n\r\n---\r\n\r\n**Compatibility**: requires `@mezzanine-ui/core` ≥ 1.1.0, `@mezzanine-ui/system` ≥ 1.0.2, `@mezzanine-ui/icons` ≥ 1.0.2\r\n\r\n**Full Changelog**: https://github.com/Mezzanine-UI/mezzanine/compare/@mezzanine-ui/react@1.4.1...@mezzanine-ui/react@1.4.2"
     }
   ],
   "propsDiff": [
@@ -258,6 +230,7 @@
         "customWidth",
         "emptyIcon",
         "emptyText",
+        "flip",
         "globalPortal",
         "listboxId",
         "listboxLabel",
@@ -321,15 +294,6 @@
         "showPageSizeOptions",
         "siblingCount",
         "total"
-      ]
-    },
-    {
-      "component": "Popper",
-      "propsAdded": [
-        "onPlacementChange"
-      ],
-      "propsRemoved": [
-        ""
       ]
     },
     {
@@ -534,7 +498,7 @@
     {
       "component": "Dropdown",
       "action": "UPDATE_PROPS",
-      "reason": "Props added: ; Props removed: computed, customWidth, emptyIcon, emptyText, globalPortal, listboxId, listboxLabel, loadingPosition, loadingText, maxHeight, minWidth, onActionCancel, onActionClear, onActionConfirm, onActionCustom, onClose, onItemHover, onLeaveBottom, onOpen, onReachBottom, onScroll, onSelect, onVisibilityChange, open, options, placement, sameWidth, scrollbarDefer, scrollbarDisabled, scrollbarMaxWidth, scrollbarOptions, showActionShowTopBar, showDropdownActions, status, target, toggleCheckedOnClick, type, zIndex",
+      "reason": "Props added: ; Props removed: computed, customWidth, emptyIcon, emptyText, flip, globalPortal, listboxId, listboxLabel, loadingPosition, loadingText, maxHeight, minWidth, onActionCancel, onActionClear, onActionConfirm, onActionCustom, onClose, onItemHover, onLeaveBottom, onOpen, onReachBottom, onScroll, onSelect, onVisibilityChange, open, options, placement, sameWidth, scrollbarDefer, scrollbarDisabled, scrollbarMaxWidth, scrollbarOptions, showActionShowTopBar, showDropdownActions, status, target, toggleCheckedOnClick, type, zIndex",
       "priority": "HIGH",
       "propsAdded": [
         ""
@@ -544,6 +508,7 @@
         "customWidth",
         "emptyIcon",
         "emptyText",
+        "flip",
         "globalPortal",
         "listboxId",
         "listboxLabel",
@@ -613,18 +578,6 @@
         "showPageSizeOptions",
         "siblingCount",
         "total"
-      ]
-    },
-    {
-      "component": "Popper",
-      "action": "UPDATE_PROPS",
-      "reason": "Props added: onPlacementChange; Props removed: ",
-      "priority": "HIGH",
-      "propsAdded": [
-        "onPlacementChange"
-      ],
-      "propsRemoved": [
-        ""
       ]
     },
     {

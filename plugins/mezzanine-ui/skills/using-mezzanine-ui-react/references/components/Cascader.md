@@ -183,7 +183,7 @@ When the selected path is too long to fit in the trigger input width, the Cascad
 
 **Hover Tooltip**: When collapsed, hovering over the trigger displays a tooltip showing the full path with all intermediate items.
 
-**Scrollable Panels**: Each `CascaderPanel` column internally wraps its option list with the Mezzanine `Scrollbar` component, which activates custom scrolling styles when `maxHeight` (passed from `menuMaxHeight`) is set and options exceed the available height.
+**Scrollable Panels**: Each `CascaderPanel` column internally wraps its option list with the Mezzanine `Scrollbar` component (internal, deprecated in 1.4.1), which activates custom scrolling styles when `maxHeight` (passed from `menuMaxHeight`) is set and options exceed the available height. This is an internal implementation detail — scrolling behavior is configured exclusively through the props documented above.
 
 ### Example with Long Path
 

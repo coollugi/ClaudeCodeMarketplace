@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-autocomplete--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.4.2 (2026-08-07)
 
 Autocomplete component combining input with dropdown menu. Supports search filtering and dynamic option creation. Internally uses `Dropdown` and `SelectTrigger` composition.
 
@@ -37,6 +37,7 @@ type AutoCompleteProps = AutoCompleteSingleProps | AutoCompleteMultipleProps;
 | ---------------------------- | ------------------------------------------------------ | ---------------------- | ---------------------------------------- |
 | `addable`                    | `boolean`                                              | `false`                | Whether options can be dynamically added |
 | `asyncData`                  | `boolean`                                              | `false`                | Whether data is async                    |
+| `caseSensitive`              | `boolean`                                              | `false`                | Whether option matching respects letter casing. When `false` (default), typed text matches options regardless of case (e.g. `colorado` matches `Colorado`). Applies to both option filtering and the duplicate check used by `addable` mode. |
 | `clearSearchText`            | `boolean`                                              | `true`                 | Whether to clear search text on blur. When false, typed text persists after blur. In single mode, a clearable icon appears if user typed without selecting. |
 | `createSeparators`           | `string[]`                                             | `[',', '+', '\n']`     | Separator characters for creating options |
 | `createActionText`           | `(text: string) => string`                             | -                      | Custom create button text function       |
@@ -316,6 +317,10 @@ interface SelectValue {
 
 // Input selector mode
 type AutoCompleteSelector = 'input' | 'selection';
+
+// Option name comparison helpers (used internally for filtering + addable duplicate detection)
+function normalizeOptionName(name: string, caseSensitive?: boolean): string;
+function isSameOptionName(a: string, b: string, caseSensitive?: boolean): boolean;
 ```
 
 ---
@@ -448,3 +453,4 @@ const handleSearch = async (input) => {
 3. **loadingPosition 預設值**：預設為 'bottom'
 4. **overflowStrategy 預設值**：多重模式預設為 'counter'（顯示 "+N"），若需顯示所有標籤改為 'wrap'
 5. **新增 onRemoveCreated**：允許在模糊時自動清理未選中的已建立項目
+6. **caseSensitive 預設值（1.4.2 新增）**：預設為 `false`，即選項比對（含 `addable` 模式的重複偵測）不分大小寫，例如輸入 `colorado` 可比對到選項 `Colorado`。若需嚴格區分大小寫比對，設定 `caseSensitive={true}`

@@ -1,13 +1,13 @@
 ---
 name: using-mezzanine-ui-react
-description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.4.1). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Also defines the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
+description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.4.2). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Also defines the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
 ---
 
 # Mezzanine-UI Design System
 
 **Core principle: All frontend development MUST prefer the Mezzanine-UI design system.**
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-07-01.
+> Baseline: `@mezzanine-ui/react` `1.4.2` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-08-07.
 >
 > Check latest version: `npm view @mezzanine-ui/react versions` or see [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases).
 
@@ -246,6 +246,18 @@ export default function ProductListPage(): JSX.Element {
 
 ---
 
+## What's New in v1.4.2
+
+> Patch release：修正 `AutoComplete` 選項比對與 `Dropdown` focus race。詳見 [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases)。
+
+### Bug Fixes
+
+- **`AutoComplete`** — 選項過濾預設改為**大小寫不敏感**（原本 `RegExp` 沒加 `i` flag，打 `vir` 配不到 `Virginia`），與 Angular 版行為對齊。新增 `caseSensitive` prop（預設 `false`）可選回舊的大小寫敏感比對。`addable` 的重複檢查（`isSameOptionName`）與 bulk-create 去重（`normalizeOptionName`）皆改走同一套規則，並尊重 `caseSensitive` 設定。
+- **`Dropdown` / `AutoComplete`** — 修正在已過濾清單中點選項目會選錯的問題。Listbox 根節點現在會擋掉 `mousedown` 預設行為，避免點擊瞬間觸發 blur 導致清單重排、點到錯的選項（`inputPosition="inside"` 的輸入框區域除外，仍可正常點擊）。
+
+<details>
+<summary>Previous: What's New in 1.4.1</summary>
+
 ## What's New in v1.4.1
 
 > 涵蓋 1.2.0 – 1.4.1（5 個 release）累積變更。詳見各元件文件與 [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases)。
@@ -334,6 +346,8 @@ export default function ProductListPage(): JSX.Element {
 ### `@mezzanine-ui/icons` 1.0.2 · `@mezzanine-ui/system` 1.0.2 (2026-04-17)
 
 - Monorepo-sync version bump only. No code change.
+
+</details>
 
 </details>
 
@@ -742,7 +756,7 @@ document.documentElement.setAttribute('data-density', 'compact');
 When Mezzanine-UI releases a new version, use the `/sync-mezzanine-ui` command to refresh all skill content:
 
 ```
-/sync-mezzanine-ui 1.4.1
+/sync-mezzanine-ui 1.4.2
 ```
 
 This orchestrates a team of agents to:

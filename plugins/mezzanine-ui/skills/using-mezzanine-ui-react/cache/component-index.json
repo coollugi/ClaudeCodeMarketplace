@@ -1,6 +1,6 @@
 {
-  "version": "1.4.1",
-  "lastUpdated": "2026-07-01T08:39:33Z",
+  "version": "1.4.2",
+  "lastUpdated": "2026-08-07T05:03:03Z",
   "figmaFileKey": "gjGdP49GQZzOeQf0bNOFlt",
   "componentCount": 6178,
   "components": {
@@ -8527,7 +8527,7 @@
     },
     "9233:13231": {
       "key": "7d61152bf826ed8a1af1858ae030789547249ea4",
-      "name": "Type=Link & Status, State or Style=Pointer 👆",
+      "name": "Type=Link & Status, State or Style=Pointer \ud83d\udc46",
       "description": "pointer",
       "remote": true,
       "componentSetId": "9233:13091",
@@ -11761,7 +11761,7 @@
     },
     "15566:59256": {
       "key": "d6c5868ef91ef445e2042b0ab03fb0aa0bfa1b71",
-      "name": "Type=Top-Left↖︎",
+      "name": "Type=Top-Left\u2196\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -14153,7 +14153,7 @@
     },
     "15210:119488": {
       "key": "2b63084b594c955d4046a376a2f6a6b70c077068",
-      "name": "Type=Bottom↓",
+      "name": "Type=Bottom\u2193",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -23452,7 +23452,7 @@
     },
     "15790:17039": {
       "key": "78a9cb63404d3c20105586bf3000ed60449148e1",
-      "name": "Type=檔案類型",
+      "name": "Type=\u6a94\u6848\u985e\u578b",
       "description": "",
       "remote": false,
       "componentSetId": "15790:17041",
@@ -33471,7 +33471,7 @@
     },
     "15210:117915": {
       "key": "1ca90aca964908e2ce3c5bdc01d1d30a1442a7ee",
-      "name": "Type=Top↑",
+      "name": "Type=Top\u2191",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -38107,7 +38107,7 @@
     },
     "16151:104856": {
       "key": "5139d7f3cd216746b397265414511b1776527d13",
-      "name": "state=Column ↔︎",
+      "name": "state=Column \u2194\ufe0e",
       "description": "col-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -39066,7 +39066,7 @@
     },
     "15210:119528": {
       "key": "455a25562f8c57b9bfc9989a9e058409dfce2a4f",
-      "name": "Type=Left←",
+      "name": "Type=Left\u2190",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39074,7 +39074,7 @@
     },
     "15210:119548": {
       "key": "ca10739f26711f0e4df60bae3bd574c7e9889e41",
-      "name": "Type=Right→",
+      "name": "Type=Right\u2192",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39082,7 +39082,7 @@
     },
     "15210:119417": {
       "key": "8af99b51f08cd25bfb958d8d956060300544a8e7",
-      "name": "Type=Top-Left↖︎",
+      "name": "Type=Top-Left\u2196\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39090,7 +39090,7 @@
     },
     "15210:119493": {
       "key": "cdf834d6a91ad567d030e2a25638b75d7ebe7f11",
-      "name": "Type=Bottom-Left↙︎",
+      "name": "Type=Bottom-Left\u2199\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39098,7 +39098,7 @@
     },
     "15210:119468": {
       "key": "1552182a09abdb95188f2b568fde7dd0384030ad",
-      "name": "Type=Top-Right↗︎",
+      "name": "Type=Top-Right\u2197\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39106,7 +39106,7 @@
     },
     "15210:119498": {
       "key": "da2911e1f8e3ba30c4a82237b20a8302379d5a8e",
-      "name": "Type=Bottom-Right↘︎",
+      "name": "Type=Bottom-Right\u2198\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15210:117916",
@@ -39114,7 +39114,7 @@
     },
     "15566:59233": {
       "key": "563857d004b3e10fd9caf015a860ace4bc75812e",
-      "name": "Type=Top↑",
+      "name": "Type=Top\u2191",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -39122,7 +39122,7 @@
     },
     "15566:59241": {
       "key": "ad2051104d855c7e1b3e48466acaa3fc8738b8ee",
-      "name": "Type=Bottom↓",
+      "name": "Type=Bottom\u2193",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -39130,7 +39130,7 @@
     },
     "15566:59261": {
       "key": "c72996c5ed1bfffac5c5d0cf253c74fef8aeb04d",
-      "name": "Type=Bottom-Left↙︎",
+      "name": "Type=Bottom-Left\u2199\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -39138,7 +39138,7 @@
     },
     "15566:59266": {
       "key": "94e6742cec046b7feb3756f1eab86563c3ff6715",
-      "name": "Type=Top-Right↗︎",
+      "name": "Type=Top-Right\u2197\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -39146,7 +39146,7 @@
     },
     "15566:59271": {
       "key": "c71abd3a46423cefeafa5de15c82dcfb18767b6e",
-      "name": "Type=Bottom-Right↘︎",
+      "name": "Type=Bottom-Right\u2198\ufe0e",
       "description": "",
       "remote": false,
       "componentSetId": "15566:59232",
@@ -39435,7 +39435,7 @@
     },
     "15694:34961": {
       "key": "3e696d349a298fd4ced4e4c0bb0cc50ff0fe6ab7",
-      "name": "Type=Two Buttons（Fill）",
+      "name": "Type=Two Buttons\uff08Fill\uff09",
       "description": "",
       "remote": false,
       "componentSetId": "15790:57074",
@@ -39603,7 +39603,7 @@
     },
     "21241:24449": {
       "key": "545de978267218fc73943171cd2be2da3dbfafde",
-      "name": "Type=Two Buttons（Fixed）",
+      "name": "Type=Two Buttons\uff08Fixed\uff09",
       "description": "",
       "remote": false,
       "componentSetId": "15790:57074",
@@ -40113,7 +40113,7 @@
     },
     "22443:36892": {
       "key": "4549b0f09a0d75fde5cc6fd1cfdfc7408a9e53f0",
-      "name": "Page_庫存清單_料號模式",
+      "name": "Page_\u5eab\u5b58\u6e05\u55ae_\u6599\u865f\u6a21\u5f0f",
       "description": "",
       "remote": true,
       "documentationLinks": []
@@ -40348,7 +40348,7 @@
     },
     "22443:31827": {
       "key": "ec09adee69b02aa830548249c4eb9ea7d37398f9",
-      "name": "Align=Left, With Help=True, Sorting=↕",
+      "name": "Align=Left, With Help=True, Sorting=\u2195",
       "description": "",
       "remote": true,
       "componentSetId": "22443:31818",
@@ -40506,7 +40506,7 @@
     },
     "22443:36728": {
       "key": "90065f10b5555e755168348f185f9e30a928e56e",
-      "name": "Table Row_庫存查詢_level2_料號模式",
+      "name": "Table Row_\u5eab\u5b58\u67e5\u8a62_level2_\u6599\u865f\u6a21\u5f0f",
       "description": "",
       "remote": true,
       "documentationLinks": []
@@ -40521,7 +40521,7 @@
     },
     "22443:32562": {
       "key": "18e397320e6752ca935a0c29db2d62616fbdaa08",
-      "name": "type=Default, state=異動項目",
+      "name": "type=Default, state=\u7570\u52d5\u9805\u76ee",
       "description": "",
       "remote": true,
       "componentSetId": "22443:32521",
@@ -41188,7 +41188,7 @@
     "15980:1276": {
       "key": "fbd64a56380c102a1fb499b987edba77340d6170",
       "name": "type=Basic",
-      "description": "ℹ️ Provide a placeholder while you wait for content to load, or to visualize content that doesn't exist yet.",
+      "description": "\u2139\ufe0f Provide a placeholder while you wait for content to load, or to visualize content that doesn't exist yet.",
       "remote": true,
       "componentSetId": "15980:1275",
       "documentationLinks": [
@@ -41219,7 +41219,7 @@
     "15980:1279": {
       "key": "158c0272809a4862358def31804e908c4e742c53",
       "name": "type=Complex",
-      "description": "ℹ️ Provide a placeholder while you wait for content to load, or to visualize content that doesn't exist yet.",
+      "description": "\u2139\ufe0f Provide a placeholder while you wait for content to load, or to visualize content that doesn't exist yet.",
       "remote": true,
       "componentSetId": "15980:1275",
       "documentationLinks": [
@@ -41244,23 +41244,23 @@
     },
     "16006:48428": {
       "key": "9f9407017eaa5d1f9058c02edece160fd5a28ca2",
-      "name": "操作按钮=false, 头像=false",
-      "description": "展示名：骨架屏",
+      "name": "\u64cd\u4f5c\u6309\u94ae=false, \u5934\u50cf=false",
+      "description": "\u5c55\u793a\u540d\uff1a\u9aa8\u67b6\u5c4f",
       "remote": true,
       "componentSetId": "16006:48427",
       "documentationLinks": []
     },
     "16006:48423": {
       "key": "d47a5bb74e1d67f3148b8482920d70c84c1f096f",
-      "name": "方向=宽",
-      "description": "展示名：宽度调节器调整自动布局面板中的“项目间距”",
+      "name": "\u65b9\u5411=\u5bbd",
+      "description": "\u5c55\u793a\u540d\uff1a\u5bbd\u5ea6\u8c03\u8282\u5668\u8c03\u6574\u81ea\u52a8\u5e03\u5c40\u9762\u677f\u4e2d\u7684\u201c\u9879\u76ee\u95f4\u8ddd\u201d",
       "remote": true,
       "componentSetId": "16006:48419",
       "documentationLinks": []
     },
     "16006:48441": {
       "key": "905f47975008aa7b0bceca5c2bff39884fa562eb",
-      "name": "操作按钮=false, 头像=true",
+      "name": "\u64cd\u4f5c\u6309\u94ae=false, \u5934\u50cf=true",
       "description": "",
       "remote": true,
       "componentSetId": "16006:48427",
@@ -46713,7 +46713,7 @@
     },
     "9233:13179": {
       "key": "65e60b9dac1cda2e2223bff56923166328f9c8d8",
-      "name": "Type=Drag n Drop, State or Style=Grabbing ✊",
+      "name": "Type=Drag n Drop, State or Style=Grabbing \u270a",
       "description": "",
       "remote": true,
       "componentSetId": "9233:13091",
@@ -47343,7 +47343,7 @@
     },
     "16151:104835": {
       "key": "dec515a701dce0c61f08fdf3f8959b8aecda204b",
-      "name": "state=Up & Down ↕︎",
+      "name": "state=Up & Down \u2195\ufe0e",
       "description": "ns-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47351,7 +47351,7 @@
     },
     "16151:104838": {
       "key": "11f506b28882f85d076c8608de02dd82b8ab2cc5",
-      "name": "state=Left Right ↔︎",
+      "name": "state=Left Right \u2194\ufe0e",
       "description": "ew-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47359,7 +47359,7 @@
     },
     "16151:104841": {
       "key": "5d5e82191b6f93b15ee47c91f12fc92a6124d4d1",
-      "name": "state=Down ↓",
+      "name": "state=Down \u2193",
       "description": "s-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47367,7 +47367,7 @@
     },
     "16151:104844": {
       "key": "055071768d41bb1fec01cdca7f67ad305282c2c7",
-      "name": "state=Right →",
+      "name": "state=Right \u2192",
       "description": "e-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47375,7 +47375,7 @@
     },
     "16151:104847": {
       "key": "3800eb540fe427b3304994e1eb3ef418a9e5d7d7",
-      "name": "state=Up ↑",
+      "name": "state=Up \u2191",
       "description": "n-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47383,7 +47383,7 @@
     },
     "16151:104850": {
       "key": "3716339521f622dfe75041eaabcca3d18eba152a",
-      "name": "state=Left ←",
+      "name": "state=Left \u2190",
       "description": "w-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47391,7 +47391,7 @@
     },
     "16151:104853": {
       "key": "a930ca1d227089afc3c1fdedc8ebfcc33763b95a",
-      "name": "state=Row ↕︎",
+      "name": "state=Row \u2195\ufe0e",
       "description": "row-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47399,7 +47399,7 @@
     },
     "16151:104859": {
       "key": "c36eb85e07ed9585e4e9b8b44bf9c602f60d3304",
-      "name": "state=Row Down ↓",
+      "name": "state=Row Down \u2193",
       "description": "Row resize Down",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47407,7 +47407,7 @@
     },
     "16151:104862": {
       "key": "ad8047cb9f0d5c5a365d7c3799e7f1c326617317",
-      "name": "state=Column R →",
+      "name": "state=Column R \u2192",
       "description": "Column resize Right",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47415,7 +47415,7 @@
     },
     "16151:104865": {
       "key": "4c53c1b7297fe98635a003a38720f1472ed2ccc7",
-      "name": "state=Row Up ↑",
+      "name": "state=Row Up \u2191",
       "description": "Row resize Up",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47423,7 +47423,7 @@
     },
     "16151:104868": {
       "key": "98f12d124052cd2ef462b34e764e55c27f92cdeb",
-      "name": "state=Column L ←",
+      "name": "state=Column L \u2190",
       "description": "Column resize Left",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47431,7 +47431,7 @@
     },
     "16151:104871": {
       "key": "e701d6e7c5832a8d1581aeae7386890b6be705ec",
-      "name": "state=Up L & Down R ⤡",
+      "name": "state=Up L & Down R \u2921",
       "description": "nwse-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47439,7 +47439,7 @@
     },
     "16151:104874": {
       "key": "24286d900241789e0018e728982b9f2dd6bc2daf",
-      "name": "state=Up R & Btm L ⤢",
+      "name": "state=Up R & Btm L \u2922",
       "description": "nesw-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47447,7 +47447,7 @@
     },
     "16151:104877": {
       "key": "3a4f88ae67019d44a458d0c2e059e6a801afbe86",
-      "name": "state=Down Left ↙︎",
+      "name": "state=Down Left \u2199\ufe0e",
       "description": "sw-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47455,7 +47455,7 @@
     },
     "16151:104880": {
       "key": "b9b62c14549a0aca19f3779dda1f1ec4351dfad3",
-      "name": "state=Down Right ↘︎",
+      "name": "state=Down Right \u2198\ufe0e",
       "description": "se-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47463,7 +47463,7 @@
     },
     "16151:104883": {
       "key": "97795640777cf690b8f53f6f84987957fb37d840",
-      "name": "state=Up Right ↗︎",
+      "name": "state=Up Right \u2197\ufe0e",
       "description": "ne-resize",
       "remote": false,
       "componentSetId": "16151:104830",
@@ -47471,7 +47471,7 @@
     },
     "16151:104886": {
       "key": "b41b02fc5f11fa24dbb2c2e4d65e8c66312443ca",
-      "name": "state=Up Left ↖︎",
+      "name": "state=Up Left \u2196\ufe0e",
       "description": "nw-resize",
       "remote": false,
       "componentSetId": "16151:104830",

@@ -44,6 +44,8 @@ type PageHeaderProps = NativeElementPropsWithoutKeyAndRef<'header'> & {
 
 ---
 
+> **Note**: The `ContentHeader` component is deprecated in 1.4.1 but remains internally required by PageHeader. Import it via `@mezzanine-ui/react/ContentHeader` sub-path. See [ContentHeader.md](ContentHeader.md) for migration guidance.
+
 ## Children Validation (重要 — 過濾並警告)
 
 PageHeader 在 runtime 透過 `flattenChildren` + `isValidElement` + `child.type === Breadcrumb || child.type === ContentHeader` 檢查每個直接子元素。**任何不在白名單內的元件都會被丟棄並 console.warn**：

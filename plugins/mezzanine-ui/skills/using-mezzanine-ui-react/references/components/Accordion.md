@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Display/Accordion`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Accordion) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Accordion) · Verified 1.4.2 (2026-08-07)
 
 Collapsible accordion panels for expanding/collapsing content areas. Supports controlled/uncontrolled modes and group management.
 

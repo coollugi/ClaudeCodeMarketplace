@@ -1,13 +1,13 @@
 # Switch Component
 
-> ⚠️ **REMOVED in 1.4.1** (deprecated in 1.1.0) — This component is no longer exported from `@mezzanine-ui/react`.
-> **Use [Toggle](Toggle.md) instead.** The component was replaced by Toggle; import and use Toggle directly.
+> ⚠️ **DEPRECATED in 1.4.1** — This component is no longer exported from `@mezzanine-ui/react`.
+> Use [Toggle](Toggle.md) instead.
 
 > **Category**: Data Entry (removed)
 >
 > **Storybook**: `Data Entry/Toggle` (successor component)
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · **Removed** in 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · **Deprecated** in 1.4.1 (2026-07-01)
 
 Toggle switch component for switching between two states (on/off). **The `Switch` component was renamed to `Toggle` in 1.0.0.** This document is retained for migration reference only — all new code should import and use `Toggle` directly. See [Toggle.md](Toggle.md) for the canonical 1.0.0 API.
 

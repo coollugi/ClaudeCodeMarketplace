@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Internal/Dropdown`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Dropdown) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Dropdown) · Verified 1.4.2 (2026-08-07)
 
 A low-level dropdown component for displaying option lists. Typically used as the internal implementation of higher-level components like Select and AutoComplete, but can also be used independently with Button or Input. Supports flat list, grouped, and tree structures, with built-in scrolling, loading states, keyboard shortcuts, and action buttons.
 
@@ -537,6 +537,7 @@ function FlippingDropdown() {
 ## Behavior Notes
 
 - **Empty status with `loadingPosition='bottom'`**: When `loadingPosition='bottom'` is set and `status='empty'`, the empty status always renders as full-area regardless of `loadingPosition`, ensuring it is visible.
+- **Correct option selection in filtered lists (v1.4.2+)**: The listbox root now prevents the `mousedown` default so the trigger keeps focus while an option is pressed (the header region is excluded so an `inputPosition="inside"` input stays clickable). This fixes a race where consumers resetting search text on blur (e.g. `AutoComplete`) could re-render the filtered option list under the cursor between `mousedown` and `click`, causing the wrong option — or none — to be selected.
 
 ---
 
