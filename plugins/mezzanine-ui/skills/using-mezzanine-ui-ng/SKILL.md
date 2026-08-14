@@ -1,6 +1,6 @@
 ---
 name: using-mezzanine-ui-ng
-description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.4, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Also defines the page layout padding contract (mznPageHeader / mznPageFooter / mznSection ship their own padding — page containers must not add horizontal padding). Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, laying out a page skeleton, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal, page layout, container padding, 版面對不齊, 雙層 padding. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
+description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.4, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Defines the component-selection contract (a UI-concept-to-directive reverse index — status chips are MznBadge not MznTag, segmented controls are MznRadio type="segment" not buttons — plus the rule that needing a class or ::ng-deep override of background/color/border means the wrong directive was chosen) and the page layout padding contract (mznPageHeader / mznPageFooter / mznSection ship their own padding — page containers must not add horizontal padding). Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, laying out a page skeleton, picking which directive to use, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal, page layout, container padding, 版面對不齊, 雙層 padding, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式, ng-deep. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
 ---
 
 # Mezzanine-UI Angular (`@mezzanine-ui/ng`)
@@ -372,6 +372,83 @@ Mezzanine **沒有**提供負責頁面 gutter 的容器 — `mznLayout` / `mznLa
 
 ---
 
+## 元件選用（必讀 — 先用「UI 概念」反查 directive 名）
+
+**放任何 directive 進 template 之前先讀這段。** Mezzanine 的元件名反映**實作結構**，不是使用者概念 —— 分段控制項的實作是 `MznRadio type="segment"`，被歸類在 Data Entry；狀態標籤的實作是 `MznBadge`，不是 `MznTag`。若照其他設計系統（MUI / Ant Design / Bootstrap / Angular Material）的先驗去猜名稱，會系統性地選錯，而且**錯法看起來很合理**：找不到 `color` input 時，最自然的推論是「這個元件比較陽春，顏色要自己補」，而不是「顏色不在它的職責範圍內 → 我選錯元件了」。
+
+### 三條鐵則
+
+1. **先查下面的反查表**，用「我要做的 UI 長什麼樣」去找 directive 名，不要用「這東西在別的設計系統叫什麼」去猜。
+2. **表上沒有 → 全文搜尋 `references/components/` 的 `Aliases` 行**（各元件文件在摘要句下方列出了其他設計系統與 Figma 的慣用名）。還是找不到才考慮用既有元件組合，**永遠不要自建元件取代**。
+3. **Tripwire（最重要）：如果你需要在 `.component.scss` 覆寫元件的 `background` / `color` / `border` 才能做出設計稿 —— 停下來，這幾乎一定代表選錯元件。**
+   回頭查表，不要在專案裡長出一套與設計系統平行的私有色階。
+   （純排版位移的 `margin` / `width` / `flex` / `grid-area` 不算，那是版面職責。Angular 的 `::ng-deep` 出現在元件外觀相關的規則上，同樣是這個訊號。）
+
+   > **這條規則涵蓋「重新指定 CSS 變數」，不只是直接寫 `background:`。**
+   > 在某個 class 裡把元件內部用到的語意 token 指到別的 token —— 例如
+   > `.status-approved { --mzn-color-background-brand-faint: var(--mzn-color-background-success-faint); }`
+   > —— **同樣是覆寫元件外觀**，而且更危險：它看起來像「只用了 design tokens」，實際上是在偽造元件的語意。
+   >
+   > 分清楚兩件事：
+   > - ✅ **用 design tokens** = 在**你自己的版面元素**上使用 `var(--mzn-spacing-*)`、`var(--mzn-color-*)`（例如 page body 的 `padding-inline`）
+   > - ❌ **重新定義 design tokens** = 在元件節點或其祖先上把 `--mzn-color-*` 指到別的值，藉此改變元件外觀
+   >
+   > 元件的語意色只能透過**元件自己的 input**（`variant` / `severity` / `type`）選擇。
+   > 一個元件沒有提供選語意色的 input，就代表**它不負責表達語意** —— 那是選錯元件，不是缺功能。
+
+> 鐵則 3 是本段唯一**可偵測**的訊號：它把「我推論錯了」這種看不見的失誤，轉成寫 SCSS 當下就能自問的條件。
+
+### UI 概念 → directive 反查表
+
+| 你要做的 UI（含他家設計系統慣用名）                                        | Mezzanine directive                                                | 常見誤用                                    |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------- |
+| 狀態晶片 / status chip / 已核准・失敗・停用                                | `MznBadge` `variant="dot-*"` + `text`                              | ❌ `MznTag` + `class` 覆寫底色              |
+| 分類標籤 / Chip (MUI) / Tag (AntD) / Pill                                  | `MznTag`（描邊外觀用 `readOnly`）                                  | ❌ 自刻 `span` + border                     |
+| 分段控制項 / Segmented Control / 檢視切換 / 排序切換 / Toggle Button Group | `MznRadioGroup` + `MznRadio type="segment"`                        | ❌ 多顆 `mznButton` 用 variant 差異模擬選中 |
+| 開關 / Switch (MUI・AntD)                                                  | `MznToggle`                                                        | ❌ 自刻 checkbox + CSS                      |
+| 未讀數字氣泡 / 角落紅點                                                    | `MznBadge` `variant="count-*"` / `dot-*` + 投影內容                | ❌ 自刻絕對定位圓點                         |
+| 頁面級・系統級警示橫幅                                                     | `MznAlertBanner`（Portal `alert` 層，`sticky; top: 0`）            | ❌ 拿來當區塊內說明（它不會待在原地）       |
+| 區塊內說明 / 警語 / 表單提示                                               | `MznInlineMessage`                                                 | ❌ `MznAlertBanner`                         |
+| Toast / Snackbar / 操作完成浮動提示                                        | `MznMessage`（imperative API）                                     | ❌ 自刻 toast                               |
+| 站內通知列表 / 通知中心                                                    | `MznNotificationCenter`                                            | ❌ 用 `MznMessage` 堆疊                     |
+| 卡片式頁面區塊 / Panel / Fieldset                                          | `MznSection`（自帶內距與底色）                                     | ❌ 自刻 `div` + box-shadow                  |
+| 圖文卡片 / 商品卡                                                          | `MznBaseCard` / `MznQuickActionCard` / `MznCardGroup`              | ❌ `MznSection`                             |
+| 標題-內容成對的詳情資訊 / Descriptions (AntD)                              | `MznDescription` + `MznDescriptionTitle` / `MznDescriptionContent` | ❌ 兩欄 `MznTable`                          |
+| 空資料畫面 / Empty state                                                   | `MznEmpty`                                                         | ❌ `MznResultState`                         |
+| 操作結果頁（成功 / 失敗 / 404）                                            | `MznResultState`                                                   | ❌ `MznEmpty`                               |
+| 載入骨架 / Skeleton screen                                                 | `MznSkeleton`                                                      | ❌ `MznSpin` 蓋整頁                         |
+| 轉圈 loading（無進度）                                                     | `MznSpin`                                                          | ❌ `MznProgress`                            |
+| 有百分比的進度                                                             | `MznProgress`                                                      | ❌ `MznSpin`                                |
+| 多步驟流程指示 / Steps (AntD)                                              | `MznStepper`                                                       | ❌ 自刻圓圈 + 連線                          |
+| 選「值」的下拉                                                             | `MznSelect`                                                        | ❌ `MznDropdown`                            |
+| 選「動作」的下拉選單 / Menu                                                | `MznDropdown` + `MznDropdownItem` / `MznDropdownAction`            | ❌ `MznSelect`                              |
+| 滑過顯示說明                                                               | `MznTooltip`                                                       | ❌ 原生 `title` 屬性                        |
+| 文字溢出才顯示完整內容                                                     | `MznOverflowTooltip`                                               | ❌ `MznTooltip` + 自行量測寬度              |
+| 頁籤 / Tabs                                                                | `MznTabs` + `MznTabItem`                                           | ❌ 自刻按鈕列                               |
+| 篩選列                                                                     | `MznFilterArea` + `MznFilterLine` + `MznFilter`                    | ❌ 自排 `mznTextField` + `mznButton`        |
+
+> `@mezzanine-ui/ng` **沒有** `MznSwitch`（React 的 `Switch` 也已不在公開 API）。開關一律用 `MznToggle`。
+
+### 兩組最常錯的，記判斷句
+
+- **Tag vs Badge** —— 問自己：**「這個標籤在說『它是什麼』，還是『它現在怎麼樣』？」**
+  「是什麼」（分類、屬性、可篩選的標籤）→ `MznTag`；「現在怎麼樣」（狀態、結果、進度）→ `MznBadge variant="dot-*"`。
+  `MznTag` **沒有**語意顏色，這是刻意的，不是缺漏。詳見 [Tag.md](references/components/Tag.md) 與 [Badge.md](references/components/Badge.md)。
+- **Segmented Control** —— 設計師講 `Segmented Control`（Figma 元件名），程式碼叫 `Radio`。互斥的檢視切換、排序切換、篩選切換一律用 `MznRadioGroup` + `MznRadio type="segment"`，**不要用多顆 `mznButton` 的 variant 差異模擬選中狀態**。詳見 [Radio.md](references/components/Radio.md)。
+
+### 自查清單（UI 寫完前逐項確認）
+
+- [ ] 每個區塊都在反查表上找得到對應 directive，沒有自建元件取代 Mezzanine 既有元件？
+- [ ] **沒有任何 class / `::ng-deep` 在覆寫元件的 `background` / `color` / `border`**（鐵則 3）？
+- [ ] 狀態類的呈現用的是 `MznBadge`，不是 `MznTag` + 自訂色？
+- [ ] 互斥切換用的是 `MznRadio type="segment"`，不是多顆 `mznButton`？
+- [ ] 區塊內的說明／警語用 `MznInlineMessage`，沒有誤用會浮到頁面頂端的 `MznAlertBanner`？
+- [ ] 沒有動到元件既有的 UX 行為（只透過 inputs 與 design tokens 調整）？
+
+完整對照表、Figma 名稱對應與「為什麼會選錯」的機制分析見 [references/COMPONENT_SELECTION.md](references/COMPONENT_SELECTION.md)。
+
+---
+
 ## Architecture Overview
 
 ### Directive-based selectors
@@ -690,6 +767,7 @@ Design tokens, icon catalog, and Figma mappings are identical across React and A
 
 | Document                                            | Description                                      |
 | --------------------------------------------------- | ------------------------------------------------ |
+| [references/COMPONENT_SELECTION.md](references/COMPONENT_SELECTION.md) | UI 概念 → directive 反查、選錯元件的三種機制、元件邊界事實 |
 | [references/PATTERNS.md](references/PATTERNS.md)    | Angular pattern cookbook — page scaffolds, forms, layouts |
 | [references/SERVICES.md](references/SERVICES.md)    | DI services exported from `@mezzanine-ui/ng/services` |
 | [references/COMPONENTS.md](references/COMPONENTS.md)| Consolidated Angular component index with full API |
