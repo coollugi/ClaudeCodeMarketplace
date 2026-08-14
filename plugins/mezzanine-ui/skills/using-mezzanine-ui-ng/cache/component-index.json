@@ -79,6 +79,7 @@
         "active",
         "addable",
         "asyncData",
+        "caseSensitive",
         "clearSearchText",
         "clearable",
         "createActionText",
@@ -808,19 +809,20 @@
         "zIndex"
       ],
       "outputs": [
-        "actionCancelled",
-        "actionCleared",
-        "actionConfirmed",
-        "actionCustomClicked",
+        "actionCancel",
+        "actionClear",
+        "actionConfirm",
+        "actionCustom",
         "checkedChange",
         "clicked",
-        "closed",
+        "close",
         "hovered",
-        "itemHovered",
+        "itemHover",
         "leaveBottom",
         "opened",
         "reachBottom",
-        "selected",
+        "scroll",
+        "select",
         "visibilityChange"
       ]
     },
@@ -1657,10 +1659,14 @@
         "type"
       ],
       "outputs": [
-        "onLeaveBottom",
-        "onReachBottom",
-        "onScroll",
-        "selectionChange"
+        "blur",
+        "change",
+        "clear",
+        "focus",
+        "leaveBottom",
+        "reachBottom",
+        "scroll",
+        "tagClose"
       ]
     },
     "SelectionCard": {

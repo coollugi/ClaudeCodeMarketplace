@@ -94,19 +94,44 @@ import type { IconDefinition } from '@mezzanine-ui/icons';
 
 ## MznDropdown — Outputs
 
-| Output              | Type                               | Description                                                    |
-| ------------------- | ---------------------------------- | -------------------------------------------------------------- |
-| `selected`          | `OutputEmitterRef<DropdownOption>` | Fires when an option is selected                               |
-| `opened`            | `OutputEmitterRef<void>`           | Fires when dropdown opens                                      |
-| `closed`            | `OutputEmitterRef<void>`           | Fires when dropdown closes                                     |
-| `visibilityChange`  | `OutputEmitterRef<boolean>`        | Unified open/close event; emits `true` on open, `false` on close |
-| `actionCancelled`   | `OutputEmitterRef<void>`           | Cancel button clicked (requires `showDropdownActions`)         |
-| `actionCleared`     | `OutputEmitterRef<void>`           | Clear button clicked (requires `showDropdownActions`)          |
-| `actionConfirmed`   | `OutputEmitterRef<void>`           | Confirm button clicked (requires `showDropdownActions`)        |
-| `actionCustomClicked` | `OutputEmitterRef<void>`         | Custom action button clicked (`actionConfig.mode = 'custom'`)  |
-| `itemHovered`       | `OutputEmitterRef<number>`         | Fires with the 0-indexed option position on mouse hover        |
-| `leaveBottom`       | `OutputEmitterRef<void>`           | Fires when scroll leaves the bottom of the list                |
-| `reachBottom`       | `OutputEmitterRef<void>`           | Fires when the list is scrolled to the bottom                  |
+> ⚠️ **`1.0.0-rc.9` 全面改名（BREAKING）** —— 七個 output 改名，同時 popover 以 CDK Overlay 重寫。
+> 舊名在 rc.9 以後**不存在**，而 Angular template 綁一個不存在的 output **不會有編譯錯誤，只會靜默不觸發**。
+>
+> **只有 `MznDropdown` 主元件改名。** 子元件 `MznDropdownItem` / `MznDropdownAction` /
+> `MznDropdownItemCard` 的 output **維持舊名**（見本檔後續章節）—— 不要一律取代。
+
+| Output             | Type                                                            | Description                                                  |
+| ------------------ | --------------------------------------------------------------- | ------------------------------------------------------------ |
+| `select`           | `OutputEmitterRef<DropdownOption>`                              | 選取選項時觸發（**rc.9 前叫 `selected`**）                   |
+| `close`            | `OutputEmitterRef<void>`                                        | 選單關閉（**rc.9 前叫 `closed`**）                           |
+| `itemHover`        | `OutputEmitterRef<number>`                                      | 滑鼠移入選項，帶 0-based 索引（**rc.9 前叫 `itemHovered`**） |
+| `actionCancel`     | `OutputEmitterRef<void>`                                        | 點擊取消鈕（**rc.9 前叫 `actionCancelled`**）                |
+| `actionClear`      | `OutputEmitterRef<void>`                                        | 點擊清除鈕（**rc.9 前叫 `actionCleared`**）                  |
+| `actionConfirm`    | `OutputEmitterRef<void>`                                        | 點擊確認鈕（**rc.9 前叫 `actionConfirmed`**）                |
+| `actionCustom`     | `OutputEmitterRef<void>`                                        | 點擊自訂動作鈕（**rc.9 前叫 `actionCustomClicked`**）        |
+| `opened`           | `OutputEmitterRef<void>`                                        | 選單開啟（未改名）                                           |
+| `visibilityChange` | `OutputEmitterRef<boolean>`                                     | 開關統一事件；開啟送 `true`、關閉送 `false`（未改名）        |
+| `scroll`           | `OutputEmitterRef<{ scrollTop: number; maxScrollTop: number }>` | 選單捲動事件（rc.9 新增）                                    |
+| `reachBottom`      | `OutputEmitterRef<void>`                                        | 捲動到底（未改名）                                           |
+| `leaveBottom`      | `OutputEmitterRef<void>`                                        | 捲離底部（未改名）                                           |
+
+### rc.4 → rc.9 遷移對照（僅 `MznDropdown` 主元件）
+
+| 舊名（rc.8 以前）       | 新名（rc.9 起）   |
+| ----------------------- | ----------------- |
+| `(selected)`            | `(select)`        |
+| `(closed)`              | `(close)`         |
+| `(itemHovered)`         | `(itemHover)`     |
+| `(actionCancelled)`     | `(actionCancel)`  |
+| `(actionCleared)`       | `(actionClear)`   |
+| `(actionConfirmed)`     | `(actionConfirm)` |
+| `(actionCustomClicked)` | `(actionCustom)`  |
+
+同時 rc.9 移除了 `MznDropdown` 的 `actionConfig` / `name` / `showCheckIcon` / `showHeader` /
+`disableClickAway` 等 input（`showHeader` 與 `disableClickAway` 已完全不存在於原始碼）。
+
+> 核對自 `packages/ng/dropdown/dropdown.component.ts:460-510`（`@mezzanine-ui/ng` `1.0.0-rc.9`），
+> 並對照 `packages/ng/CHANGELOG.md` 的 rc.9 BREAKING CHANGES 條目。
 
 ## ControlValueAccessor
 

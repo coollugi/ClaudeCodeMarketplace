@@ -66,6 +66,7 @@ import { AutoCompleteMode, AutoCompleteInputSize } from '@mezzanine-ui/core/auto
 | `id`                        | `string`                                          | —                   | Native `<input id>`                                                |
 | `name`                      | `string`                                          | —                   | Native `<input name>`                                              |
 | `dropdownZIndex`            | `number`                                          | —                   | Dropdown z-index                                                   |
+| `caseSensitive`             | `boolean`                                         | `false`             | 選項比對是否區分大小寫（**`1.0.0-rc.10` 新增**，對應 React 1.4.2）|
 
 > Inputs declared with signal API (`input()`) accept both static and reactive values.
 

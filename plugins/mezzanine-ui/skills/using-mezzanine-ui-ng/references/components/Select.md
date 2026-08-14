@@ -52,12 +52,32 @@ import { SelectInputSize, SelectMode } from '@mezzanine-ui/core/select';
 
 ## Outputs
 
-| Output            | Type                                              | Description                                          |
-| ----------------- | ------------------------------------------------- | ---------------------------------------------------- |
-| `selectionChange` | `OutputEmitterRef<DropdownOption>`                | Emitted when an option is selected/deselected        |
-| `onScroll`        | `OutputEmitterRef<{ scrollTop, maxScrollTop }>`   | Scroll events on the dropdown list                   |
-| `onReachBottom`   | `OutputEmitterRef<void>`                          | Scroll reaches bottom (infinite scroll hook)         |
-| `onLeaveBottom`   | `OutputEmitterRef<void>`                          | Scroll leaves bottom                                 |
+> ⚠️ **`1.0.0-rc.9` 全面改名（BREAKING）** —— 四個 output 去掉 `on` 前綴／改用簡名。
+> 舊名在 rc.9 以後**不存在**，而 Angular template 綁一個不存在的 output **不會有編譯錯誤，只會靜默不觸發**。
+> 升級後請全域搜尋 `(selectionChange)` `(onScroll)` `(onReachBottom)` `(onLeaveBottom)` 逐一替換。
+
+| Output        | Type                                                            | Description                                                 |
+| ------------- | --------------------------------------------------------------- | ----------------------------------------------------------- |
+| `change`      | `OutputEmitterRef<DropdownOption>`                              | 選取／取消選取選項時觸發（**rc.9 前叫 `selectionChange`**） |
+| `scroll`      | `OutputEmitterRef<{ scrollTop: number; maxScrollTop: number }>` | 選單捲動事件（**rc.9 前叫 `onScroll`**）                    |
+| `reachBottom` | `OutputEmitterRef<void>`                                        | 捲動到底（無限捲動掛載點）（**rc.9 前叫 `onReachBottom`**） |
+| `leaveBottom` | `OutputEmitterRef<void>`                                        | 捲離底部（**rc.9 前叫 `onLeaveBottom`**）                   |
+| `focus`       | `OutputEmitterRef<void>`                                        | 觸發器取得焦點（rc.9 新增）                                 |
+| `blur`        | `OutputEmitterRef<void>`                                        | 觸發器失去焦點（rc.9 新增）                                 |
+| `clear`       | `OutputEmitterRef<void>`                                        | 點擊清除鈕（rc.9 新增）                                     |
+| `tagClose`    | `OutputEmitterRef<SelectTriggerTagValue>`                       | 多選模式關閉單一標籤（rc.9 新增）                           |
+
+### rc.4 → rc.9 遷移對照
+
+| 舊名（rc.8 以前）  | 新名（rc.9 起） |
+| ------------------ | --------------- |
+| `(selectionChange)` | `(change)`      |
+| `(onScroll)`        | `(scroll)`      |
+| `(onReachBottom)`   | `(reachBottom)` |
+| `(onLeaveBottom)`   | `(leaveBottom)` |
+
+> 核對自 `packages/ng/select/select.component.ts:339-360`（`@mezzanine-ui/ng` `1.0.0-rc.9`），
+> 並對照 `packages/ng/CHANGELOG.md` 的 rc.9 BREAKING CHANGES 條目。
 
 ## ControlValueAccessor
 
@@ -182,4 +202,4 @@ Renders multiple-selection values as dismissable tags inside the trigger area. S
 - In tree mode, clicking a parent node toggles/collapses it; clicking a leaf selects it. Checking a parent's checkbox selects all its leaf descendants.
 - `globalPortal: true` (default) renders the dropdown panel outside the component's DOM subtree using a portal, which avoids `overflow: hidden` clipping from ancestor containers.
 - The CVA `onChange` emits a plain `string` (not `string[]`) in single mode for React-parity. This means `formControl.value` is `string | string[]` depending on `mode`. Type your `FormControl` accordingly.
-- When the clear button is clicked, `selectionChange` emits a synthetic `DropdownOption` with `{ id: '', name: '' }`. Consumers guarding on `event.id` must handle the empty-string case.
+- When the clear button is clicked, `change` (rc.9 前叫 `selectionChange`) emits a synthetic `DropdownOption` with `{ id: '', name: '' }`. Consumers guarding on `event.id` must handle the empty-string case.
