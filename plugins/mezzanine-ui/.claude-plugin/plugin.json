@@ -1,7 +1,7 @@
 {
   "name": "mezzanine-ui",
   "description": "Mezzanine-UI design system skills for React/Next.js and Angular 21+. Source-verified component API docs (71 components each), design tokens, DI services, ControlValueAccessor/ReactiveForms patterns, and a /sync-mezzanine-ui orchestrator that refreshes skill content from the mezzanine monorepo.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "license": "MIT",
   "keywords": [
     "mezzanine-ui",
