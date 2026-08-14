@@ -33,6 +33,7 @@ Before editing ANY file, read the ENTIRE file first. Check for existing content,
 - `SKILL.md` — main skill entry point (component tables by category)
 - `references/PATTERNS.md` — React hook patterns, form patterns, composition patterns
 - `references/COMPONENTS.md` — component directory listing
+- `references/COMPONENT_SELECTION.md` — UI-concept → component reverse index (hand-curated; verify targets, never regenerate)
 - `references/ICONS.md` — icon reference
 - `references/DESIGN_TOKENS.md` — design token docs
 - `references/FIGMA_MAPPING.md` — Figma node mapping
@@ -42,6 +43,7 @@ Before editing ANY file, read the ENTIRE file first. Check for existing content,
 - `SKILL.md` — main skill entry point (directive tables by category, with selector column)
 - `references/PATTERNS.md` — Angular directive patterns, ControlValueAccessor + Reactive Forms patterns, standalone imports patterns
 - `references/COMPONENTS.md` — directive directory listing
+- `references/COMPONENT_SELECTION.md` — UI-concept → directive reverse index (hand-curated; verify targets, never regenerate)
 - `references/SERVICES.md` — DI services (`ClickAwayService`, `EscapeKeyService`, `MZN_CALENDAR_CONFIG`, etc.) — Angular-only
 - `references/ICONS.md` — icon reference (mostly re-exports from React skill)
 - `references/DESIGN_TOKENS.md` — design token docs (shared content with React)
@@ -231,6 +233,30 @@ Verify all components in `componentDiff.removed`:
 
 Cross-check SKILL.md's selector column against `cache/component-index.json`. Every directive listed in SKILL.md must have a matching `selector` field in the cache. Report mismatches.
 
+#### 8g. Component-Selection Index Consistency
+
+The skill carries a **component-selection contract** — a UI-concept → component reverse index whose job is to stop consumers from picking the wrong component (e.g. using `Tag` + a `className` background override instead of `Badge variant="dot-*"`). It lives in three places that must stay in agreement:
+
+1. `SKILL.md → 元件選用` — inline reverse-lookup table + the three 鐵則 + 自查清單
+2. `references/COMPONENT_SELECTION.md` — full table, judgement questions, verified boundary facts
+3. Each component `.md` — the `> **Aliases**` / `> **Not for**` lines under the summary
+
+Check, and report (non-blocking):
+
+1. **Recommended components exist** — every component named in the "Mezzanine 元件" / "Mezzanine directive" column of both tables has a matching `references/components/*.md`. A row pointing at a removed component is a hard error to report.
+2. **Anti-pattern column is still accurate** — if the "常見誤用" column names a component that was removed this sync (e.g. `Switch`), confirm the row still reads correctly; if a *recommended* component was removed, flag it loudly — that row now teaches the wrong thing.
+3. **Two tables agree** — SKILL.md's table must not recommend a different component than `COMPONENT_SELECTION.md` for the same concept.
+4. **High-risk docs still carry both fields** — check each of these `.md` files for a `> **Aliases**` line AND a `> **Not for**` line:
+
+   ```
+   Tag Badge Radio Toggle Button AlertBanner InlineMessage Message Notifier Tab
+   Section Card Description Stepper Progress Skeleton Empty ResultState Select Tooltip
+   ```
+
+   List any that are missing a field. **Do not invent replacements** — report them so a human can write them; these lines are hand-curated, not derived from source.
+5. **New components are covered** — any component created by `mzn-component-creator` this sync must have both fields (the creator agent is required to write them). If one is missing, report it.
+6. **Boundary sections survived** — confirm `Tag.md` still has 「Tag 沒有語意顏色」 and `Badge.md` still has 「沒有膠囊底色」and 「表格狀態欄用 dot-*」. The updater agents are instructed never to touch these; their absence means something went wrong upstream.
+
 ### Step 9: Write Updated Files and Report
 
 Write all updated files. Output a final consistency report:
@@ -251,10 +277,17 @@ Component Docs:
 
 PATTERNS.md:        ✓ Updated, 0 deprecated references
 COMPONENTS.md:      ✓ Updated, N headings, 0 duplicates
+COMPONENT_SELECTION.md: ✓ N rows, all targets exist
 SERVICES.md:        ✓ Version updated, N services verified  (ng only)
 ICONS.md:           ✓ Version updated
 DESIGN_TOKENS.md:   ✓ Version updated
 FIGMA_MAPPING.md:   ✓ Version updated
+
+Component Selection Contract:
+  ✓ Reverse-index targets resolve: N/N
+  ✓ Aliases / Not for present: N/20 high-risk docs
+  ✓ Boundary sections intact (Tag semantic-color, Badge no-pill, Badge dot-in-tables)
+  ⚠ Missing fields: (list, or "none")
 
 Old version strings remaining: N (list files if > 0)
 (Angular) Selector mismatches vs cache: N (list if > 0)
@@ -270,5 +303,6 @@ Old version strings remaining: N (list files if > 0)
 6. **Collapsible history** — use `<details>` for previous version notes
 7. **No duplicates** — check for existing entries before adding new ones
 8. **Read full files** — understand the complete context before editing
-9. **ALL reference files** — you own COMPONENTS.md, ICONS.md, DESIGN_TOKENS.md, FIGMA_MAPPING.md (both) + SERVICES.md (Angular only)
-10. **Angular selector is contract** — a mismatch between SKILL.md's selector column and the cache means user HTML templates will break; catch this in Step 8f
+9. **ALL reference files** — you own COMPONENTS.md, COMPONENT_SELECTION.md, ICONS.md, DESIGN_TOKENS.md, FIGMA_MAPPING.md (both) + SERVICES.md (Angular only)
+10. **COMPONENT_SELECTION.md and the `元件選用` section are hand-curated** — verify their targets still resolve and their anti-pattern columns are still true, but **never regenerate or reword them**. Report gaps for a human to fill; an invented alias is worse than a missing one
+11. **Angular selector is contract** — a mismatch between SKILL.md's selector column and the cache means user HTML templates will break; catch this in Step 8f
