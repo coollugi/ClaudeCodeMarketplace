@@ -27,14 +27,21 @@
       ],
       "outputs": [
         "expandedChange"
+      ],
+      "familySelectors": [
+        "[mznAccordionActions]",
+        "[mznAccordionContent]",
+        "[mznAccordionGroup]",
+        "[mznAccordionTitle]",
+        "[mznAccordion]"
       ]
     },
     "AlertBanner": {
-      "symbol": "MznAlertBannerContainer",
+      "symbol": "MznAlertBanner",
       "importPath": "@mezzanine-ui/ng/alert-banner",
       "sourceDir": "packages/ng/alert-banner",
       "selectorType": "component",
-      "selector": "mzn-alert-banner-container",
+      "selector": "[mznAlertBanner]",
       "category": "others",
       "cva": false,
       "referenceDoc": "references/components/AlertBanner.md",
@@ -50,6 +57,10 @@
       ],
       "outputs": [
         "closed"
+      ],
+      "familySelectors": [
+        "[mznAlertBanner]",
+        "mzn-alert-banner-container"
       ]
     },
     "Anchor": {
@@ -64,6 +75,9 @@
       "inputs": [
         "anchors",
         "className"
+      ],
+      "familySelectors": [
+        "[mznAnchorGroup]"
       ]
     },
     "Autocomplete": {
@@ -122,6 +136,10 @@
         "selectionChange",
         "valueChange",
         "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznAutocompletePrefix]",
+        "[mznAutocomplete]"
       ]
     },
     "Backdrop": {
@@ -144,6 +162,9 @@
       "outputs": [
         "backdropClick",
         "closed"
+      ],
+      "familySelectors": [
+        "[mznBackdrop]"
       ]
     },
     "Badge": {
@@ -162,6 +183,10 @@
         "size",
         "text",
         "variant"
+      ],
+      "familySelectors": [
+        "[mznBadgeContainer]",
+        "div[mznBadge]"
       ]
     },
     "Breadcrumb": {
@@ -184,6 +209,12 @@
       ],
       "outputs": [
         "itemClick"
+      ],
+      "familySelectors": [
+        "[mznBreadcrumbItem]",
+        "[mznBreadcrumbOverflowMenuItem]",
+        "[mznBreadcrumbOverflowMenu]",
+        "[mznBreadcrumb]"
       ]
     },
     "Button": {
@@ -207,14 +238,18 @@
         "tooltipPosition",
         "tooltipText",
         "variant"
+      ],
+      "familySelectors": [
+        "[mznButtonGroup]",
+        "[mznButton]"
       ]
     },
     "Calendar": {
-      "symbol": "MznCalendarHalfYears",
+      "symbol": "MznCalendar",
       "importPath": "@mezzanine-ui/ng/calendar",
       "sourceDir": "packages/ng/calendar",
       "selectorType": "directive",
-      "selector": "[mznCalendarHalfYears]",
+      "selector": "[mznCalendar]",
       "category": "utility",
       "cva": false,
       "referenceDoc": "references/components/Calendar.md",
@@ -264,14 +299,30 @@
         "prevClicked",
         "rangeChanged",
         "yearControlClicked"
+      ],
+      "familySelectors": [
+        "[mznCalendarCell]",
+        "[mznCalendarConfigProvider]",
+        "[mznCalendarControls]",
+        "[mznCalendarDayOfWeek]",
+        "[mznCalendarDays]",
+        "[mznCalendarFooterControl]",
+        "[mznCalendarHalfYears]",
+        "[mznCalendarMonths]",
+        "[mznCalendarQuarters]",
+        "[mznCalendarQuickSelect]",
+        "[mznCalendarWeeks]",
+        "[mznCalendarYears]",
+        "[mznCalendar]",
+        "[mznRangeCalendar]"
       ]
     },
     "Card": {
-      "symbol": "MznCardGroup",
+      "symbol": "MznBaseCard",
       "importPath": "@mezzanine-ui/ng/card",
       "sourceDir": "packages/ng/card",
       "selectorType": "directive",
-      "selector": "[mznCardGroup]",
+      "selector": "[mznBaseCard]",
       "category": "data-display",
       "cva": false,
       "referenceDoc": "references/components/Card.md",
@@ -303,14 +354,21 @@
         "actionClick",
         "optionSelect",
         "toggleChange"
+      ],
+      "familySelectors": [
+        "[mznBaseCardSkeleton]",
+        "[mznBaseCard]",
+        "[mznCardGroup]",
+        "[mznQuickActionCardSkeleton]",
+        "[mznQuickActionCard]"
       ]
     },
     "Cascader": {
-      "symbol": "MznCascaderPanel",
+      "symbol": "MznCascader",
       "importPath": "@mezzanine-ui/ng/cascader",
       "sourceDir": "packages/ng/cascader",
       "selectorType": "directive",
-      "selector": "[mznCascaderPanel]",
+      "selector": "[mznCascader]",
       "category": "data-entry",
       "cva": false,
       "referenceDoc": "references/components/Cascader.md",
@@ -333,6 +391,10 @@
         "cascaderBlur",
         "cascaderFocus",
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznCascaderPanel]",
+        "[mznCascader]"
       ]
     },
     "Checkbox": {
@@ -367,6 +429,11 @@
       "outputs": [
         "editableInputChange",
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznCheckAll]",
+        "[mznCheckboxGroup]",
+        "[mznCheckbox]"
       ]
     },
     "ClearActions": {
@@ -384,6 +451,9 @@
       ],
       "outputs": [
         "clicked"
+      ],
+      "familySelectors": [
+        "button[mznClearActions]"
       ]
     },
     "ContentHeader": {
@@ -404,6 +474,10 @@
       ],
       "outputs": [
         "backClick"
+      ],
+      "familySelectors": [
+        "[mznContentHeaderResponsive]",
+        "[mznContentHeader]"
       ]
     },
     "Cropper": {
@@ -447,14 +521,19 @@
         "imageError",
         "imageLoad",
         "scaleChange"
+      ],
+      "familySelectors": [
+        "[mznCropperElement]",
+        "[mznCropperModal]",
+        "[mznCropper]"
       ]
     },
     "DatePicker": {
-      "symbol": "MznDatePickerPanel",
+      "symbol": "MznDatePicker",
       "importPath": "@mezzanine-ui/ng/date-picker",
       "sourceDir": "packages/ng/date-picker",
       "selectorType": "directive",
-      "selector": "[mznDatePickerPanel]",
+      "selector": "[mznDatePicker]",
       "category": "data-entry",
       "cva": false,
       "referenceDoc": "references/components/DatePicker.md",
@@ -496,6 +575,10 @@
         "dateChanged",
         "hover",
         "leave"
+      ],
+      "familySelectors": [
+        "[mznDatePickerCalendar]",
+        "[mznDatePicker]"
       ]
     },
     "DateRangePicker": {
@@ -555,6 +638,10 @@
         "confirmed",
         "mouseLeave",
         "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznDateRangePickerCalendar]",
+        "[mznDateRangePicker]"
       ]
     },
     "DateTimePicker": {
@@ -632,6 +719,9 @@
         "pasteIsoValueLeft",
         "pasteIsoValueRight",
         "rightComplete"
+      ],
+      "familySelectors": [
+        "[mznDateTimePicker]"
       ]
     },
     "DateTimeRangePicker": {
@@ -667,14 +757,17 @@
       ],
       "outputs": [
         "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznDateTimeRangePicker]"
       ]
     },
     "Description": {
-      "symbol": "MznDescriptionGroup",
+      "symbol": "MznDescription",
       "importPath": "@mezzanine-ui/ng/description",
       "sourceDir": "packages/ng/description",
       "selectorType": "directive",
-      "selector": "[mznDescriptionGroup]",
+      "selector": "[mznDescription]",
       "category": "data-display",
       "cva": false,
       "referenceDoc": "references/components/Description.md",
@@ -692,6 +785,12 @@
       ],
       "outputs": [
         "clickIcon"
+      ],
+      "familySelectors": [
+        "[mznDescriptionContent]",
+        "[mznDescriptionGroup]",
+        "[mznDescriptionTitle]",
+        "[mznDescription]"
       ]
     },
     "Drawer": {
@@ -733,6 +832,9 @@
         "filterAreaCustomButtonClick",
         "filterAreaRadioChange",
         "filterAreaSelect"
+      ],
+      "familySelectors": [
+        "[mznDrawer]"
       ]
     },
     "Dropdown": {
@@ -814,6 +916,14 @@
         "scroll",
         "select",
         "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznDropdownAction]",
+        "[mznDropdownItemCard]",
+        "[mznDropdownItem]",
+        "[mznDropdownPopper]",
+        "[mznDropdownStatus]",
+        "[mznDropdown]"
       ]
     },
     "Empty": {
@@ -832,6 +942,9 @@
         "size",
         "title",
         "type"
+      ],
+      "familySelectors": [
+        "[mznEmpty]"
       ]
     },
     "FilterArea": {
@@ -860,6 +973,11 @@
       "outputs": [
         "filterReset",
         "filterSubmit"
+      ],
+      "familySelectors": [
+        "[mznFilterArea]",
+        "[mznFilterLine]",
+        "[mznFilter]"
       ]
     },
     "FloatingButton": {
@@ -879,14 +997,17 @@
         "iconType",
         "loading",
         "open"
+      ],
+      "familySelectors": [
+        "[mznFloatingButton]"
       ]
     },
     "Form": {
-      "symbol": "MznForm",
+      "symbol": "MznFormField",
       "importPath": "@mezzanine-ui/ng/form",
       "sourceDir": "packages/ng/form",
       "selectorType": "directive",
-      "selector": "[mznForm]",
+      "selector": "[mznFormField]",
       "category": "data-entry",
       "cva": false,
       "referenceDoc": "references/components/Form.md",
@@ -917,6 +1038,12 @@
         "severity",
         "showHintTextIcon",
         "title"
+      ],
+      "familySelectors": [
+        "[mznFormField]",
+        "[mznFormGroup]",
+        "[mznFormHintText]",
+        "[mznFormLabel]"
       ]
     },
     "FourThumbnailCard": {
@@ -945,6 +1072,10 @@
         "actionClick",
         "optionSelect",
         "personalActionClick"
+      ],
+      "familySelectors": [
+        "[mznFourThumbnailCardSkeleton]",
+        "[mznFourThumbnailCard]"
       ]
     },
     "Icon": {
@@ -963,6 +1094,9 @@
         "size",
         "spin",
         "title"
+      ],
+      "familySelectors": [
+        "[mznIcon]"
       ]
     },
     "InlineMessage": {
@@ -983,6 +1117,10 @@
       "outputs": [
         "closed",
         "itemClose"
+      ],
+      "familySelectors": [
+        "[mznInlineMessageGroup]",
+        "[mznInlineMessage]"
       ]
     },
     "Input": {
@@ -1033,6 +1171,13 @@
         "spinDown",
         "spinUp",
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznInputActionButton]",
+        "[mznInputSelectButton]",
+        "[mznInputSpinnerButton]",
+        "[mznInput]",
+        "[mznPasswordStrengthIndicator]"
       ]
     },
     "Layout": {
@@ -1056,6 +1201,12 @@
       ],
       "outputs": [
         "widthChange"
+      ],
+      "familySelectors": [
+        "[mznLayoutLeftPanel]",
+        "[mznLayoutMain]",
+        "[mznLayoutRightPanel]",
+        "[mznLayout]"
       ]
     },
     "MediaPreviewModal": {
@@ -1085,6 +1236,9 @@
         "indexChange",
         "next",
         "prev"
+      ],
+      "familySelectors": [
+        "[mznMediaPreviewModal]"
       ]
     },
     "Message": {
@@ -1106,6 +1260,9 @@
       ],
       "outputs": [
         "closed"
+      ],
+      "familySelectors": [
+        "[mznMessage]"
       ]
     },
     "Modal": {
@@ -1172,6 +1329,13 @@
         "passwordClicked",
         "resent",
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznModalBodyContainer]",
+        "[mznModalBodyForVerification]",
+        "[mznModalFooter]",
+        "[mznModalHeader]",
+        "[mznModal]"
       ]
     },
     "MultipleDatePicker": {
@@ -1209,6 +1373,10 @@
         "focused",
         "suffixClicked",
         "tagClosed"
+      ],
+      "familySelectors": [
+        "[mznMultipleDatePickerTrigger]",
+        "[mznMultipleDatePicker]"
       ]
     },
     "Navigation": {
@@ -1246,6 +1414,15 @@
         "optionSelected",
         "triggerClick",
         "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznNavigationFooter]",
+        "[mznNavigationHeader]",
+        "[mznNavigationIconButton]",
+        "[mznNavigation]",
+        "div[mznNavigationUserMenu]",
+        "mzn-navigation-option",
+        "mzn-navigation-option-category"
       ]
     },
     "NotificationCenter": {
@@ -1307,6 +1484,11 @@
         "filterBarOnCustomButtonClick",
         "filterBarOnRadioChange",
         "filterBarOnSelect"
+      ],
+      "familySelectors": [
+        "[mznNotificationCenterContainer]",
+        "[mznNotificationCenterDrawer]",
+        "[mznNotificationCenter]"
       ]
     },
     "OverflowTooltip": {
@@ -1330,6 +1512,10 @@
       ],
       "outputs": [
         "tagDismiss"
+      ],
+      "familySelectors": [
+        "[mznOverflowCounterTag]",
+        "[mznOverflowTooltip]"
       ]
     },
     "PageFooter": {
@@ -1353,6 +1539,9 @@
       ],
       "outputs": [
         "supportingActionClick"
+      ],
+      "familySelectors": [
+        "[mznPageFooter]"
       ]
     },
     "PageHeader": {
@@ -1363,7 +1552,10 @@
       "selector": "[mznPageHeader]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/PageHeader.md"
+      "referenceDoc": "references/components/PageHeader.md",
+      "familySelectors": [
+        "[mznPageHeader]"
+      ]
     },
     "Pagination": {
       "symbol": "MznPagination",
@@ -1403,14 +1595,20 @@
         "itemClick",
         "pageChanged",
         "pageSizeChanged"
+      ],
+      "familySelectors": [
+        "[mznPaginationItem]",
+        "[mznPaginationJumper]",
+        "[mznPaginationPageSize]",
+        "[mznPagination]"
       ]
     },
     "Picker": {
-      "symbol": "MznPickerPanel",
+      "symbol": "MznPickerTrigger",
       "importPath": "@mezzanine-ui/ng/picker",
       "sourceDir": "packages/ng/picker",
       "selectorType": "directive",
-      "selector": "[mznPickerPanel]",
+      "selector": "[mznPickerTrigger]",
       "category": "data-entry",
       "cva": false,
       "referenceDoc": "references/components/Picker.md",
@@ -1480,6 +1678,12 @@
         "toValueCleared",
         "valueChanged",
         "valueCleared"
+      ],
+      "familySelectors": [
+        "[mznFormattedInput]",
+        "[mznPickerTriggerWithSeparator]",
+        "[mznPickerTrigger]",
+        "[mznRangePickerTrigger]"
       ]
     },
     "Popper": {
@@ -1503,6 +1707,9 @@
       ],
       "outputs": [
         "positionUpdated"
+      ],
+      "familySelectors": [
+        "[mznPopper]"
       ]
     },
     "Portal": {
@@ -1510,7 +1717,7 @@
       "importPath": "@mezzanine-ui/ng/portal",
       "sourceDir": "packages/ng/portal",
       "selectorType": "component",
-      "selector": "ng-container",
+      "selector": "[mznPortal]",
       "category": "utility",
       "cva": false,
       "referenceDoc": "references/components/Portal.md",
@@ -1518,6 +1725,9 @@
         "container",
         "disablePortal",
         "layer"
+      ],
+      "familySelectors": [
+        "[mznPortal]"
       ]
     },
     "Progress": {
@@ -1536,6 +1746,9 @@
         "status",
         "tick",
         "type"
+      ],
+      "familySelectors": [
+        "[mznProgress]"
       ]
     },
     "Radio": {
@@ -1563,6 +1776,10 @@
       ],
       "outputs": [
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznRadioGroup]",
+        "[mznRadio]"
       ]
     },
     "ResultState": {
@@ -1579,6 +1796,9 @@
         "size",
         "title",
         "type"
+      ],
+      "familySelectors": [
+        "[mznResultState]"
       ]
     },
     "Scrollbar": {
@@ -1600,6 +1820,9 @@
       ],
       "outputs": [
         "viewportReady"
+      ],
+      "familySelectors": [
+        "[mznScrollbar]"
       ]
     },
     "Section": {
@@ -1613,14 +1836,18 @@
       "referenceDoc": "references/components/Section.md",
       "inputs": [
         "direction"
+      ],
+      "familySelectors": [
+        "[mznSectionGroup]",
+        "[mznSection]"
       ]
     },
     "Select": {
-      "symbol": "MznSelectTrigger",
+      "symbol": "MznSelect",
       "importPath": "@mezzanine-ui/ng/select",
       "sourceDir": "packages/ng/select",
       "selectorType": "directive",
-      "selector": "[mznSelectTrigger]",
+      "selector": "[mznSelect]",
       "category": "data-entry",
       "cva": true,
       "referenceDoc": "references/components/Select.md",
@@ -1656,6 +1883,11 @@
         "reachBottom",
         "scroll",
         "tagClose"
+      ],
+      "familySelectors": [
+        "[mznSelectTriggerTags]",
+        "[mznSelectTrigger]",
+        "[mznSelect]"
       ]
     },
     "SelectionCard": {
@@ -1686,6 +1918,9 @@
       ],
       "outputs": [
         "onClick"
+      ],
+      "familySelectors": [
+        "[mznSelectionCard]"
       ]
     },
     "Separator": {
@@ -1699,6 +1934,9 @@
       "referenceDoc": "references/components/Separator.md",
       "inputs": [
         "orientation"
+      ],
+      "familySelectors": [
+        "[mznSeparator]"
       ]
     },
     "SingleThumbnailCard": {
@@ -1728,6 +1966,10 @@
         "actionClick",
         "optionSelect",
         "personalActionClick"
+      ],
+      "familySelectors": [
+        "[mznSingleThumbnailCardSkeleton]",
+        "[mznSingleThumbnailCard]"
       ]
     },
     "Skeleton": {
@@ -1744,6 +1986,9 @@
         "height",
         "variant",
         "width"
+      ],
+      "familySelectors": [
+        "[mznSkeleton]"
       ]
     },
     "Slider": {
@@ -1772,6 +2017,9 @@
         "prefixIconClick",
         "suffixIconClick",
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznSlider]"
       ]
     },
     "Spin": {
@@ -1792,6 +2040,9 @@
         "size",
         "stretch",
         "trackColor"
+      ],
+      "familySelectors": [
+        "[mznSpin]"
       ]
     },
     "Stepper": {
@@ -1817,14 +2068,18 @@
       ],
       "outputs": [
         "stepChange"
+      ],
+      "familySelectors": [
+        "[mznStep]",
+        "[mznStepper]"
       ]
     },
     "Tab": {
-      "symbol": "MznTabGroup",
+      "symbol": "MznTabs",
       "importPath": "@mezzanine-ui/ng/tab",
       "sourceDir": "packages/ng/tab",
       "selectorType": "directive",
-      "selector": "[mznTabGroup]",
+      "selector": "[mznTabs]",
       "category": "navigation",
       "cva": false,
       "referenceDoc": "references/components/Tab.md",
@@ -1842,14 +2097,18 @@
       "outputs": [
         "activeKeyChange",
         "clicked"
+      ],
+      "familySelectors": [
+        "[mznTabItem]",
+        "[mznTabs]"
       ]
     },
     "Table": {
-      "symbol": "MznTableContainer",
+      "symbol": "MznTable",
       "importPath": "@mezzanine-ui/ng/table",
       "sourceDir": "packages/ng/table",
       "selectorType": "directive",
-      "selector": "[mznTableContainer]",
+      "selector": "[mznTable]",
       "category": "data-display",
       "cva": false,
       "referenceDoc": "references/components/Table.md",
@@ -1883,6 +2142,10 @@
         "toggleable",
         "transitionState",
         "zebraStriping"
+      ],
+      "familySelectors": [
+        "[mznTableCellRender]",
+        "[mznTable]"
       ]
     },
     "Tag": {
@@ -1907,6 +2170,10 @@
       "outputs": [
         "close",
         "tagClick"
+      ],
+      "familySelectors": [
+        "[mznTagGroup]",
+        "[mznTag]"
       ]
     },
     "TextField": {
@@ -1939,6 +2206,10 @@
         "focusedChange",
         "hasValueChange",
         "hoveredChange"
+      ],
+      "familySelectors": [
+        "[mznTextFieldHost]",
+        "[mznTextField]"
       ]
     },
     "Textarea": {
@@ -1960,6 +2231,9 @@
       ],
       "outputs": [
         "valueChange"
+      ],
+      "familySelectors": [
+        "[mznTextarea]"
       ]
     },
     "Thumbnail": {
@@ -1973,6 +2247,9 @@
       "referenceDoc": "references/components/Thumbnail.md",
       "inputs": [
         "title"
+      ],
+      "familySelectors": [
+        "[mznThumbnail]"
       ]
     },
     "ThumbnailCardInfo": {
@@ -1997,6 +2274,9 @@
       "outputs": [
         "actionClick",
         "optionSelect"
+      ],
+      "familySelectors": [
+        "[mznThumbnailCardInfo]"
       ]
     },
     "TimePanel": {
@@ -2025,14 +2305,18 @@
         "confirmed",
         "timeChanged",
         "unitChanged"
+      ],
+      "familySelectors": [
+        "[mznTimePanelColumn]",
+        "[mznTimePanel]"
       ]
     },
     "TimePicker": {
-      "symbol": "MznTimePickerPanel",
+      "symbol": "MznTimePicker",
       "importPath": "@mezzanine-ui/ng/time-picker",
       "sourceDir": "packages/ng/time-picker",
       "selectorType": "directive",
-      "selector": "[mznTimePickerPanel]",
+      "selector": "[mznTimePicker]",
       "category": "data-entry",
       "cva": true,
       "referenceDoc": "references/components/TimePicker.md",
@@ -2057,6 +2341,10 @@
       "outputs": [
         "panelToggled",
         "timeChanged"
+      ],
+      "familySelectors": [
+        "[mznTimePickerPanel]",
+        "[mznTimePicker]"
       ]
     },
     "TimeRangePicker": {
@@ -2089,6 +2377,9 @@
       "outputs": [
         "panelToggled",
         "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznTimeRangePicker]"
       ]
     },
     "Toggle": {
@@ -2106,6 +2397,9 @@
         "label",
         "size",
         "supportingText"
+      ],
+      "familySelectors": [
+        "[mznToggle]"
       ]
     },
     "Tooltip": {
@@ -2125,14 +2419,17 @@
         "tooltipOffset",
         "tooltipOpen",
         "tooltipPlacement"
+      ],
+      "familySelectors": [
+        "[mznTooltip]"
       ]
     },
     "Transition": {
-      "symbol": "MznScale",
+      "symbol": "MznCollapse",
       "importPath": "@mezzanine-ui/ng/transition",
       "sourceDir": "packages/ng/transition",
       "selectorType": "directive",
-      "selector": "[mznScale]",
+      "selector": "[mznCollapse]",
       "category": "utility",
       "cva": false,
       "referenceDoc": "references/components/Transition.md",
@@ -2150,6 +2447,14 @@
       "outputs": [
         "onEntering",
         "onExiting"
+      ],
+      "familySelectors": [
+        "[mznCollapse]",
+        "[mznFade]",
+        "[mznRotate]",
+        "[mznScale]",
+        "[mznSlide]",
+        "[mznTranslate]"
       ]
     },
     "Typography": {
@@ -2168,14 +2473,17 @@
         "ellipsis",
         "noWrap",
         "variant"
+      ],
+      "familySelectors": [
+        "[mznTypography]"
       ]
     },
     "Upload": {
-      "symbol": "MznUploader",
+      "symbol": "MznUpload",
       "importPath": "@mezzanine-ui/ng/upload",
       "sourceDir": "packages/ng/upload",
       "selectorType": "directive",
-      "selector": "[mznUploader]",
+      "selector": "[mznUpload]",
       "category": "data-entry",
       "cva": false,
       "referenceDoc": "references/components/Upload.md",
@@ -2232,6 +2540,13 @@
         "upload",
         "zoomIn",
         "zoomed"
+      ],
+      "familySelectors": [
+        "[mznUploadItem]",
+        "[mznUploadPictureCard]",
+        "[mznUpload]",
+        "[mznUploader]",
+        "mzn-upload-media-preview-modal"
       ]
     }
   }
