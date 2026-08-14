@@ -6,6 +6,58 @@
 
 標籤元件，用於分類、篩選或標記內容。支援五種模式：`static`（純標籤）、`counter`（帶計數徽章）、`dismissable`（可關閉）、`addable`（可點擊新增）及 `overflow-counter`（溢出計數）。`MznTagGroup` 可包裹多個標籤，並支援 `fade` 過場動畫。
 
+> **Aliases** — mat-chip (Angular Material) · Chip (MUI) · Tag (Ant Design) · Label · Pill · 標籤 · 分類標籤 · Figma `Tag / *`
+> **Not for** — 狀態呈現（已核准 / 失敗 / 停用）。`MznTag` **沒有語意顏色**，狀態請用 [`MznBadge variant="dot-*"`](Badge.md)，見下一節。
+
+---
+
+## Tag 沒有語意顏色（重要）
+
+`Tag` 只有**單一配色** —— `background/brand-faint` 底 + `text/brand-solid` 字（來源：`packages/core/src/tag/_tag-styles.scss`）。它**沒有** `color` / `severity` / `status` input，也沒有對應的 CSS variable。
+
+**這是刻意的，不是缺漏**：`Tag` 表達「這是什麼」（分類），不表達「它現在怎麼樣」（狀態）。
+
+| 你要表達的               | directive                       | 範例                         |
+| ------------------------ | ------------------------------- | ---------------------------- |
+| 分類、標籤、可篩選的屬性 | `MznTag`                        | 「測試單據」「會簽」「FVPL」 |
+| 狀態、結果、進度         | `MznBadge variant="dot-*"`      | 「已核准」「失敗」「送審中」 |
+
+判斷句：**「這個標籤在說『它是什麼』，還是『它現在怎麼樣』？」**
+
+```html
+<!-- ❌ 不要用 class / ::ng-deep 覆寫 Tag 的底色來製造狀態色 -->
+<span mznTag label="已核准" class="status-positive"></span>
+
+<!-- ✅ 狀態用 Badge，五階語意色、零覆寫 -->
+<span mznBadge variant="dot-success" text="已核准"></span>
+```
+
+> ⚠️ 覆寫 `Tag` 底色會在專案裡長出一套與設計系統平行的私有色階，違反「樣式僅可透過 design tokens 調整」。
+> **需要 class 或 `::ng-deep` 覆寫 `background` / `color` / `border` 才能達成設計 = 選錯元件的訊號。**
+
+### 「只改 CSS 變數」也不行（常見的漂亮繞法）
+
+有一種看起來很守規矩的做法：不直接寫 `background`，而是在 class 裡把 `Tag` 內部用到的語意 token 指到別的 token。
+
+```scss
+/* ❌ 這仍然是覆寫元件外觀，而且更難察覺 */
+.status-approved {
+  --mzn-color-background-brand-faint: var(--mzn-color-background-success-faint);
+  --mzn-color-text-brand-solid: var(--mzn-color-text-success);
+}
+```
+
+它「只用了 design tokens」，但做的事情是**讓一個宣稱自己是 brand 色的元件謊稱自己是 success 色**。後果與直接寫死顏色相同，還多了兩個問題：
+
+1. 語意錯位 —— 該節點的 `--mzn-color-background-brand-faint` 已不再是 brand 色，任何巢狀在裡面、也用到這個 token 的元素會一起被污染。
+2. 升級即碎 —— 一旦 `Tag` 改用別的 token，這套覆寫會靜默失效，沒有任何型別或編譯錯誤會提醒你。
+
+**判準**：design tokens 是拿來用在**你自己的版面元素**上的，不是拿來**重新定義元件內部語意**的。元件的語意色只能透過元件自己的 input 選 —— `MznTag` 沒有那個 input，就是它不負責語意。
+
+另：分類標籤需要「白底 + 灰框」的描邊外觀時，用 `readOnly` input（`background-color: unset` + `border: 1px solid border/neutral-light`），**不要自己刻 border**。
+
+---
+
 ## Import
 
 ```ts

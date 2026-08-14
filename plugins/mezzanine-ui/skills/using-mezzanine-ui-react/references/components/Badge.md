@@ -6,7 +6,14 @@
 >
 > **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Badge) · Verified 1.4.1 (2026-07-01)
 
-Badge component for marking status, quantity, or hint messages. Supports dot and count modes.
+Badge component for marking status, quantity, or hint messages.
+
+**四種型態**：`dot-*`（狀態圓點）、`dot-*` + `text`（圓點 + 狀態文字，**表格狀態欄最常用**）、`text-*`（純文字狀態）、`count-*`（數字氣泡）。
+
+**狀態標籤（「已核准」「失敗」「停用」）用 `dot-*` + `text`，不要用 [`Tag`](Tag.md)。**
+
+> **Aliases** — Badge (MUI・Ant Design・Bootstrap) · Chip (MUI，狀態用途) · status chip · 狀態晶片 · 狀態標籤 · 紅點 · 未讀數字 · Figma `Badge / Dot With Text`
+> **Not for** — 分類標籤（用 [`Tag`](Tag.md)）；有底色的膠囊狀態晶片（`dot-*` / `text-*` **沒有背景色**，見下方〈沒有膠囊底色〉）
 
 ## Import
 
@@ -20,6 +27,42 @@ import type { BadgeProps } from '@mezzanine-ui/react';
 > **Note**: `BadgeContainer` is deprecated (`@deprecated`), use the `Badge` component directly. `BadgeContainerProps` is equivalent to `NativeElementPropsWithoutKeyAndRef<'span'>`.
 
 `BadgeProps` extends `Omit<NativeElementPropsWithoutKeyAndRef<'span'>, 'children'>` and unions with `BadgeVariantProps`.
+
+---
+
+## 沒有膠囊底色（重要）
+
+核對自 `packages/core/src/badge/_badge-styles.scss`：
+
+| variant   | 實際樣式                                                               | 有膠囊底嗎                                    |
+| --------- | ---------------------------------------------------------------------- | --------------------------------------------- |
+| `dot-*`   | `color` + `column-gap` + 一顆 `::before` 圓點                          | ❌ 無 background、無 radius、無 padding        |
+| `text-*`  | `color` + `column-gap`                                                 | ❌ 只有文字顏色                                |
+| `count-*` | `color` + `background-color` + `border-radius` + `padding-inline` | ✅ 但它的 prop 是 `count: number`，塞不了文字   |
+
+> `count-*` 的圓角**不是一致的**：`count-alert` / `count-inactive` / `count-inverse` / `count-brand` 是 `radius.variable(full)`（膠囊），但 **`count-info` 是 `radius.variable(tiny)`**（近乎方角）。核對自 `packages/core/src/badge/_badge-styles.scss` 的 `$count-type-config`。
+
+**結論：設計稿上「有底色的圓角膠囊 + 狀態文字」這種晶片，在 Mezzanine 裡零覆寫做不出來。**
+
+遇到這種稿子的正解是改用 `dot-*` + `text`，或回頭與設計確認 —— **不是**自己補 `background`。補了就違反「樣式僅可透過 design tokens 調整」，而且會在專案裡長出一套與設計系統平行的私有色階。
+
+---
+
+## 表格狀態欄用 `dot-*`，不要用 `text-*`
+
+實測（放大對照）：表格狀態欄用 `text-success` 時，「啟用」與同一列操作欄的 `base-text-link`「編輯」**幾乎無法分辨** —— 同色系、同字重、同字級，狀態看起來像可點的連結。
+
+`dot-*` 多的那顆 6px 圓點提供了「這是狀態指示器」的**形狀記號**，一眼分開，不靠顏色。
+
+```tsx
+// ❌ 表格狀態欄：與同列的 text-link 操作按鈕難以分辨
+<Badge variant="text-success" text="啟用" />
+
+// ✅ 圓點提供形狀記號
+<Badge variant="dot-success" text="啟用" />
+```
+
+**無障礙補充**（`packages/system/src/palette/typings.ts`）：`TextTone` 有 `error-strong` / `warning-strong` / `info-strong`，**但沒有 `success-strong`**（只有 `IconTone` 有）。所以純文字綠固定卡在 `text/success` = green-500 `#139F62`，對白底對比 **3.41:1**，低於 WCAG AA 的 4.5:1，**在型別範圍內換不掉**。這是另一個該用 `dot-*` 的理由。
 
 ---
 
@@ -54,6 +97,9 @@ import type { BadgeProps } from '@mezzanine-ui/react';
 | `text-warning`  | Warning text   | Inline warning           |
 | `text-info`     | Info text      | Inline info              |
 | `text-inactive` | Inactive text  | Inline inactive          |
+
+> 三組 variant 各**恰好五個值，沒有其他成員**（核對自 `packages/core/src/badge/badge.ts`）。
+> **沒有** `text-alert` / `text-brand` / `text-neutral` / `dot-brand` / `dot-neutral` 這些值 —— 灰色是 `*-inactive`，藍色是 `*-info`，`brand` 只存在於計數型（`count-brand`）。
 
 ---
 
@@ -314,6 +360,7 @@ interface BadgeTextProps {
 | 使用情境 | 推薦用法 | 原因 |
 | ------- | ------- | ---- |
 | 狀態指示 | `variant="dot-*"` | 視覺標記狀態（在線/離線） |
+| 表格狀態欄 | `variant="dot-*"` + `text` | 圓點提供形狀記號，不會被誤認為 text-link |
 | 通知計數 | `variant="count-*"` + `count={num}` | 顯示未讀數量 |
 | 內聯狀態文字 | `variant="text-*"` + `text="..."` | 文字形式的狀態 |
 | 大於 99 | `overflowCount={99}` | 防止數字過長 |
@@ -408,8 +455,8 @@ interface BadgeTextProps {
 ```tsx
 <Badge variant="count-alert" count={notifications.length} />
 
-// 需要文字說明時用文字 Badge
-<Badge variant="text-alert" text="5 Notifications" />
+// 需要文字說明時用文字 Badge（注意：BadgeTextVariant 沒有 text-alert，錯誤語意用 text-error）
+<Badge variant="text-error" text="5 Notifications" />
 ```
 
 #### ❌ Dot Badge 位置不明確
@@ -452,3 +499,5 @@ interface BadgeTextProps {
 4. **狀態色彩一致**：全系統統一顏色語義
 5. **點搭配內容**：點應與圖示或文字結合，增強表意
 6. **尺寸適應場景**：main 用於主要內容，sub 用於輔助資訊
+7. **狀態標籤用 Badge，不是 Tag**：`Tag` 沒有語意色，覆寫它的底色是選錯元件的訊號（見 [Tag.md](Tag.md)）
+8. **表格狀態欄用 `dot-*`**：`text-*` 與 `base-text-link` 難以分辨，且純文字綠對比僅 3.41:1

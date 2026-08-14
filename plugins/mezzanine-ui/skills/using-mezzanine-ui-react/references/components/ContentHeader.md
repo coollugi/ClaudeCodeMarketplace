@@ -47,11 +47,20 @@ ContentHeader 會在 runtime 透過 `isValidElement` 檢查每個子元素的 `t
 | 類別 | 規則 | 例外/限制 |
 | --- | --- | --- |
 | 返回鈕 | `type === 'a'` 或 props 含 `href`（如 `<a>`、`<Link>`） | 也可改用 `onBackClick` prop（互斥） |
-| Filter 元件 | `Input variant="search"` / `Select` / `Toggle` / `Checkbox` | `SegmentedControl` 寫在型別但目前**未實作**，使用會被丟棄並 warning |
+| Filter 元件 | `Input variant="search"` / `Select` / `Toggle` / `Checkbox` | `SegmentedControl` 寫在 `ContentHeader` 的型別但目前**未實作**，放進 `ContentHeader` 會被丟棄並 warning（**這只代表 ContentHeader 不吃它，不代表 Mezzanine 沒有分段控制項** —— 見下方說明） |
 | Action 按鈕 | `Button` | `variant` 必須是 `base-primary` / `base-secondary` / `destructive-secondary` 或 `undefined`；其他 variant 不渲染 |
 | Utility 按鈕 | `Button` 且 `iconType="icon-only"` | 一般文字按鈕不算 utility |
 | Overflow 下拉 | `Dropdown`，且其 trigger 必須是 icon-only `Button` | 非 icon-only Button trigger 會 warning + 丟棄 |
 | 響應式版型 | 內部 `ContentHeaderResponsive`（一般使用不會直接寫） | - |
+
+> **⚠️ 關於 `SegmentedControl`（重要，容易誤讀）**
+>
+> 上表那個「未實作」**只適用於 `ContentHeader` 的 filter slot**：`ContentHeaderProps` 的型別 union 裡有 `SegmentedControlProps` 這個成員，但 `ContentHeader` 內部沒有對應的渲染分支，所以放進去會被丟棄。
+>
+> **這不代表 Mezzanine 沒有分段控制項。** 分段控制項（Segmented Control / 分段切換 / 檢視切換 / 排序切換）的實作是
+> **[`RadioGroup type="segment"` + `Radio type="segment"`](Radio.md)**，功能完整、有專屬樣式（`mzn-radio--segmented`），Figma 元件名就叫 `Segmented Control`。
+>
+> 若你是為了做分段切換而搜尋到這一行 —— 請直接前往 [Radio.md](Radio.md)，**不要**退而用多顆 `Button` 的 variant 差異模擬。
 
 ### 會被丟棄並警告的常見錯誤
 

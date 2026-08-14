@@ -8,6 +8,17 @@ A single-select radio button component supporting `radio` (standard) and `segmen
 
 `MznRadioGroup` can render radio buttons from a declarative `options` array or accept projected `mznRadio` children. Both approaches can be mixed.
 
+> **別名（重要）** — `type="segment"` 的 `MznRadioGroup` 就是一般所稱的
+> **Segmented Control / 分段控制項 / 分段切換 / Toggle Button Group / mat-button-toggle-group (Angular Material) / Segmented (Ant Design)**
+> （Figma 元件名為 `Segmented Control` / `Segmented Control Set`）。
+> 互斥的**檢視切換、排序切換、篩選切換**一律用它，
+> **不要用多顆 `mznButton` 的 variant 差異模擬選中狀態**。
+
+> **Aliases** — Radio · Radio Button · 單選 · Segmented Control · 分段控制項 · 分段切換 · 檢視切換 · 排序切換 · Toggle Button Group · mat-button-toggle-group · Segmented (AntD) · Figma `Segmented Control`
+> **Not for** — 多選（用 [`MznCheckbox`](Checkbox.md) / `MznCheckboxGroup`）；卡片式選取（用 [`MznSelectionCard`](SelectionCard.md)）
+
+> **這個元件歸類在 Data Entry，但 `segment` 模式不限於表單。** 排序切換、檢視切換這類非表單的互斥切換也用它 —— 見下方 [Usage](#usage) 的排序切換範例。
+
 ## Import
 
 ```ts
@@ -126,6 +137,37 @@ export class PlanSelectorComponent {
 }
 ```
 
+### Segment 模式 — 非表單情境（排序切換 / 檢視切換）
+
+`segment` 模式最常見的用途其實**不是表單欄位**，而是列表上方的排序、檢視、篩選切換。這種情境不需要 `mznFormField`，直接綁 signal 或 `ngModel` 即可。
+
+```html
+<!-- ✅ 這就是設計稿上的 Segmented Control -->
+<div mznRadioGroup
+  type="segment"
+  size="sub"
+  name="sort"
+  [(ngModel)]="sort"
+  [options]="[
+    { id: 'sla', name: '時效由近到遠' },
+    { id: 'amount', name: '金額由大到小' }
+  ]">
+</div>
+```
+
+```html
+<!-- ❌ 反例：用兩顆 Button 的 variant 差異模擬選中狀態 -->
+<!-- 語意不對（不是 radiogroup，鍵盤操作與 a11y 都不同）、視覺也不是設計稿上的 Segmented Control -->
+@for (option of sorts; track option.id) {
+  <button
+    mznButton
+    [variant]="sort() === option.id ? 'base-secondary' : 'base-tertiary'"
+    (click)="sort.set(option.id)">
+    {{ option.name }}
+  </button>
+}
+```
+
 ## Notes
 
 - When radios are inside a group, the group's `MZN_RADIO_GROUP` DI token provides shared state. The radio's `select(value)` call on change bubbles up through the group's CVA `onChange`. The injected value has the shape:
@@ -143,3 +185,4 @@ export class PlanSelectorComponent {
 - For `segment` type, icons can be provided via the `icon` input (individual radio) or the `icon` field in `RadioGroupOption`.
 - `withInputConfig` shows an adjacent `MznInput` (base variant) that auto-focuses when the radio is selected. This is a React parity feature for "Other: [input]" patterns.
 - Unlike `MznCheckboxGroup` which binds `string[]`, `MznRadioGroup` binds a single `string` — reflecting radio's mutually exclusive selection.
+- **不要用多顆 `mznButton` 模擬分段控制項**：設計稿上的 Segmented Control 一律是 `MznRadioGroup type="segment"`。用 `Button` 的 variant 差異模擬選中狀態，語意（不是 radiogroup）、鍵盤操作與視覺都不對。
