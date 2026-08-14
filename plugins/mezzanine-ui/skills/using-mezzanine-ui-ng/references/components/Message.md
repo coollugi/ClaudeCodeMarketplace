@@ -4,6 +4,9 @@
 
 Global toast notification system. The primary API is `MznMessageService` (injectable singleton) which corresponds to React's `Message.success()` / `Message.error()` static methods. `MznMessage` is the individual toast component rendered by the notifier system.
 
+> **Aliases** — Toast · Snackbar (MUI) · MatSnackBar (Angular Material) · message (Ant Design) · 浮動提示 · 操作回饋
+> **Not for** — 需要保留可回顧的通知（用 [`MznNotificationCenter`](NotificationCenter.md)）；固定在版面裡的說明（用 [`MznInlineMessage`](InlineMessage.md)）
+
 ## Import
 
 ```ts

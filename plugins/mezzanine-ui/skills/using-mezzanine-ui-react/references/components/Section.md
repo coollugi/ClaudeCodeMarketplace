@@ -10,6 +10,9 @@
 
 Section container component for composing `ContentHeader`, `FilterArea`, `Tab`, and other sub-components to build structured page sections. The passed `contentHeader` and `filterArea` automatically receive `size="sub"`.
 
+> **Aliases** — Panel · Fieldset · Well · Card（作為頁面區塊時）· 區塊 · 卡片式區塊 · Figma `Section / *`
+> **Not for** — 圖文卡片／商品卡（用 [`Card`](Card.md) 家族）。`Section` 自帶 16px 內距與底色，**不要再幫它補 padding**，外側 gutter 由 page body wrapper 提供。
+
 > **ContentHeader note**: `ContentHeader` is removed in 1.4.1 (deprecated since 1.1.0) because it is no longer exported from the `@mezzanine-ui/react` main entry. However, it **remains internally required** by Section's `contentHeader` prop — runtime validation rejects any other component type. Import `ContentHeader` via the sub-path `@mezzanine-ui/react/ContentHeader` and continue using it as shown in the examples below. See [ContentHeader.md](ContentHeader.md) for details.
 
 ## Import

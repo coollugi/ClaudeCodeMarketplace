@@ -6,6 +6,9 @@
 
 A binary on/off toggle switch component (supersedes the React `Switch` component naming). Implements `ControlValueAccessor` to bind `boolean` values with Angular Forms. Supports an optional text label and supporting text.
 
+> **Aliases** — mat-slide-toggle (Angular Material) · Switch (MUI・Ant Design) · 開關 · 切換開關 · Figma `Toggle / *`
+> **Not for** — 多選清單（用 [`MznCheckbox`](Checkbox.md) / `MznCheckboxGroup`）；互斥的多選一（用 [`MznRadioGroup type="segment"`](Radio.md)）。`@mezzanine-ui/ng` 沒有 `MznSwitch`。
+
 ## Import
 
 ```ts

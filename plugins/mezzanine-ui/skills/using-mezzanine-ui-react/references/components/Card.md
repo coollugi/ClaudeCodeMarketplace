@@ -8,6 +8,9 @@
 
 The Card system provides a set of structured card components for displaying different types of content. The v2 version splits cards into multiple specialized sub-components, each with clear use cases and type definitions. All card components support polymorphic rendering and can render as `div`, `a`, or custom components (e.g., Next.js `Link`).
 
+> **Aliases** — Card · Tile · 卡片 · 商品卡 · 圖文卡 · Figma `Card / *`
+> **Not for** — 頁面級的內容區塊（用 [`Section`](Section.md)）；可選取的卡片（用 [`SelectionCard`](SelectionCard.md)）
+
 ---
 
 ## Import

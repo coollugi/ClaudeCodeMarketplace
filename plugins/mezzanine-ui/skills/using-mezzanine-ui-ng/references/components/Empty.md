@@ -6,6 +6,9 @@
 
 空狀態元件，用於資料為空時的佔位提示。透過 `type` 自動選擇對應的預設圖示，搭配 `title` 及 `description` 傳遞訊息。提供兩種操作按鈕 API：`actions` input（物件設定，自動套用 `size`）與 `<ng-content select="[actions]">` content projection。支援 `pictogram` 傳入自訂圖形 TemplateRef 取代預設圖示。
 
+> **Aliases** — Empty State · No Data · Blank Slate · 空狀態 · 無資料 · Figma `Empty / *`
+> **Not for** — 操作完成／失敗的結果頁（用 [`MznResultState`](ResultState.md)）
+
 ## Import
 
 ```ts

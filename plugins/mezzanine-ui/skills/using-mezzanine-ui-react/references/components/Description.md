@@ -8,6 +8,9 @@
 
 Description component for displaying structured information in title-content pairs.
 
+> **Aliases** — Descriptions (Ant Design) · Definition List · Key-Value List · 詳情資訊 · 標題內容對 · Figma `Description / *`
+> **Not for** — 可排序／分頁的資料列表（用 [`Table`](Table.md)）。單筆資料的欄位展示不要用兩欄 `Table` 湊。
+
 ## Import
 
 ```tsx

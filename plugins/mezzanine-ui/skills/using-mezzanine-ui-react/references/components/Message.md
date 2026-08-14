@@ -8,6 +8,9 @@
 
 A global message notification component for displaying operation feedback, system notifications, and other lightweight messages. Uses an imperative API.
 
+> **Aliases** — Toast · Snackbar (MUI) · message (Ant Design) · 浮動提示 · 操作回饋
+> **Not for** — 需要保留可回顧的通知（用 [`NotificationCenter`](NotificationCenter.md)）；固定在版面裡的說明（用 [`InlineMessage`](InlineMessage.md)）
+
 ## Import
 
 ```tsx

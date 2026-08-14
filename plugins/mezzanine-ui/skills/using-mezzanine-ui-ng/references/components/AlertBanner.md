@@ -6,6 +6,9 @@
 
 橫幅通知元件，用於全域性重要訊息提示。支援 `info`、`warning`、`error` 三種嚴重程度，可附帶最多 2 個操作按鈕與關閉按鈕，並內建入場/離場高度動畫。通常搭配 `MznAlertBannerService` 以命令式 API 呼叫，並配合 `MznAlertBannerContainer` 統一渲染所有浮動橫幅。
 
+> **Aliases** — Alert · Banner · System Banner · 系統警示 · 頁面級橫幅 · Figma `Alert Banner`
+> **Not for** — 區塊內的說明／警語（用 [`MznInlineMessage`](InlineMessage.md)）。`MznAlertBanner` 走 Portal 的 `alert` 層（`position: sticky; top: 0`），**不會待在你放它的位置**，而是浮到頁面頂端蓋住 `mznPageHeader`。
+
 ## Import
 
 ```ts

@@ -8,6 +8,9 @@
 
 The most commonly used interactive element, supporting multiple variants and sizes.
 
+> **Aliases** — Button · CTA · 按鈕 · Figma `Button / *`
+> **Not for** — 模擬分段控制項的選中狀態（用 [`RadioGroup type="segment"`](Radio.md)，**不要**用多顆 Button 的 variant 差異）；開關（用 [`Toggle`](Toggle.md)）
+
 ## Import
 
 ```tsx

@@ -8,6 +8,9 @@
 
 Skeleton screen component for providing placeholder effects while content is loading.
 
+> **Aliases** — Skeleton Screen · Placeholder · Shimmer · Ghost Loading · 骨架屏 · 載入佔位
+> **Not for** — 不知道版面結構的載入（用 [`Spin`](Spin.md)）；有百分比的進度（用 [`Progress`](Progress.md)）
+
 ## Import
 
 ```tsx

@@ -4,6 +4,9 @@
 
 Attribute directive that renders a floating tooltip on mouse hover. Uses `@floating-ui/dom` for positioning (with `flip` + `shift` middleware) and renders an SVG arrow indicator by default. Mounts the tooltip element to `document.body` (portal mode) unless `tooltipDisablePortal` is set.
 
+> **Aliases** — Tooltip · Hint · matTooltip (Angular Material) · 提示泡泡 · 滑過說明
+> **Not for** — 文字溢出才顯示完整內容（用 [`MznOverflowTooltip`](OverflowTooltip.md)）；需要互動內容的浮層（用 [`MznPopper`](Popper.md) / [`MznDropdown`](Dropdown.md)）
+
 ## Import
 
 ```ts

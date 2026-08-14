@@ -8,6 +8,9 @@
 
 An inline message component for displaying contextual feedback messages.
 
+> **Aliases** — Alert (MUI) · Callout · Inline Alert · Helper Text · 區塊說明 · 警語 · 表單提示
+> **Not for** — 頁面級／系統級公告（用 [`AlertBanner`](AlertBanner.md)）；一閃即逝的操作回饋（用 [`Message`](Message.md)）
+
 ## Import
 
 ```tsx

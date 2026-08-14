@@ -8,6 +8,9 @@
 
 Tooltip component for displaying additional information on mouse hover. Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 
+> **Aliases** — Tooltip · Hint · 提示泡泡 · 滑過說明
+> **Not for** — 文字溢出才顯示完整內容（用 [`OverflowTooltip`](OverflowTooltip.md)）；需要互動內容的浮層（用 [`Popper`](Popper.md) / [`Dropdown`](Dropdown.md)）
+
 ## Import
 
 ```tsx

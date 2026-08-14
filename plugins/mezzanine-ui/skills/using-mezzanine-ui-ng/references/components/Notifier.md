@@ -4,6 +4,9 @@
 
 Low-level notification queue manager. `MznNotifierService` is the singleton backbone used by `MznMessageService` and `MznAlertBannerService`. It manages a displayed list and a queue, enforcing `maxCount` with automatic promotion.
 
+> **Aliases** — Notification factory · 自訂通知系統底層
+> **Not for** — 一般的操作提示（直接用 [`MznMessage`](Message.md)）；通知中心（用 [`MznNotificationCenter`](NotificationCenter.md)）。只有需要自建一整套通知型別時才直接用它。
+
 ## Import
 
 ```ts

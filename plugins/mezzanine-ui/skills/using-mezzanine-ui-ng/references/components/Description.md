@@ -4,6 +4,9 @@
 
 Key–value pair display. `MznDescription` wraps a `MznDescriptionTitle` (label) and a projected `MznDescriptionContent` (value). Group multiple pairs with `MznDescriptionGroup`.
 
+> **Aliases** — Descriptions (Ant Design) · Definition List · Key-Value List · 詳情資訊 · 標題內容對 · Figma `Description / *`
+> **Not for** — 可排序／分頁的資料列表（用 [`MznTable`](Table.md)）。單筆資料的欄位展示不要用兩欄 `MznTable` 湊。
+
 ## Import
 
 ```ts

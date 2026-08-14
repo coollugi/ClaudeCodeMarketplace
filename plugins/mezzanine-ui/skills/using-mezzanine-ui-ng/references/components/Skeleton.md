@@ -6,6 +6,9 @@
 
 骨架屏佔位元件，用於載入中狀態的視覺提示。支援兩種模式：**strip mode**（設定 `variant` 且未指定 `height` / `circle` 時，以對應文字排版高度呈現長條形）與 **block mode**（指定 `width` / `height` / `circle` 時以指定尺寸呈現方形或圓形）。
 
+> **Aliases** — Skeleton Screen · Placeholder · Shimmer · Ghost Loading · 骨架屏 · 載入佔位
+> **Not for** — 不知道版面結構的載入（用 [`MznSpin`](Spin.md)）；有百分比的進度（用 [`MznProgress`](Progress.md)）
+
 ## Import
 
 ```ts

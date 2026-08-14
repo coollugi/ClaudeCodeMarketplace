@@ -8,6 +8,9 @@
 
 An empty state component for displaying placeholder screens when there is no data or in specific states.
 
+> **Aliases** — Empty State · No Data · Blank Slate · 空狀態 · 無資料 · Figma `Empty / *`
+> **Not for** — 操作完成／失敗的結果頁（用 [`ResultState`](ResultState.md)）
+
 ## Import
 
 ```tsx

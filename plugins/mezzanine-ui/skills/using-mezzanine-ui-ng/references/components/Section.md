@@ -4,6 +4,9 @@
 
 Layout container that composes a `MznContentHeader`, an optional `MznFilterArea`, optional tabs, and the main content area. Uses named `ng-content` selectors to position each child in the correct slot.
 
+> **Aliases** — Panel · Fieldset · Well · Card（作為頁面區塊時）· 區塊 · 卡片式區塊 · Figma `Section / *`
+> **Not for** — 圖文卡片／商品卡（用 [`MznBaseCard`](Card.md) 家族）。`MznSection` 自帶 16px 內距與底色，**不要再幫它補 padding**，外側 gutter 由 page body wrapper 提供。
+
 ## Import
 
 ```ts

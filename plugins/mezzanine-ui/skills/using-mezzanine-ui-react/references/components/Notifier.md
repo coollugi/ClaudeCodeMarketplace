@@ -8,6 +8,9 @@
 
 Notifier factory function for creating custom notification systems. It is the underlying implementation of Message, NotificationCenter, and other components.
 
+> **Aliases** — Notification factory · createNotifier · 自訂通知系統底層
+> **Not for** — 一般的操作提示（直接用 [`Message`](Message.md)）；通知中心（用 [`NotificationCenter`](NotificationCenter.md)）。只有需要自建一整套通知型別時才直接用它。
+
 ## Import
 
 ```tsx

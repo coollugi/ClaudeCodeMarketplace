@@ -6,6 +6,9 @@
 
 A dropdown selector component that opens a floating list panel on trigger click. Supports single and multiple selection modes. In `multiple` mode, if any option has `children` (nested options), the component auto-switches to tree mode and renders a checkbox-based tree. Uses `ClickAwayService` to close on outside clicks and `MznInputTriggerPopper` for floating panel positioning. Implements `ControlValueAccessor`.
 
+> **Aliases** — Select · Combobox · mat-select (Angular Material) · 下拉選單 · 下拉選擇
+> **Not for** — 觸發動作的選單（用 [`MznDropdown`](Dropdown.md)）；邊打字邊過濾（用 [`MznAutocomplete`](Autocomplete.md)）；有階層的選項（用 [`MznCascader`](Cascader.md)）
+
 ## Import
 
 ```ts

@@ -6,6 +6,9 @@
 
 通用按鈕 directive，支援多種外觀變體與尺寸。使用 attribute selector `[mznButton]`，可套用於 `<button>`、`<a>` 或任意 host element，實現與 React `component` prop 等效的多型態功能。`MznButtonGroup` 可將多個按鈕水平/垂直排列，並透過 DI 向子按鈕提供預設的 `variant`、`size`、`disabled`。
 
+> **Aliases** — Button · CTA · 按鈕 · Figma `Button / *`
+> **Not for** — 模擬分段控制項的選中狀態（用 [`MznRadioGroup type="segment"`](Radio.md)，**不要**用多顆 `mznButton` 的 variant 差異）；開關（用 [`MznToggle`](Toggle.md)）
+
 ## Import
 
 ```ts

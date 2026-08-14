@@ -6,6 +6,9 @@
 
 行內訊息元件，用於表單欄位旁的即時回饋。支援 `info`、`warning`、`error` 三種語意；`info` 模式可附帶關閉按鈕。`MznInlineMessageGroup` 將多則訊息集中顯示，支援透過 `items` 陣列傳入並統一監聽關閉事件。
 
+> **Aliases** — Alert (MUI) · Callout · Inline Alert · Helper Text · 區塊說明 · 警語 · 表單提示
+> **Not for** — 頁面級／系統級公告（用 [`MznAlertBanner`](AlertBanner.md)）；一閃即逝的操作回饋（用 [`MznMessage`](Message.md)）
+
 ## Import
 
 ```ts
