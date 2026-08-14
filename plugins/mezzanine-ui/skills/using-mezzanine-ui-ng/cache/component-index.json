@@ -535,7 +535,7 @@
       "selectorType": "directive",
       "selector": "[mznDatePicker]",
       "category": "data-entry",
-      "cva": false,
+      "cva": true,
       "referenceDoc": "references/components/DatePicker.md",
       "inputs": [
         "anchor",
@@ -1897,7 +1897,7 @@
       "selectorType": "directive",
       "selector": "[mznSelectionCard]",
       "category": "data-entry",
-      "cva": false,
+      "cva": true,
       "referenceDoc": "references/components/SelectionCard.md",
       "inputs": [
         "checked",
