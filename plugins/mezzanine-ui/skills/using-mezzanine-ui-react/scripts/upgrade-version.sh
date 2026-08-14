@@ -595,7 +595,10 @@ fetch_component_props_diff() {
         ng)
             api_index_file="$CACHE_DIR/component-index.json"
             # ng component-index.json stores inputs/outputs under .components.<Name>.inputs
-            current_lookup_jq='.components[$comp].inputs // {} | keys[]'
+            # `inputs` may be an array of names or an object keyed by name.
+            # `keys[]` on an array yields INDICES (0,1,2...), so every component
+            # reported its entire input set as both added and removed.
+            current_lookup_jq='.components[$comp].inputs // [] | if type == "object" then keys[] else .[] end'
             ;;
     esac
 
@@ -722,14 +725,41 @@ fetch_component_props_diff() {
             # The replacement tolerates visibility/readonly modifiers and both
             # `input(...)` and `input.required<...>()` forms, plus legacy @Input().
             local signal_inputs legacy_inputs
+            # Angular's `input(..., { alias: 'x' })` makes `x` the template-facing
+            # name while the class member is called something else. MznInput
+            # declares `externalValue = input(..., { alias: 'value' })` and
+            # `readonlyState = input(false, { alias: 'readonly' })` — reading member
+            # names would have renamed the documented `value` and `readonly` inputs
+            # to internal identifiers and broken every consumer template.
+            #
+            # Buffer each declaration until its parentheses balance so a multi-line
+            # options object is seen, then prefer the alias when present.
             signal_inputs=$(echo "$source_content" | awk '
+                function emit(buf, member,   a) {
+                    if (match(buf, /alias:[[:space:]]*['"'"'"][^'"'"'"]+['"'"'"]/)) {
+                        a = substr(buf, RSTART, RLENGTH)
+                        sub(/alias:[[:space:]]*['"'"'"]/, "", a)
+                        sub(/['"'"'"]$/, "", a)
+                        if (a != "") { print a; return }
+                    }
+                    if (member != "") print member
+                }
+                collecting {
+                    buf = buf " " $0
+                    depth += gsub(/\(/, "(") - gsub(/\)/, ")")
+                    if (depth <= 0) { emit(buf, member); collecting = 0 }
+                    next
+                }
                 match($0, /^[[:space:]]*(public[[:space:]]+|protected[[:space:]]+|private[[:space:]]+)?(readonly[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]/) {
                     seg = substr($0, RSTART, RLENGTH)
                     sub(/[[:space:]]*=[[:space:]]*input[.<(]$/, "", seg)
                     sub(/^[[:space:]]*/, "", seg)
                     sub(/^(public|protected|private)[[:space:]]+/, "", seg)
                     sub(/^readonly[[:space:]]+/, "", seg)
-                    if (seg != "") print seg
+                    member = seg
+                    buf = $0
+                    depth = gsub(/\(/, "(") - gsub(/\)/, ")")
+                    if (depth <= 0) { emit(buf, member) } else { collecting = 1 }
                 }
             ' || true)
             legacy_inputs=$(echo "$source_content" \
