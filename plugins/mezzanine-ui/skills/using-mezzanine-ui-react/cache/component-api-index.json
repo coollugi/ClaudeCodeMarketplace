@@ -87,6 +87,26 @@
       "children": {
         "type": "never",
         "required": false
+      },
+      "autoScrollTo": {
+        "type": "boolean",
+        "required": false
+      },
+      "disabled": {
+        "type": "boolean",
+        "required": false
+      },
+      "href": {
+        "type": "string",
+        "required": false
+      },
+      "onClick": {
+        "type": "VoidFunction",
+        "required": false
+      },
+      "title": {
+        "type": "string",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Anchor/Anchor.tsx",
@@ -331,6 +351,14 @@
       "size": {
         "type": "'sub'",
         "required": false
+      },
+      "filter": {
+        "type": "object",
+        "required": false
+      },
+      "utilities": {
+        "type": "(",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/ContentHeader/ContentHeader.tsx",
@@ -502,7 +530,28 @@
     ]
   },
   "Description": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "unknown",
+        "required": true
+      },
+      "className": {
+        "type": "string",
+        "required": false
+      },
+      "orientation": {
+        "type": "DescriptionOrientation",
+        "required": false
+      },
+      "size": {
+        "type": "DescriptionSize",
+        "required": false
+      },
+      "title": {
+        "type": "string",
+        "required": true
+      }
+    },
     "sourceFile": "packages/react/src/Description/Description.tsx",
     "extends": []
   },
@@ -1211,7 +1260,40 @@
     "extends": []
   },
   "OverflowTooltip": {
-    "props": {},
+    "props": {
+      "anchor": {
+        "type": "PopperProps['anchor']",
+        "required": true
+      },
+      "className": {
+        "type": "string",
+        "required": false
+      },
+      "onTagDismiss": {
+        "type": "(tagIndex: number) => void",
+        "required": true
+      },
+      "open": {
+        "type": "boolean",
+        "required": true
+      },
+      "placement": {
+        "type": "Placement",
+        "required": false
+      },
+      "readOnly": {
+        "type": "boolean",
+        "required": false
+      },
+      "tags": {
+        "type": "string[]",
+        "required": true
+      },
+      "tagSize": {
+        "type": "TagProps['size']",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/OverflowTooltip/OverflowTooltip.tsx",
     "extends": []
   },
@@ -1221,7 +1303,12 @@
     "extends": []
   },
   "PageHeader": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "PageHeaderChild | PageHeaderChild[]",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/PageHeader/PageHeader.tsx",
     "extends": []
   },
@@ -1328,17 +1415,9 @@
         "type": "{",
         "required": false
       },
-      "enabled": {
-        "type": "boolean",
-        "required": true
-      },
       "className": {
         "type": "string",
         "required": true
-      },
-      "padding": {
-        "type": "number",
-        "required": false
       },
       "controllerRef": {
         "type": "Ref<PopperController>",
@@ -1394,14 +1473,6 @@
     "props": {
       "icons": {
         "type": "{",
-        "required": false
-      },
-      "error": {
-        "type": "IconDefinition",
-        "required": false
-      },
-      "success": {
-        "type": "IconDefinition",
         "required": false
       },
       "percent": {
@@ -1780,7 +1851,20 @@
     "extends": []
   },
   "Textarea": {
-    "props": {},
+    "props": {
+      "textareaClassName": {
+        "type": "string",
+        "required": false
+      },
+      "textareaRef": {
+        "type": "Ref<HTMLTextAreaElement>",
+        "required": false
+      },
+      "resize": {
+        "type": "'none' | 'both' | 'horizontal' | 'vertical'",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Textarea/Textarea.tsx",
     "extends": []
   },
@@ -1938,14 +2022,6 @@
         "required": false,
         "default": "true"
       },
-      "onMouseEnter": {
-        "type": "MouseEventHandler",
-        "required": true
-      },
-      "onMouseLeave": {
-        "type": "MouseEventHandler",
-        "required": true
-      },
       "ref": {
         "type": "React.RefCallback<HTMLElement>",
         "required": true
@@ -1968,6 +2044,10 @@
       "title": {
         "type": "ReactNode",
         "required": false
+      },
+      "children": {
+        "type": "object",
+        "required": true
       }
     },
     "sourceFile": "packages/react/src/Tooltip/Tooltip.tsx",
@@ -2210,7 +2290,7 @@
   },
   "_meta": {
     "version": "1.4.2",
-    "generatedAt": "2026-07-01",
+    "generatedAt": "2026-08-14",
     "description": "TypeScript props API index for Mezzanine UI v2"
   }
 }
