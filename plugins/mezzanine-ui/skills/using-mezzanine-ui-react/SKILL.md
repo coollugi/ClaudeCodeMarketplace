@@ -7,7 +7,7 @@ description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX c
 
 **Core principle: All frontend development MUST prefer the Mezzanine-UI design system.**
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）. Last verified: 2026-07-01；版本歷史於 2026-08-14 逐版重新核對。
+> Baseline: `@mezzanine-ui/react` `1.4.2` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）. Last verified: 2026-07-01；版本歷史於 2026-08-14 逐版重新核對。
 >
 > **已有更新版本**：`@mezzanine-ui/react@1.4.2` 已發布（含 `AutoComplete` 的 `caseSensitive` 新 prop 與預設比對行為變更），本 skill 尚未涵蓋 —— 見〈更新版本存在〉。
 >
@@ -323,6 +323,15 @@ export default function ProductListPage(): JSX.Element {
 
 ---
 
+## What's New in v1.4.2
+
+- **`AutoComplete`** — 選項比對預設從**大小寫敏感改為不敏感**（先前比對 RegExp 漏了 `i` flag，輸入 `vir` 找不到 `Virginia`）。新增 `caseSensitive?: boolean`（預設 `false`）供退回舊行為；`addable` 模式的重複檢查（`isSameOptionName()`）也一併尊重這個 flag，避免對只差大小寫的既有選項再提供「建立」動作。**這是行為變更，倚賴舊行為的專案升級後需明確傳 `caseSensitive`。**
+- **`Dropdown`** — option `mousedown` 時保留 trigger focus，修正 `AutoComplete` 篩選文字在 blur 時被清空。純內部修正，無 API 變更。
+
+> 1.4.2 只動到 `AutoComplete` 家族與 `Dropdown` 內部事件處理，其餘元件文件的 `Verified 1.4.1` 標記仍然成立。
+
+---
+
 ## What's New in v1.4.1
 
 > 涵蓋 1.2.0 – 1.4.1（5 個 release）累積變更。詳見各元件文件與 [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases)。
@@ -365,17 +374,6 @@ export default function ProductListPage(): JSX.Element {
   > 修正位於 core 的 calendar adapter 層，react / ng 的日期元件透過注入 `calendarMethods` 取用，因此**不需要** react 端另外修改；只要相依的 `@mezzanine-ui/core` 到 1.1.0 即生效。react 1.2.0 與 core 1.1.0 同日（2026-05-07）發布，先前本文件因此把它誤記在 react 1.2.0 名下。
 
 **相依套件版本**：`packages/react/package.json` 對三個套件都是**精確釘版（exact pin，無 `^` / `~` / `>=`）** —— `@mezzanine-ui/core` `1.1.0`、`@mezzanine-ui/system` `1.0.2`、`@mezzanine-ui/icons` `1.0.2`。不要寫成 `>=`，那會誤導成「更高版本也相容」。
-
-### 更新版本存在（本 skill 尚未涵蓋）
-
-`@mezzanine-ui/react@1.4.2` 已發布，含**一項公開 API 變更**：
-
-- **`AutoComplete`** — 選項比對預設改為**大小寫不敏感**（先前 RegExp 漏了 `i` flag，輸入 `vir` 找不到 `Virginia`），並新增 `caseSensitive?: boolean`（預設 `false`）供退回舊行為。bulk-create 的去重邏輯也一併尊重這個 flag。
-- **`Dropdown`** — option `mousedown` 時保留 trigger focus，修正 `AutoComplete` 篩選文字在 blur 時被清空的問題。純內部修正。
-
-> 本 skill 的元件文件仍以 1.4.1 為基準，尚未納入 `caseSensitive`。下次 `/sync-mezzanine-ui 1.4.2` 時補齊。
-
----
 
 <details>
 <summary>Previous: What's New in 1.1.0</summary>
@@ -831,7 +829,7 @@ document.documentElement.setAttribute('data-density', 'compact');
 When Mezzanine-UI releases a new version, use the `/sync-mezzanine-ui` command to refresh all skill content:
 
 ```
-/sync-mezzanine-ui 1.4.1
+/sync-mezzanine-ui react 1.4.2
 ```
 
 This orchestrates a team of agents to:
