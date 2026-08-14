@@ -718,16 +718,6 @@
         "disableCloseOnBackdropClick",
         "disableCloseOnEscapeKeyDown",
         "disablePortal",
-        "filterAreaAllRadioLabel",
-        "filterAreaCustomButtonLabel",
-        "filterAreaDefaultValue",
-        "filterAreaIsEmpty",
-        "filterAreaOptions",
-        "filterAreaReadRadioLabel",
-        "filterAreaShow",
-        "filterAreaShowUnreadButton",
-        "filterAreaUnreadRadioLabel",
-        "filterAreaValue",
         "headerTitle",
         "isBottomDisplay",
         "isHeaderDisplay",
@@ -1335,7 +1325,6 @@
         "open",
         "placement",
         "readOnly",
-        "tagDismiss",
         "tagSize",
         "tags"
       ],
@@ -2228,7 +2217,6 @@
         "zoomInEnabled"
       ],
       "outputs": [
-        "Method",
         "cancel",
         "change",
         "delete",

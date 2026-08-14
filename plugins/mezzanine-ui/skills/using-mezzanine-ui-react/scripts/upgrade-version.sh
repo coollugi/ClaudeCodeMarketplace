@@ -212,6 +212,29 @@ component_source_path() {
     esac
 }
 
+# Concatenated source of every file in a component's family.
+# React has one file per component; Angular families span several, so diffing
+# only the "main" file produced phantom removals for every sibling directive.
+component_source_contents() {
+    local component="$1"
+    case "$FRAMEWORK" in
+        react)
+            curl -sf "$GITHUB_RAW_BASE/$(component_source_path "$component")" 2>/dev/null || true
+            ;;
+        ng)
+            [ -f "$NG_COMPONENT_MAP_FILE" ] || return 0
+            local files
+            files=$(jq -r --arg c "$component" '.[$c].allFiles // [] | .[]' "$NG_COMPONENT_MAP_FILE")
+            [ -z "$files" ] && files=$(jq -r --arg c "$component" '.[$c].mainFile // empty' "$NG_COMPONENT_MAP_FILE")
+            while IFS= read -r f; do
+                [ -z "$f" ] && continue
+                curl -sf "$GITHUB_RAW_BASE/$f" 2>/dev/null || true
+                echo ""
+            done <<< "$files"
+            ;;
+    esac
+}
+
 # Convert kebab-case to PascalCase: "date-picker" -> "DatePicker".
 kebab_to_pascal() {
     echo "$1" | awk -F'-' '{ for (i=1;i<=NF;i++) printf "%s%s", toupper(substr($i,1,1)), substr($i,2); print "" }'
@@ -266,6 +289,13 @@ build_ng_component_source_map() {
         # (e.g. in accordion/, './accordion.component' -> MznAccordion is the
         # "main"). If none matches, fall back to the first Mzn class exported.
         local main_cls="" main_src="" first_cls="" first_src=""
+        # Every source path re-exported from index.ts. A component "family" is a
+        # folder, not a file: dropdown/ ships MznDropdown plus MznDropdownItem,
+        # MznDropdownAction and MznDropdownItemCard, and picker/ spans nine files.
+        # Diffing against a single arbitrarily-chosen main file reported every
+        # sibling directive's inputs/outputs as removed, and made an unrelated
+        # sibling's selector look like a rename.
+        local all_srcs=""
         local flat_exports
         flat_exports=$(echo "$idx_content" | awk '
             /^export[[:space:]]+\{/ && !/^export[[:space:]]+type/ {
@@ -291,6 +321,8 @@ build_ng_component_source_map() {
             local src
             src=$(echo "$line" | grep -oE "from '\./[^']+'" | sed -E "s|from '\./||; s|'||" || true)
             [ -z "$src" ] && continue
+
+            all_srcs="$all_srcs$src\n"
 
             # All Mzn* identifiers inside the braces are candidate class names.
             local classes
@@ -323,12 +355,18 @@ build_ng_component_source_map() {
         [ -z "$main_cls" ] && continue
 
         local main_file="packages/ng/$folder/$main_src.ts"
+        local all_files_json
+        all_files_json=$(printf '%b' "$all_srcs" \
+            | grep -v '^$' | sort -u \
+            | sed "s|^|packages/ng/$folder/|; s|$|.ts|" \
+            | jq -R . | jq -sc '[.[] | select(. != "")]')
         map=$(echo "$map" | jq \
             --arg k "$comp_name" \
             --arg cls "$main_cls" \
             --arg folder "packages/ng/$folder" \
             --arg file "$main_file" \
-            '. + {($k): {className: $cls, sourceDir: $folder, mainFile: $file}}')
+            --argjson all "$all_files_json" \
+            '. + {($k): {className: $cls, sourceDir: $folder, mainFile: $file, allFiles: $all}}')
     done <<< "$folders"
 
     echo "$map" > "$NG_COMPONENT_MAP_FILE"
@@ -578,10 +616,9 @@ fetch_component_props_diff() {
         source_path=$(component_source_path "$component")
         [ -z "$source_path" ] && continue
 
-        local source_url="$GITHUB_RAW_BASE/$source_path"
         local source_content
-
-        if ! source_content=$(curl -sf "$source_url" 2>/dev/null); then
+        source_content=$(component_source_contents "$component")
+        if [ -z "$source_content" ]; then
             # Component source file not found under expected path
             continue
         fi
@@ -770,20 +807,37 @@ fetch_angular_specific_diff() {
         source_path=$(component_source_path "$component")
         [ -z "$source_path" ] && continue
 
+        # Whole-family source: inputs/outputs/CVA/token scanning must see every
+        # directive the folder exports, not just the main file.
         local content
-        if ! content=$(curl -sf "$GITHUB_RAW_BASE/$source_path" 2>/dev/null); then
-            continue
-        fi
+        content=$(component_source_contents "$component")
+        [ -z "$content" ] && continue
+
+        # The main file's own selector, used as the "current" value when reporting.
+        local main_content
+        main_content=$(curl -sf "$GITHUB_RAW_BASE/$source_path" 2>/dev/null || true)
 
         # Selector: first string inside @Component({ selector: '...' }) or @Directive.
         # `|| true` guards against components with no explicit selector.
         local source_selector
-        source_selector=$(echo "$content" \
+        source_selector=$(echo "$main_content" \
             | grep -oE "selector:[[:space:]]*['\"][^'\"]+['\"]" \
             | head -n1 \
             | sed -E "s/selector:[[:space:]]*['\"]//; s/['\"]//" || true)
         local source_selector_kind="tag"
         [[ "$source_selector" == \[*\] ]] && source_selector_kind="attribute"
+
+        # Every selector declared anywhere in the family. A cached selector that
+        # still exists on a sibling directive has NOT been renamed — the main-file
+        # heuristic simply picked a different file. Without this check the diff
+        # claimed renames like `[mznCardGroup] -> [mznBaseCard]` and
+        # `mzn-alert-banner-container -> [mznAlertBanner]`, where both selectors
+        # coexist in the same folder.
+        local family_selectors
+        family_selectors=$(echo "$content" \
+            | grep -oE "selector:[[:space:]]*['\"][^'\"]+['\"]" \
+            | sed -E "s/selector:[[:space:]]*['\"]//; s/['\"]//" \
+            | sort -u || true)
 
         # CVA: implements ControlValueAccessor or provideValueAccessor(X).
         local source_has_cva="false"
@@ -825,7 +879,17 @@ fetch_angular_specific_diff() {
                 sub(/^readonly[[:space:]]+/, "", seg)
                 if (seg != "") print seg
             }
-        ' | sort -u || true)
+        ' || true)
+        # Legacy decorator outputs: `@Output() readonly foo = new EventEmitter<T>()`.
+        # Still used deliberately in places — MznDescriptionContent keeps clickIcon on
+        # the decorator API so `.observed` can tell whether a listener is bound.
+        # Missing these reported real outputs as removed.
+        local legacy_outputs
+        legacy_outputs=$(echo "$content" \
+            | grep -oE '@Output\([^)]*\)[[:space:]]+(readonly[[:space:]]+)?[a-zA-Z_][a-zA-Z0-9_]*' \
+            | grep -oE '[a-zA-Z_][a-zA-Z0-9_]*$' || true)
+        source_outputs=$(printf '%s\n%s\n' "$source_outputs" "$legacy_outputs" \
+            | grep -v '^$' | sort -u || true)
 
         # Cached (current documented) values.
         local cache_selector cache_has_cva cache_tokens cache_imports cache_outputs
@@ -840,7 +904,8 @@ fetch_angular_specific_diff() {
 
         # Compute diffs.
         local selector_change='null'
-        if [ -n "$source_selector" ] && [ "$source_selector" != "$cache_selector" ]; then
+        if [ -n "$source_selector" ] && [ "$source_selector" != "$cache_selector" ] \
+           && ! echo "$family_selectors" | grep -qxF "$cache_selector"; then
             local cache_kind="tag"
             [[ "$cache_selector" == \[*\] ]] && cache_kind="attribute"
             local kind_changed="false"
