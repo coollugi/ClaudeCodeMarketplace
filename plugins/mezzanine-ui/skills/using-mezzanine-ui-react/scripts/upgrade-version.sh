@@ -592,23 +592,96 @@ fetch_component_props_diff() {
         # (e.g. `type FooProps = A & B`) rather than `interface FooProps`, where
         # the grep produces no match and would otherwise trip `pipefail`.
         if [ "$FRAMEWORK" = "react" ]; then
-            # Extract prop field names from the main Props interface (first one found).
-            local main_props_block
-            main_props_block=$(echo "$source_content" \
-                | grep -A 60 "interface ${component}Props" \
-                | awk '/^\}[[:space:]]*$/{exit} {print}' || true)
+            # Extract top-level field names from the component's Props interface.
+            #
+            # HISTORY: this was `grep -A 60 "interface ${component}Props" | awk '/^\}$/{exit}'`,
+            # which was the root cause of large-scale FALSE "props removed" reports
+            # (Drawer -33, Dropdown -39, Calendar -18, ...). Those false positives were
+            # consumed by the updater agents and written into SKILL.md as bogus
+            # "API 重構" claims such as "Calendar 移除 mode/value/onChange" and
+            # "Drawer 移除內建底部操作按鈕" — none of which ever happened.
+            #
+            # Two defects:
+            #   1. `-A 60` hard-capped the scan window at 60 lines. Long interfaces
+            #      (DrawerProps spans 200+ lines with JSDoc) had every field past the
+            #      cut-off silently reported as removed.
+            #   2. The awk terminated at the FIRST line consisting solely of `}`,
+            #      firing early on nested object types and on braces inside JSDoc
+            #      `@example` blocks.
+            #
+            # The replacement tracks brace depth, tolerates multi-line declarations
+            # (`interface X\n  extends A,\n  Pick<B,'c'> {`), strips line/block
+            # comments before counting braces, and only emits fields at depth 1 so
+            # nested object-literal members (e.g. `arrow: { padding?: number }`)
+            # are not promoted to top-level props.
+            source_prop_names=$(echo "$source_content" | awk -v comp="$component" '
+                BEGIN { started = 0; seenOpen = 0; depth = 0; inBlock = 0 }
+                # Match the Props interface AND same-file base interfaces that it
+                # extends by convention (`<Comp>PropsBase`, `<Comp>PropsCommon`, ...).
+                # Without this, components declared as
+                #   `interface XProps extends XPropsBase {}`
+                # report every inherited field as removed (observed on SelectionCard).
+                !started && $0 ~ ("(interface|type)[[:space:]]+" comp "Props[A-Za-z0-9_]*([^A-Za-z0-9_]|$)") {
+                    started = 1; seenOpen = 0; depth = 0
+                }
+                started {
+                    line = $0
+                    if (inBlock) {
+                        if (line ~ /\*\//) { sub(/^.*\*\//, "", line); inBlock = 0 } else { next }
+                    }
+                    while (line ~ /\/\*/) {
+                        if (line ~ /\/\*.*\*\//) { sub(/\/\*.*\*\//, "", line) }
+                        else { sub(/\/\*.*$/, "", line); inBlock = 1; break }
+                    }
+                    sub(/\/\/.*$/, "", line)
 
-            source_prop_names=$(echo "$main_props_block" \
-                | grep -oE '^[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*[?]?:' \
-                | grep -oE '[a-zA-Z_][a-zA-Z0-9_]*' \
-                | sort -u || true)
+                    nOpen  = gsub(/\{/, "{", line)
+                    nClose = gsub(/\}/, "}", line)
+
+                    if (seenOpen && depth == 1) {
+                        cand = line
+                        sub(/^[[:space:]]+/, "", cand)
+                        sub(/^readonly[[:space:]]+/, "", cand)
+                        if (match(cand, /^[a-zA-Z_][a-zA-Z0-9_]*[?]?[[:space:]]*:/)) {
+                            name = substr(cand, 1, RLENGTH)
+                            sub(/[[:space:]]*:$/, "", name)
+                            sub(/[?]$/, "", name)
+                            print name
+                        }
+                    }
+
+                    depth += nOpen
+                    if (nOpen > 0) seenOpen = 1
+                    depth -= nClose
+                    if (seenOpen && depth <= 0) { started = 0; seenOpen = 0; depth = 0 }
+                }
+            ' | sort -u || true)
         else
-            # Angular signal inputs: lines like "  foo = input<T>(...)" or "foo = input(...)"
-            # Also catches legacy "@Input() foo!: T" for safety.
+            # Angular signal inputs.
+            #
+            # HISTORY: the previous regex was
+            #   '^[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]'
+            # which required the identifier to sit immediately after the leading
+            # indentation. Every directive in @mezzanine-ui/ng declares inputs as
+            #   `readonly variant = input.required<BadgeVariant>();`
+            # so the `readonly` modifier made the pattern match NOTHING — measured
+            # 0/6 on badge, 0/33 on select, 0/5 on toggle. Feeding that to the
+            # updater agents would report 100% of every directive's inputs as
+            # "removed" and strip every Inputs table in the Angular skill.
+            #
+            # The replacement tolerates visibility/readonly modifiers and both
+            # `input(...)` and `input.required<...>()` forms, plus legacy @Input().
             local signal_inputs legacy_inputs
-            signal_inputs=$(echo "$source_content" \
-                | grep -oE '^[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]' \
-                | sed -E 's/^[[:space:]]+//; s/[[:space:]]*=.*//' || true)
+            signal_inputs=$(echo "$source_content" | awk '
+                match($0, /^[[:space:]]*(public[[:space:]]+|protected[[:space:]]+|private[[:space:]]+)?(readonly[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]/) {
+                    seg = substr($0, RSTART, RLENGTH)
+                    sub(/[[:space:]]*=[[:space:]]*input[.<(]$/, "", seg)
+                    sub(/^[[:space:]]*/, "", seg)
+                    sub(/^(public|protected|private)[[:space:]]+/, "", seg)
+                    sub(/^readonly[[:space:]]+/, "", seg)
+                    if (seg != "") print seg
+                }
+            ' || true)
             legacy_inputs=$(echo "$source_content" \
                 | grep -oE '@Input\([^)]*\)[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*' \
                 | grep -oE '[a-zA-Z_][a-zA-Z0-9_]*$' || true)
@@ -736,12 +809,31 @@ fetch_angular_specific_diff() {
             | grep -v '^NgIf$\|^NgFor$\|^NgTemplateOutlet$' \
             | sort -u || true)
 
+        # Outputs: `readonly foo = output<T>()`. NOT previously tracked — which meant
+        # the rc.9 breaking rename wave (MznSelect selectionChange->change,
+        # onScroll->scroll; MznDropdown closed->close, selected->select, ...) was
+        # completely invisible to this manifest. Output renames are the single
+        # highest-blast-radius Angular change: consumer templates bind `(oldName)`
+        # and simply stop firing, with no compile error.
+        local source_outputs
+        source_outputs=$(echo "$content" | awk '
+            match($0, /^[[:space:]]*(public[[:space:]]+|protected[[:space:]]+|private[[:space:]]+)?(readonly[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*[[:space:]]*=[[:space:]]*output[.<(]/) {
+                seg = substr($0, RSTART, RLENGTH)
+                sub(/[[:space:]]*=[[:space:]]*output[.<(]$/, "", seg)
+                sub(/^[[:space:]]*/, "", seg)
+                sub(/^(public|protected|private)[[:space:]]+/, "", seg)
+                sub(/^readonly[[:space:]]+/, "", seg)
+                if (seg != "") print seg
+            }
+        ' | sort -u || true)
+
         # Cached (current documented) values.
-        local cache_selector cache_has_cva cache_tokens cache_imports
+        local cache_selector cache_has_cva cache_tokens cache_imports cache_outputs
         cache_selector=$(jq -r --arg c "$component" '.components[$c].selector // empty' "$api_index")
         cache_has_cva=$(jq -r --arg c "$component" '.components[$c].cva // false | tostring' "$api_index")
         cache_tokens=$(jq -r --arg c "$component" '.components[$c].providesTokens // [] | .[]' "$api_index" 2>/dev/null | sort -u)
         cache_imports=$(jq -r --arg c "$component" '.components[$c].standaloneImports // [] | .[]' "$api_index" 2>/dev/null | sort -u)
+        cache_outputs=$(jq -r --arg c "$component" '.components[$c].outputs // [] | .[] | (if type == "object" then .name else . end)' "$api_index" 2>/dev/null | sort -u)
 
         # Skip if no cache entry for this component (can't diff what doesn't exist).
         [ -z "$cache_selector" ] && continue
@@ -769,6 +861,10 @@ fetch_angular_specific_diff() {
         tokens_added_json=$(comm -23 <(echo "$source_tokens") <(echo "$cache_tokens") | jq -R . | jq -sc '[.[] | select(. != "")]')
         tokens_removed_json=$(comm -13 <(echo "$source_tokens") <(echo "$cache_tokens") | jq -R . | jq -sc '[.[] | select(. != "")]')
 
+        local outputs_added_json outputs_removed_json
+        outputs_added_json=$(comm -23 <(echo "$source_outputs") <(echo "$cache_outputs") | jq -R . | jq -sc '[.[] | select(. != "")]')
+        outputs_removed_json=$(comm -13 <(echo "$source_outputs") <(echo "$cache_outputs") | jq -R . | jq -sc '[.[] | select(. != "")]')
+
         local imports_added_json imports_removed_json
         imports_added_json=$(comm -23 <(echo "$source_imports") <(echo "$cache_imports") | jq -R . | jq -sc '[.[] | select(. != "")]')
         imports_removed_json=$(comm -13 <(echo "$source_imports") <(echo "$cache_imports") | jq -R . | jq -sc '[.[] | select(. != "")]')
@@ -781,6 +877,8 @@ fetch_angular_specific_diff() {
         [ "$(echo "$tokens_removed_json" | jq 'length')" != "0" ] && any_change="true"
         [ "$(echo "$imports_added_json"   | jq 'length')" != "0" ] && any_change="true"
         [ "$(echo "$imports_removed_json" | jq 'length')" != "0" ] && any_change="true"
+        [ "$(echo "$outputs_added_json"   | jq 'length')" != "0" ] && any_change="true"
+        [ "$(echo "$outputs_removed_json" | jq 'length')" != "0" ] && any_change="true"
 
         [ "$any_change" = "false" ] && continue
 
@@ -793,12 +891,15 @@ fetch_angular_specific_diff() {
             --argjson tokensRemoved    "$tokens_removed_json" \
             --argjson importsAdded     "$imports_added_json" \
             --argjson importsRemoved   "$imports_removed_json" \
+            --argjson outputsAdded     "$outputs_added_json" \
+            --argjson outputsRemoved   "$outputs_removed_json" \
             '{
                 component: $comp,
                 selectorChanged: $selectorChanged,
                 cvaChange:       $cvaChange,
                 providersTokensChanged:  { added: $tokensAdded,  removed: $tokensRemoved  },
-                standaloneImportsChanged:{ added: $importsAdded, removed: $importsRemoved }
+                standaloneImportsChanged:{ added: $importsAdded, removed: $importsRemoved },
+                outputsChanged:          { added: $outputsAdded, removed: $outputsRemoved }
              }')
         entries+=("$entry")
 
@@ -806,7 +907,8 @@ fetch_angular_specific_diff() {
         [ "$selector_change" != "null" ] && label+="${YELLOW}selector${NC} "
         [ "$cva_change"      != "null" ] && label+="${CYAN}cva${NC} "
         [ "$(echo "$tokens_added_json$tokens_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${BLUE}tokens${NC} "
-        [ "$(echo "$imports_added_json$imports_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${GREEN}imports${NC}"
+        [ "$(echo "$imports_added_json$imports_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${GREEN}imports${NC} "
+        [ "$(echo "$outputs_added_json$outputs_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${RED}outputs${NC}"
         echo -e "  ${BOLD}$component${NC}: $label"
     done <<< "$components"
 
