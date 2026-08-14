@@ -1,17 +1,45 @@
 ---
 name: using-mezzanine-ui-ng
-description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.4, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Defines the component-selection contract (a UI-concept-to-directive reverse index — status chips are MznBadge not MznTag, segmented controls are MznRadio type="segment" not buttons — plus the rule that needing a class or ::ng-deep override of background/color/border means the wrong directive was chosen) and the page layout padding contract (mznPageHeader / mznPageFooter / mznSection ship their own padding — page containers must not add horizontal padding). Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, laying out a page skeleton, picking which directive to use, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal, page layout, container padding, 版面對不齊, 雙層 padding, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式, ng-deep. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
+description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalone Angular components with @mezzanine-ui/ng (1.0.0-rc.10, RC tier) directives. Covers directive-based selectors (mznButton, mznInput, mznSelect, mznTextField, mznFormField, mznModal, mznTable, mznNavigation), ControlValueAccessor + ReactiveFormsModule integration, DI services (ClickAwayService, EscapeKeyService, MZN_CALENDAR_CONFIG), sub-path imports, design tokens. Defines the component-selection contract (a UI-concept-to-directive reverse index — status chips are MznBadge not MznTag, segmented controls are MznRadio type="segment" not buttons — plus the rule that needing a class or ::ng-deep override of background/color/border means the wrong directive was chosen) and the page layout padding contract (mznPageHeader / mznPageFooter / mznSection ship their own padding — page containers must not add horizontal padding). Use when working on *.component.ts, *.component.html, *.component.scss files that import from @mezzanine-ui/ng/*, building Angular reactive forms with mznFormField + formControlName, laying out a page skeleton, picking which directive to use, wiring Mezzanine directives into standalone components, or configuring Angular global SCSS. Trigger — Angular, standalone component, mzn directive, ControlValueAccessor, ReactiveForms, mezzanine-ui/ng, ng form, ng select, ng table, ng modal, page layout, container padding, 版面對不齊, 雙層 padding, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式, ng-deep. For React / Next.js projects use the sibling using-mezzanine-ui-react skill instead.
 ---
 
 # Mezzanine-UI Angular (`@mezzanine-ui/ng`)
 
 **Core principle: For Angular 21+ standalone projects, prefer `@mezzanine-ui/ng` directives over custom Angular implementations.**
 
-> Baseline: `@mezzanine-ui/ng` `1.0.0-rc.4` · `@mezzanine-ui/core` `1.0.4` · `@mezzanine-ui/system` `1.0.2` · `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-04-24.
+> Baseline: `@mezzanine-ui/ng` `1.0.0-rc.10` · `@mezzanine-ui/core` `1.0.4` · `@mezzanine-ui/system` `1.0.2` · `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-08-14（rc.5–rc.10 逐版核對）。
 >
 > **⚠️ RC tier** — `@mezzanine-ui/ng` is in Release Candidate. API may still shift minor details before `1.0.0` stable. Check `npm view @mezzanine-ui/ng versions` for the latest.
 
 > **For React (Next.js) projects** see the companion skill [`using-mezzanine-ui-react`](../using-mezzanine-ui-react/SKILL.md). Design tokens, icons, and Figma mappings are shared.
+
+## What's New in 1.0.0-rc.10
+
+> 涵蓋 rc.5 – rc.10（6 個 release）。核對自 `packages/ng/CHANGELOG.md` 與原始碼。
+
+### ⚠️ Breaking — output 全面改名（rc.9）
+
+`MznSelect` 與 `MznDropdown` 的 output 大量改名。**Angular template 綁一個不存在的 output 不會有編譯錯誤，只會靜默不觸發**，升級後務必全域搜尋替換：
+
+| Directive     | 舊名                                                                                              | 新名                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `MznSelect`   | `selectionChange` `onScroll` `onReachBottom` `onLeaveBottom`                                      | `change` `scroll` `reachBottom` `leaveBottom`                               |
+| `MznDropdown` | `selected` `closed` `itemHovered` `actionCancelled` `actionCleared` `actionConfirmed` `actionCustomClicked` | `select` `close` `itemHover` `actionCancel` `actionClear` `actionConfirm` `actionCustom` |
+
+> **只有主元件改名。** `MznDropdownItem` / `MznDropdownAction` / `MznDropdownItemCard` 維持舊名 —— 不要做全域無差別取代。
+
+`MznDropdown` 同時移除 `actionConfig` / `name` / `showCheckIcon` / `showHeader` / `disableClickAway`，並改用 CDK Overlay 重寫 popover。
+
+### 其他變更
+
+- **`MznInput`（rc.7）** — 掛在原生 `<input>` / `<textarea>` 上時改為**初始化即 throw**。先前這樣寫會讓 CVA 脫鉤、`ngModel` 靜默失效，現在變成一眼可見的錯誤。見 [Input.md](references/components/Input.md#selector)。
+- **`MznDropdown` / `MznSelect`（rc.8）** — 新增 `flip` input，視窗底部空間不足時翻轉選單。
+- **`MznSelect`（rc.9）** — 補上一批對齊 React 的 input：`value` / `defaultValue` / `warning` / `searchText` / `inputProps` / `suffixAction` / `forceXxx` 等，並新增 `blur` / `clear` / `focus` / `tagClose` output。
+- **`MznAutocomplete`（rc.10）** — 新增 `caseSensitive` input（預設 `false`），對應 React 1.4.2。
+- **`MznTable`（rc.6）** — 欄寬調整改為優先向最右欄借用空間，與 React 對齊。
+- **`MznCalendar`（rc.5）** — 僅新增 Temporal adapter 的 story，無 API 變更。
+
+---
 
 ## What's New in 1.0.0-rc.4
 
@@ -781,7 +809,7 @@ Design tokens, icon catalog, and Figma mappings are identical across React and A
 When `@mezzanine-ui/ng` releases a new version, run the sync orchestrator:
 
 ```
-/sync-mezzanine-ui 1.0.0 --target angular
+/sync-mezzanine-ui ng 1.0.0-rc.10
 ```
 
 The orchestrator shares infrastructure with the React sync: fetches TypeScript from GitHub, regenerates cache JSON, refreshes shared design-token / icon / figma-mapping docs.

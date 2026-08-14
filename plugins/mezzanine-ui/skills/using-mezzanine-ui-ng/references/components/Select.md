@@ -48,6 +48,27 @@ import { SelectInputSize, SelectMode } from '@mezzanine-ui/core/select';
 | `type`              | `DropdownType`                | `'default'`  | `'default' \| 'tree'` — overridden automatically in multiple mode with children |
 | `className`         | `string`                      | —            | Extra host CSS class                                              |
 
+### rc.8 / rc.9 新增的 Inputs
+
+rc.9 為對齊 React 版 API 補了一批 input，先前文件未涵蓋：
+
+| Input                       | Type                                      | Default | Description                                    |
+| --------------------------- | ----------------------------------------- | ------- | ---------------------------------------------- |
+| `value`                     | `ReadonlyArray<string> \| string \| null` | —       | 受控值。與 CVA 併用時以 CVA 為準               |
+| `defaultValue`              | `ReadonlyArray<string> \| string`         | —       | 非受控模式的初始值                             |
+| `flip`                      | `boolean`                                 | `false` | **rc.8 新增。** 底部空間不足時讓選單沿主軸翻轉 |
+| `warning`                   | `boolean`                                 | `false` | 警告狀態樣式（與 `error` 互斥呈現）            |
+| `searchText`                | `string`                                  | —       | 受控的搜尋文字                                 |
+| `inputProps`                | `Record<string, unknown>`                 | —       | 轉發到內層 input 元素的屬性                    |
+| `suffixAction`              | `(() => void) \| undefined`               | —       | 點擊尾端 icon 時的回呼                         |
+| `forceHideSuffixActionIcon` | `boolean`                                 | `false` | 強制隱藏尾端動作圖示                           |
+| `hideSuffixWhenClearable`   | `boolean`                                 | `false` | 出現清除鈕時隱藏尾端圖示                       |
+| `forceShowClearable`        | `boolean`                                 | `false` | 強制顯示清除鈕（忽略內部判斷）                 |
+| `isForceClearable`          | `boolean`                                 | `false` | 強制進入可清除狀態                             |
+| `showTextInputAfterTags`    | `boolean`                                 | `false` | 多選模式下把輸入框排在標籤之後                 |
+
+> `active` / `displayText` / `hasValue` / `listboxId` 宣告在 `MznSelectTrigger` 上，見本檔的 MznSelectTrigger 章節。
+
 > Inputs declared with signal API (`input()`) accept both static and reactive values.
 
 ## Outputs

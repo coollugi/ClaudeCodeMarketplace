@@ -10,7 +10,7 @@ Floating dropdown list positioned relative to an anchor element. Uses `MznPopper
 
 ```ts
 import { MznDropdown, MznDropdownItemCard } from '@mezzanine-ui/ng/dropdown';
-import type { DropdownActionConfig }         from '@mezzanine-ui/ng/dropdown';
+// DropdownActionConfig 已於 rc.9 隨 actionConfig input 一併移除，不再匯出
 import type {
   DropdownOption,
   DropdownMode,
@@ -39,7 +39,20 @@ import type { IconDefinition } from '@mezzanine-ui/icons';
 | `placement` | `Placement`                                   | `'bottom-start'` | Floating-UI placement                                      |
 | `disabled`  | `boolean`                                     | `false`          | Disable all options                                        |
 | `type`      | `DropdownType`                                | `'default'`      | `'default' \| 'tree' \| 'grouped'`                        |
-| `name`      | `string \| undefined`                         | —                | Name attribute (for form context)                          |
+
+### rc.8 / rc.9 新增的 Inputs
+
+| Input                     | Type                                     | Default | Description                                                                 |
+| ------------------------- | ---------------------------------------- | ------- | --------------------------------------------------------------------------- |
+| `flip`                    | `boolean`                                | `false` | **rc.8 新增。** 視窗底部空間不足時讓選單沿主軸翻轉（對應 React 的 `flip`）。 |
+| `actionCustomButtonProps` | `DropdownActionButtonProps \| undefined` | —       | **rc.9 新增。** 自訂動作按鈕的 props，取代已移除的 `actionConfig`。          |
+
+> ⚠️ `DropdownActionButtonProps` 定義在 internal 的 `dropdown-action.component`，**未從 `index.ts` 匯出**，
+> 所以消費端無法 `import type` 取得它。傳值時只能仰賴結構相容（或自行宣告等價型別）。
+>
+> **rc.9 移除**：`actionConfig`、`name`、`showCheckIcon`、`showHeader`、`disableClickAway`。
+> 原本用 `actionConfig` 統一設定動作按鈕的，改用個別的 `actionCancelText` / `actionClearText` /
+> `actionConfirmText` 搭配 `actionCustomButtonProps`。
 
 ### Action controls
 
@@ -48,8 +61,7 @@ import type { IconDefinition } from '@mezzanine-ui/icons';
 | `actionCancelText`     | `string \| undefined`    | —       | Cancel button label (requires `showDropdownActions`)                     |
 | `actionClearText`      | `string \| undefined`    | —       | Clear button label (requires `showDropdownActions`)                      |
 | `actionConfirmText`    | `string \| undefined`    | —       | Confirm button label (requires `showDropdownActions`)                    |
-| `actionConfig`         | `DropdownActionConfig \| undefined` | — | Merged action config object; fields override individual action inputs |
-| `actionText`           | `string \| undefined`    | —       | Custom button label (for `actionConfig.mode = 'custom'`)                 |
+| `actionText`           | `string \| undefined`    | —       | 自訂動作按鈕文字（搭配 `actionCustomButtonProps`；rc.9 前是 `actionConfig.mode = 'custom'`） |
 | `showDropdownActions`  | `boolean`                | `false` | Show the confirm/cancel/clear action footer                              |
 | `showActionShowTopBar` | `boolean`                | `false` | Show a top divider above the action footer                               |
 
@@ -64,8 +76,6 @@ import type { IconDefinition } from '@mezzanine-ui/icons';
 | `globalPortal`   | `boolean`                 | `true`   | Render popper via portal to `document.body` (avoids overflow clipping)   |
 | `loadingPosition`| `'full' \| 'bottom'`      | `'full'` | Loading indicator position                                               |
 | `loadingText`    | `string \| undefined`     | —        | Loading state text                                                       |
-| `showCheckIcon`  | `boolean`                 | `true`   | Show check icon on selected option                                       |
-| `showHeader`     | `boolean`                 | `false`  | Render `[mznDropdownHeader]` ng-content slot (popper mode)               |
 | `status`         | `DropdownStatusType \| undefined` | —  | `'loading'` or `'empty'` state indicator                            |
 
 ### Search / keyboard
@@ -86,7 +96,6 @@ import type { IconDefinition } from '@mezzanine-ui/icons';
 | ------------------ | ------------------------- | ------- | ------------------------------------------------------------- |
 | `listboxId`        | `string \| undefined`     | —       | `id` of the listbox element (for `aria-controls`)             |
 | `listboxLabel`     | `string \| undefined`     | —       | `aria-label` of the listbox                                   |
-| `disableClickAway` | `boolean`                 | `false` | Prevent auto-close on outside click                           |
 | `emptyIcon`        | `IconDefinition \| undefined` | —   | Override the empty-state icon                                 |
 | `emptyText`        | `string \| undefined`     | —       | Override the empty-state text                                 |
 
@@ -215,5 +224,4 @@ onSelect(option: DropdownOption): void {
 - For form-integrated select, use `MznSelect` (from `@mezzanine-ui/ng/select`) which wraps `MznDropdown` with `ControlValueAccessor`.
 - `MznDropdown` does not manage its own open/close state — the parent must toggle `open` in response to the trigger and handle `(closed)` to reset it.
 - The `mode='multiple'` allows multiple selections; `value` should be an array of option IDs in this mode.
-- `DropdownActionConfig` provides a single object alternative to the individual `actionCancelText` / `actionClearText` / `actionConfirmText` / `showDropdownActions` / `showActionShowTopBar` inputs. If both are provided, `actionConfig` fields take precedence.
 - `MznDropdownItem`, `MznDropdownAction`, and `MznDropdownStatus` are **internal** (not in `index.ts`). Only `MznDropdown` and `MznDropdownItemCard` are public exports.
