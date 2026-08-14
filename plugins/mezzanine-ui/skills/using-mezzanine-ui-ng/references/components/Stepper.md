@@ -54,6 +54,7 @@ import type {
 | `interactive` | `boolean`      | `false` | 是否可互動（加入 `role="button"`、`tabindex="0"`，Enter/Space 觸發 click）  |
 | `status`      | `StepStatus`   | auto    | 手動覆蓋步驟狀態；未設定時由父 Stepper 依 `currentStep` 自動計算           |
 | `index`       | `number`       | auto    | 手動指定步驟索引；通常由 Stepper 自動注入                                  |
+| `connectLineDistance` | `string \| undefined` | — | 覆寫此步驟與下一步之間連接線的長度（CSS 長度字串）                 |
 
 > Inputs declared with signal API (`input()`, `input.required()`) accept both static and reactive values.
 >

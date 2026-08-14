@@ -183,6 +183,7 @@ The clickable trigger area of a select. Renders prefix text, the display value (
 | `displayText`      | `string`                      | `''`               | Display text for single-mode value                        |
 | `error`            | `boolean`                     | `false`            | Error state styling                                       |
 | `hasValue`         | `boolean`                     | `false`            | Controls display text vs. placeholder visibility          |
+| `listboxId`        | `string \| undefined`         | —                  | 對應 listbox 的 `id`，用於 `aria-controls`                |
 | `mode`             | `SelectMode`                  | `'single'`         | `'single' \| 'multiple'`; affects CSS class              |
 | `placeholder`      | `string`                      | `''`               | Placeholder text when no value is selected                |
 | `prefix`           | `string \| undefined`         | —                  | Prefix text shown before the value                        |

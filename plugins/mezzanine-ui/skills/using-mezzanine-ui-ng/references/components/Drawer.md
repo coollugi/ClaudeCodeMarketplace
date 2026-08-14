@@ -37,17 +37,29 @@ import type { DrawerSize } from '@mezzanine-ui/core/drawer';
 
 Each action slot (primary, secondary, ghost) shares the same set of inputs:
 
-| Pattern                           | Type             | Default          | Notes                                  |
-| --------------------------------- | ---------------- | ---------------- | -------------------------------------- |
-| `bottomPrimaryActionText`         | `string`         | —                | Button label; button hidden if empty   |
-| `bottomPrimaryActionVariant`      | `ButtonVariant`  | `'base-primary'` | Button variant                         |
-| `bottomPrimaryActionLoading`      | `boolean`        | `false`          | Loading spinner state                  |
-| `bottomPrimaryActionDisabled`     | `boolean`        | `false`          | Disabled state                         |
-| `bottomPrimaryActionIcon`         | `IconDefinition` | —                | Leading icon                           |
-| `bottomPrimaryActionIconType`     | `ButtonIconType` | —                | Icon button type                       |
-| `bottomPrimaryActionSize`         | `ButtonSize`     | —                | Button size                            |
-| `bottomSecondaryAction*`          | (same pattern)   | `'base-secondary'` | —                                   |
-| `bottomGhostAction*`              | (same pattern)   | `'base-ghost'`   | —                                     |
+| Input                           | Type             | Default            | Description                          |
+| ------------------------------- | ---------------- | ------------------ | ------------------------------------ |
+| `bottomPrimaryActionText`       | `string`         | —                  | Button label; button hidden if empty |
+| `bottomPrimaryActionVariant`    | `ButtonVariant`  | `'base-primary'`   | Button variant                       |
+| `bottomPrimaryActionLoading`    | `boolean`        | `false`            | Loading spinner state                |
+| `bottomPrimaryActionDisabled`   | `boolean`        | `false`            | Disabled state                       |
+| `bottomPrimaryActionIcon`       | `IconDefinition` | —                  | Leading icon                         |
+| `bottomPrimaryActionIconType`   | `ButtonIconType` | —                  | Icon button type                     |
+| `bottomPrimaryActionSize`       | `ButtonSize`     | —                  | Button size                          |
+| `bottomSecondaryActionText`     | `string`         | —                  | Button label; button hidden if empty |
+| `bottomSecondaryActionVariant`  | `ButtonVariant`  | `'base-secondary'` | Button variant                       |
+| `bottomSecondaryActionLoading`  | `boolean`        | `false`            | Loading spinner state                |
+| `bottomSecondaryActionDisabled` | `boolean`        | `false`            | Disabled state                       |
+| `bottomSecondaryActionIcon`     | `IconDefinition` | —                  | Leading icon                         |
+| `bottomSecondaryActionIconType` | `ButtonIconType` | —                  | Icon button type                     |
+| `bottomSecondaryActionSize`     | `ButtonSize`     | —                  | Button size                          |
+| `bottomGhostActionText`         | `string`         | —                  | Button label; button hidden if empty |
+| `bottomGhostActionVariant`      | `ButtonVariant`  | `'base-ghost'`     | Button variant                       |
+| `bottomGhostActionLoading`      | `boolean`        | `false`            | Loading spinner state                |
+| `bottomGhostActionDisabled`     | `boolean`        | `false`            | Disabled state                       |
+| `bottomGhostActionIcon`         | `IconDefinition` | —                  | Leading icon                         |
+| `bottomGhostActionIconType`     | `ButtonIconType` | —                  | Icon button type                     |
+| `bottomGhostActionSize`         | `ButtonSize`     | —                  | Button size                          |
 
 ### Filter Area (Notification-style drawer)
 
