@@ -675,13 +675,26 @@ fetch_component_props_diff() {
                     nOpen  = gsub(/\{/, "{", line)
                     nClose = gsub(/\}/, "}", line)
 
+                    # A declaration that terminates before any `{` is a non-object
+                    # alias, e.g. `type SliderProps = Omit<SliderComponentProps, "innerRef">;`
+                    # Previously the scan latched on and never closed, running into the
+                    # component body and emitting function parameter names (`e`, `handler`)
+                    # as if they were props.
+                    if (!seenOpen && nOpen == 0 && line ~ /;/) {
+                        started = 0
+                        next
+                    }
+
                     if (seenOpen && depth == 1) {
                         cand = line
                         sub(/^[[:space:]]+/, "", cand)
                         sub(/^readonly[[:space:]]+/, "", cand)
-                        if (match(cand, /^[a-zA-Z_][a-zA-Z0-9_]*[?]?[[:space:]]*:/)) {
+                        # `foo:` / `foo?:` and the method shorthand `foo?(args): T;`
+                        # Accordion declares `onChange?(e: boolean): void;` — requiring a
+                        # colon reported it as removed.
+                        if (match(cand, /^[a-zA-Z_][a-zA-Z0-9_]*[?]?[[:space:]]*[:(]/)) {
                             name = substr(cand, 1, RLENGTH)
-                            sub(/[[:space:]]*:$/, "", name)
+                            sub(/[[:space:]]*[:(]$/, "", name)
                             sub(/[?]$/, "", name)
                             print name
                         }
