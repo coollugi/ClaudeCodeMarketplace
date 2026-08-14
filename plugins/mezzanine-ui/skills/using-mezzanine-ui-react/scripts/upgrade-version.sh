@@ -734,6 +734,19 @@ fetch_component_props_diff() {
             #
             # Buffer each declaration until its parentheses balance so a multi-line
             # options object is seen, then prefer the alias when present.
+            # Join declarations whose `= input(...)` starts on the next line, e.g.
+            #   readonly orientation: Signal<InputCheckGroupOrientation> =
+            #     input<InputCheckGroupOrientation>('horizontal');
+            # Requiring `name = input` on one line missed every explicitly-typed
+            # declaration (MznRadioGroup options/orientation, NotificationCenter
+            # emptyNotificationDescription, Pagination itemTemplate, ...), reporting
+            # correctly documented inputs as removed.
+            source_content=$(echo "$source_content" | awk '
+                { if (prev != "") { print prev " " $0; prev = "" }
+                  else if ($0 ~ /=[[:space:]]*$/) { prev = $0 }
+                  else print }
+                END { if (prev != "") print prev }
+            ')
             signal_inputs=$(echo "$source_content" | awk '
                 function emit(buf, member,   a) {
                     if (match(buf, /alias:[[:space:]]*['"'"'"][^'"'"'"]+['"'"'"]/)) {
@@ -750,12 +763,14 @@ fetch_component_props_diff() {
                     if (depth <= 0) { emit(buf, member); collecting = 0 }
                     next
                 }
-                match($0, /^[[:space:]]*(public[[:space:]]+|protected[[:space:]]+|private[[:space:]]+)?(readonly[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]/) {
+                match($0, /^[[:space:]]*(public[[:space:]]+|protected[[:space:]]+|private[[:space:]]+)?(readonly[[:space:]]+)?[A-Za-z_][A-Za-z0-9_]*([[:space:]]*:[^=]*)?[[:space:]]*=[[:space:]]*input[.<(]/) {
                     seg = substr($0, RSTART, RLENGTH)
                     sub(/[[:space:]]*=[[:space:]]*input[.<(]$/, "", seg)
                     sub(/^[[:space:]]*/, "", seg)
                     sub(/^(public|protected|private)[[:space:]]+/, "", seg)
                     sub(/^readonly[[:space:]]+/, "", seg)
+                    # strip an explicit type annotation: `options: Signal<...>`
+                    sub(/[[:space:]]*:.*$/, "", seg)
                     member = seg
                     buf = $0
                     depth = gsub(/\(/, "(") - gsub(/\)/, ")")
