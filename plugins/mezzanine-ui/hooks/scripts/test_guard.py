@@ -42,6 +42,12 @@ CASES = [
      "<Tag type=\"static\" label={l} className={STATUS_CLASS[status]} />"),
     ("WARN", "arrow handler before className", "S.tsx",
      "<Tag onClick={() => x()} className={styles.chip} />"),
+    ("BLOCK", "style object one indirection away", "S.tsx",
+     "const chipStyle = { backgroundColor: x };\n<Badge style={chipStyle} />"),
+    ("BLOCK", "space after = in attribute selector", "a.scss",
+     '.foo :global([class*= "mzn-tag"]) { background: red; }'),
+    ("WARN", "layout-only style object stays a warning", "S.tsx",
+     "const box = { marginTop: 8 };\n<Badge style={box} />"),
     ("WARN", "ButtonGroup faking a segmented control", "S.tsx",
      '<ButtonGroup>\n<Button variant={s==="a"?"base-primary":"base-secondary"}>A</Button>\n'
      '<Button variant={s==="b"?"base-primary":"base-secondary"}>B</Button>\n</ButtonGroup>'),

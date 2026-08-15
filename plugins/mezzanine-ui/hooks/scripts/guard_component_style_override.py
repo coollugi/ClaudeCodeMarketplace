@@ -40,7 +40,10 @@ COMPONENTS = (
 
 # `.mzn-tag__label` and `[class*="mzn-tag__label"]` target the same node; only
 # the first was detected, so a one-line rewrite walked straight through.
-COMPONENT_SELECTOR = re.compile(r"\.mzn-[\w-]|\[class[*^~|$]?=[\"']\s*mzn-", re.I)
+# `[class*= "mzn-tag"]` with a space after `=` is valid CSS and evaded the first
+# attribute-selector fix. Custom-property case IS significant, so `--MZN-…` is a
+# different property and is deliberately not matched here.
+COMPONENT_SELECTOR = re.compile(r"\.mzn-[\w-]|\[class[*^~|$]?=\s*[\"']\s*mzn-", re.I)
 
 
 def strip_css_comments(text: str) -> str:
@@ -129,7 +132,26 @@ def classify(path: str, added: str) -> Optional[str]:
         return "BLOCK\n" + "\n".join(f"  - {item}" for item in unique[:5])
 
     if is_markup:
+        # `const chipStyle = { backgroundColor: x }` then `style={chipStyle}` is
+        # the same override one indirection away; resolve it when the object is
+        # declared in the same edit.
+        painted_objects = {
+            m.group("name")
+            for m in re.finditer(
+                r"(?:const|let|var)\s+(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=]*)?=\s*\{(?P<body>[^{}]*)\}",
+                added,
+                re.S,
+            )
+            if re.search(
+                r"\b(background|backgroundColor|backgroundImage|border|borderRadius|"
+                r"borderColor|boxShadow|color)\s*:",
+                m.group("body"),
+            )
+        }
         for tag, attrs in jsx_elements(added, COMPONENTS):
+            named = re.search(r"\bstyle\s*=\s*\{\s*([A-Za-z_$][\w$]*)\s*\}", attrs)
+            if named and named.group(1) in painted_objects:
+                return f"BLOCK\n  - <{tag}> is painted by `{named.group(1)}`"
             inline = re.search(r"\bstyle\s*=\s*\{\{(?P<body>.*?)\}\}", attrs, re.S)
             if inline and re.search(
                 r"\b(background|backgroundColor|backgroundImage|border|borderRadius|"
