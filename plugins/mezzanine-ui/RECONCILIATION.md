@@ -188,7 +188,13 @@ and let a human rewrite it.
 
 ---
 
-## State of the last run (2026-08-15, react 1.4.2 / ng 1.0.0-rc.10, local checkout at `origin/main`)
+## State of the last run (2026-08-15, react 1.4.2 / ng 1.0.0-rc.10, local checkout `d4a7dba4`)
+
+Coverage: 73 of 74 Angular and 68 of 69 React components. The two not checked
+are `ThumbnailCards` and `Switch`, both exception rows above. **Check that line
+on every run** — a component the run could not locate looks exactly like a
+component with nothing wrong, and one silently dropped out for a while because
+`AutoComplete.md` did not match the folder `autocomplete/` by case.
 
 Reconciles clean — zero differences:
 
