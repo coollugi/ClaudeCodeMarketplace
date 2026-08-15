@@ -204,11 +204,19 @@ Reconciles clean — zero differences:
 | | react (start → now) | ng (start → now) |
 | - | ------------------ | ---------------- |
 | components with differences | 63 → 54 | 50 → 12 |
-| type mismatches | 73 → 8 | 59 → 3 |
+| type mismatches | 73 → 6 | 59 → 3 |
 | default mismatches | 33 → 1 | 14 → 0 |
+| **types never compared** (`typeUnverifiable`) | **177** | **4** |
+| **source sets a default, table blank** (`defaultMissing`) | **18** | **0** |
 | required mismatches | 65 → 34 | — → 3 |
 | documented, absent from source | 438 → 95 | 27 → 1 |
 | in source, not documented | 349 → 361 | 49 → 28 |
+
+**"6 type mismatches" is not "types are verified".** 177 of 1,419 documented
+React prop types — one in eight — were *skipped*, not checked: an alias the
+extractor cannot follow across packages, a doc that abbreviates a 20-line
+`Omit<>`, a generic parameter. They are counted in the row above so the number
+cannot be read as coverage. The equivalent Angular figure is 4 of 1,112.
 
 **Almost every closed item was a tooling defect, not a doc edit.** Two docs were
 wrong and are fixed (`ContentHeader.utilities` omitted that a Button-shaped
@@ -229,8 +237,11 @@ regression comments at each site:
   two lines above an `input()` became an input named `deps`.
 - A default was taken from a sibling component in the same folder (`Cropper.tsx`
   declares both `size = 'main'` and `size = 'wide'`), or from an inherited
-  `@default` JSDoc tag that contradicts the destructuring (every picker is
-  tagged `clearable false` upstream and destructures `clearable = true`).
+  `@default` JSDoc tag that contradicts the destructuring — `TextField.tsx:56`
+  tags `clearable` `@default false` while nine of the ten pickers destructure
+  `clearable = true` in their own file (`DateTimeRangePicker` is the tenth: it
+  forwards a bare `clearable` through `sharedProps` into `DateTimePicker`, which
+  supplies the `true`).
 
 Had those been "fixed" in the docs instead, 20 correct Default columns and ~340
 correct prop rows would have been rewritten to match a broken scanner. That is
@@ -246,6 +257,8 @@ the failure mode this file exists to prevent, and it nearly happened here.
 | Cross-package type aliases the map misses | react 8, ng 3 | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
 | Deliberately unexported config shapes | `Navigation.items` (ng) | doc right | `Navigation.md:23` states the config types are internal and unexported, and gives the shape inline — exactly the "do not document internal API to chase zero" rule |
 | Required-ness not stated in prose | 34 react, 3 ng | doc incomplete | Source is authoritative (`?` absent) but the blast radius is a compile error, not silent wrong behaviour. Mechanical to fix, deliberately not batch-applied without per-row review |
+| Types skipped, not verified | 177 react, 4 ng | scanner-limited | Cross-package aliases, doc abbreviations, generic parameters. Closing it needs a real TypeScript resolver, not more regex |
+| Source sets a default the table leaves blank | 18 react | doc incomplete | Calendar, Checkbox, DateTimePicker, Navigation, NotificationCenter, Pagination, Picker, Radio, Select, Spin. Emitted as `UPDATE_DEFAULTS` work items; each needs the per-row check that caught the 20 false positives above |
 
 ## Static checks are not evidence
 
@@ -295,9 +308,25 @@ A `PreToolUse` hook on `Write|Edit`, because a tool result is not advisory:
 | WARN | `<ButtonGroup>` with two `<Button>`s whose `variant` is a state ternary | the shape all five segment failures shipped |
 
 Silent on legitimate layout CSS, on a plain `ButtonGroup`, and on both correct
-answers. Note the honest limit: the segment mis-use leaves no CSS smell, so it
-is caught by shape-matching one specific pattern — a different spelling of the
-same mistake will pass. The BLOCK tier is the durable half.
+answers. `hooks/scripts/test_guard.py` runs all 16 cases, including the ones an
+independent audit used to break the first version:
+
+- `:root` / `[data-theme]` / `:host` token declarations are **theming and are
+  allowed**; only a re-point inside a component-scoped rule blocks. The first
+  version blocked every `--mzn-*:` and so blocked the project's own sanctioned
+  customisation path.
+- `[class*="mzn-tag__label"]` is treated like `.mzn-tag__label` — an attribute
+  selector reaches the same node and evaded the first version entirely.
+- Element scanning is brace-aware, so `<Badge onClick={() => x} style={{…}} />`
+  no longer slips through on the `>` inside the arrow.
+- A `.mzn-` mention inside a CSS comment no longer arms the following rule.
+- `.ts` is scanned for CSS smells (styled-components), not for JSX.
+
+Two honest limits remain. The segment mis-use has no CSS smell and is
+shape-matched, so a different spelling passes. And a status chip written as an
+ordinary class (`.statusChip { background: … }`) plus `<Tag className={…}>` is
+only **warned**, never blocked — blocking every coloured class would fire on
+normal application styling. The BLOCK tier is the durable half.
 
 The replays could not test the hook: they were told not to write files, and the
 hook fires on writes. What it is verified against is the recorded output of the

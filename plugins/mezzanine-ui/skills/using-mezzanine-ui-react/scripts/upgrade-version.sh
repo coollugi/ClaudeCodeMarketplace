@@ -49,9 +49,16 @@ GITHUB_BRANCH="main"
 GITHUB_RAW_BASE="https://raw.githubusercontent.com/Mezzanine-UI/mezzanine/$GITHUB_BRANCH"
 GITHUB_API_BASE="https://api.github.com/repos/Mezzanine-UI/mezzanine"
 
-# Cache: PascalCase component name → package sub-path + main source file (Angular only).
-# Populated by build_ng_component_source_map(), consumed by ng-specific diff steps.
-NG_COMPONENT_MAP_FILE="/tmp/mzn_ng_component_map.json"
+# Per-run scratch state. These were hardcoded /tmp paths shared by both
+# frameworks, and cleanup() deleted BOTH — so a react run finishing during an ng
+# run removed the ng component map mid-flight, and the ng run then reported
+# "Source located for 0 of 74" followed by "matches source for every component":
+# a vacuous all-green with exit 0. They now live in $WORK_DIR (mktemp -d).
+NG_COMPONENT_MAP_FILE=""
+COMPONENT_DIFF_FILE=""
+CHANGELOG_FILE=""
+PROPS_DIFF_FILE=""
+NG_SPECIFIC_FILE=""
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -190,6 +197,11 @@ parse_args() {
     fi
 
     WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/mzn-upgrade.XXXXXX")
+    NG_COMPONENT_MAP_FILE="$WORK_DIR/ng-component-map.json"
+    COMPONENT_DIFF_FILE="$WORK_DIR/component-diff.json"
+    CHANGELOG_FILE="$WORK_DIR/changelog.json"
+    PROPS_DIFF_FILE="$WORK_DIR/props-diff.json"
+    NG_SPECIFIC_FILE="$WORK_DIR/ng-specific.json"
 
     # Resolve framework-scoped paths.
     SKILL_DIR="$PLUGIN_SKILLS_DIR/using-mezzanine-ui-$FRAMEWORK"
@@ -542,9 +554,9 @@ fetch_and_compare_components() {
         --argjson removed "$removed_json" \
         --argjson unchanged "$unchanged_json" \
         '{added: $added, removed: $removed, unchanged: $unchanged}' \
-        > /tmp/mzn_component_diff.json
+        > "$COMPONENT_DIFF_FILE"
 
-    info "Component diff written to /tmp/mzn_component_diff.json"
+    info "Component diff written to $COMPONENT_DIFF_FILE"
 }
 
 # ─── Step 2: Fetch release changelog between versions ─────────────────────────
@@ -564,7 +576,7 @@ fetch_changelog() {
             "$GITHUB_API_BASE/releases?per_page=30&page=$page" 2>/dev/null); then
             [ "$page" -eq 1 ] && {
                 warn "Could not fetch releases from GitHub API. Skipping changelog."
-                echo "[]" > /tmp/mzn_changelog.json
+                echo "[]" > "$CHANGELOG_FILE"
                 return
             }
             break
@@ -628,7 +640,7 @@ fetch_changelog() {
         })
     ')
 
-    echo "$changelog_json" > /tmp/mzn_changelog.json
+    echo "$changelog_json" > "$CHANGELOG_FILE"
 
     local count
     count=$(echo "$changelog_json" | jq 'length')
@@ -730,6 +742,13 @@ fetch_component_props_diff() {
         [ -z "$SOURCE_DIR" ] && detail "Pass --source-dir <mezzanine checkout> for full coverage and cross-folder type resolution."
     fi
 
+    # Zero coverage must never read as "everything matches".
+    if [ "$count" -eq 0 ] && [ "$doc_count" -gt 0 ]; then
+        error "Located source for 0 of $doc_count components — refusing to report a clean run."
+        error "Check network access, or pass --source-dir <mezzanine checkout>."
+        exit 1
+    fi
+
     local root_args=()
     if [ "$FRAMEWORK" = "react" ] && [ -n "$SOURCE_DIR" ]; then
         # Lets a base declared in a sibling component folder resolve
@@ -741,14 +760,14 @@ fetch_component_props_diff() {
     if ! python3 "$SCRIPT_DIR/extract-api.py" --framework "$FRAMEWORK" --batch "$batch" \
         "${root_args[@]+"${root_args[@]}"}" > "$WORK_DIR/source-api.json" 2>"$WORK_DIR/extract.err"; then
         warn "extract-api.py failed: $(head -n3 "$WORK_DIR/extract.err")"
-        echo "[]" > /tmp/mzn_props_diff.json
+        echo "[]" > "$PROPS_DIFF_FILE"
         return
     fi
 
     if ! python3 "$SCRIPT_DIR/doc-api.py" --framework "$FRAMEWORK" \
         --components-dir "$COMPONENTS_DIR" > "$WORK_DIR/doc-api.json" 2>"$WORK_DIR/doc.err"; then
         warn "doc-api.py failed: $(head -n3 "$WORK_DIR/doc.err")"
-        echo "[]" > /tmp/mzn_props_diff.json
+        echo "[]" > "$PROPS_DIFF_FILE"
         return
     fi
 
@@ -766,10 +785,10 @@ fetch_component_props_diff() {
     python3 "$SCRIPT_DIR/reconcile-api.py" --framework "$FRAMEWORK" \
         --docs "$WORK_DIR/doc-api.json" --source "$WORK_DIR/source-api.json" \
         "${alias_args[@]+"${alias_args[@]}"}" --summary \
-        > /tmp/mzn_props_diff.json
+        > "$PROPS_DIFF_FILE"
 
     local changed
-    changed=$(jq 'length' /tmp/mzn_props_diff.json)
+    changed=$(jq 'length' "$PROPS_DIFF_FILE")
     if [ "$changed" = "0" ]; then
         info "Documented API matches source for every component"
     else
@@ -783,14 +802,14 @@ fetch_component_props_diff() {
 # cache; tokens and standalone imports are compared against the DOCS by
 # reconcile-api.py (Step 3), because that is the claim a consumer copies.
 fetch_angular_specific_diff() {
-    [ "$FRAMEWORK" = "ng" ] || { echo "[]" > /tmp/mzn_ng_specific.json; return; }
+    [ "$FRAMEWORK" = "ng" ] || { echo "[]" > "$NG_SPECIFIC_FILE"; return; }
 
     step "Step 3b: Analyzing Angular-specific changes (selector / CVA)"
 
     local api_index="$CACHE_DIR/component-index.json"
     if [ ! -f "$api_index" ] || [ ! -f "$WORK_DIR/source-api.json" ]; then
         warn "component-index.json or source extraction missing — skipping ng-specific diff"
-        echo "[]" > /tmp/mzn_ng_specific.json
+        echo "[]" > "$NG_SPECIFIC_FILE"
         return
     fi
 
@@ -824,14 +843,14 @@ fetch_angular_specific_diff() {
               )
             }
           | select(.selectorChanged != null or .cvaChange != null)
-        ]' > /tmp/mzn_ng_specific.json
+        ]' > "$NG_SPECIFIC_FILE"
 
     local changed
-    changed=$(jq 'length' /tmp/mzn_ng_specific.json)
+    changed=$(jq 'length' "$NG_SPECIFIC_FILE")
     if [ "$changed" = "0" ]; then
         info "No selector or CVA changes detected"
     else
-        jq -r '.[] | "  \(.component): \(if .selectorChanged then "selector " else "" end)\(if .cvaChange then "cva" else "" end)"' /tmp/mzn_ng_specific.json
+        jq -r '.[] | "  \(.component): \(if .selectorChanged then "selector " else "" end)\(if .cvaChange then "cva" else "" end)"' "$NG_SPECIFIC_FILE"
         info "$changed component(s) have Angular-specific changes"
     fi
 }
@@ -902,10 +921,10 @@ generate_manifest() {
     local props_diff="[]"
     local ng_specific="[]"
 
-    [ -f /tmp/mzn_component_diff.json ] && component_diff=$(cat /tmp/mzn_component_diff.json)
-    [ -f /tmp/mzn_changelog.json ]      && changelog=$(cat /tmp/mzn_changelog.json)
-    [ -f /tmp/mzn_props_diff.json ]     && props_diff=$(cat /tmp/mzn_props_diff.json)
-    [ -f /tmp/mzn_ng_specific.json ]    && ng_specific=$(cat /tmp/mzn_ng_specific.json)
+    [ -f "$COMPONENT_DIFF_FILE" ] && component_diff=$(cat "$COMPONENT_DIFF_FILE")
+    [ -f "$CHANGELOG_FILE" ]      && changelog=$(cat "$CHANGELOG_FILE")
+    [ -f "$PROPS_DIFF_FILE" ]     && props_diff=$(cat "$PROPS_DIFF_FILE")
+    [ -f "$NG_SPECIFIC_FILE" ]    && ng_specific=$(cat "$NG_SPECIFIC_FILE")
 
     # Build per-component work items with priority.
     # Every work item, regardless of priority, must be resolved during verification;
@@ -1091,11 +1110,8 @@ generate_manifest() {
 # ─── Cleanup temp files ───────────────────────────────────────────────────────
 
 cleanup() {
-    rm -f /tmp/mzn_component_diff.json
-    rm -f /tmp/mzn_changelog.json
-    rm -f /tmp/mzn_props_diff.json
-    rm -f /tmp/mzn_ng_specific.json
-    rm -f "$NG_COMPONENT_MAP_FILE"
+    # Everything lives under $WORK_DIR, so one removal covers this run and
+    # cannot touch a concurrent run's state.
     [ -n "$WORK_DIR" ] && rm -rf "$WORK_DIR"
 }
 
