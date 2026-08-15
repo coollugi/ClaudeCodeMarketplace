@@ -713,9 +713,22 @@ fetch_component_props_diff() {
 
     local batch
     batch=$(prepare_source_batch)
-    local count
+    local count doc_count
     count=$(jq 'length' "$batch")
-    detail "Source located for $count component(s)$([ -n "$SOURCE_DIR" ] && echo " (local: $SOURCE_DIR)" || echo " (github: $GITHUB_BRANCH)")"
+    doc_count=$(ls "$COMPONENTS_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
+    detail "Source located for $count of $doc_count documented component(s)$([ -n "$SOURCE_DIR" ] && echo " (local: $SOURCE_DIR)" || echo " (github: $GITHUB_BRANCH)")"
+
+    # A component whose source could not be fetched is skipped entirely, and a
+    # skipped component looks exactly like a component with no differences.
+    # Saying so is the difference between "42 differ" and "42 differ, 18 unchecked".
+    if [ "$count" -lt "$doc_count" ]; then
+        local missing
+        missing=$(comm -23 \
+            <(ls "$COMPONENTS_DIR"/*.md | xargs -n1 basename | sed 's/\.md$//' | sort) \
+            <(jq -r '.[].component' "$batch" | sort) | tr '\n' ' ')
+        warn "No source for $((doc_count - count)) documented component(s) — NOT checked: $missing"
+        [ -z "$SOURCE_DIR" ] && detail "Pass --source-dir <mezzanine checkout> for full coverage and cross-folder type resolution."
+    fi
 
     local root_args=()
     if [ "$FRAMEWORK" = "react" ] && [ -n "$SOURCE_DIR" ]; then

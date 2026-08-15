@@ -29,6 +29,15 @@ local tree and `main` disagree, say which one the numbers came from.
 
 Requires `curl`, `jq` and `python3`.
 
+**Without `--source-dir` the run is degraded, and knowing how matters.** Measured
+on the same commit: the local run located source for 68 of 69 documented React
+components and reported 54 differing; the HTTP run located 51 and reported 42.
+The 12-component gap is not agreement — it is components that were never checked,
+because a component whose source cannot be fetched is skipped, and a skipped
+component looks exactly like a clean one. The script now warns and names them.
+HTTP mode also has no `--root`, so bases declared in a sibling folder
+(`DatePickerProps extends Omit<PickerTriggerProps, ...>`) do not resolve.
+
 At the same version real API changes are zero by construction, so **every
 reported difference is a tooling artifact or accumulated drift**. That is the only
 reliable way to separate the two. Re-run after every change.
