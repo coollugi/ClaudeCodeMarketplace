@@ -96,6 +96,8 @@ CASES = [
      "@media (prefers-contrast: more) { .mzn-tag { border-color: #000; } }"),
     ("BLOCK", "ordinary breakpoint media query still blocks", "a.scss",
      "@media (min-width: 768px) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "interpolation with nested braces", "s.ts",
+     "const S = styled.div`.mzn-badge { color: ${({ theme }) => theme.brand}; }`;"),
     ("WARN", "ButtonGroup faking a segmented control", "S.tsx",
      '<ButtonGroup>\n<Button variant={s==="a"?"base-primary":"base-secondary"}>A</Button>\n'
      '<Button variant={s==="b"?"base-primary":"base-secondary"}>B</Button>\n</ButtonGroup>'),

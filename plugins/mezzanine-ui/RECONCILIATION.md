@@ -341,9 +341,10 @@ independent audit used to break the first version:
   ordinary component-scoped class names.
 
 Known residuals, kept rather than papered over: a hand-written CSS escape in an
-attribute selector (`[class*=mzn\2d tag]`) is not matched, and a bare `.dark {}`
-token block is treated as component-scoped — class-based dark mode must anchor
-to the root (`html.dark`), which the block message now says.
+attribute selector (`[class*=mzn\2d tag]`) is not matched; a property name hidden
+behind an interpolation (`${'background-color'}: red`) is not resolved; and a
+bare `.dark {}` token block is treated as component-scoped — class-based dark
+mode must anchor to the root (`html.dark`), which the block message now says.
 
 Two honest limits remain. The segment mis-use has no CSS smell and is
 shape-matched, so a different spelling passes. And a status chip written as an

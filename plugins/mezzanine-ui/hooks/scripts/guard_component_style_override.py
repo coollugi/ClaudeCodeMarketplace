@@ -209,7 +209,36 @@ def css_regions(path: str, text: str) -> List[str]:
     if path.endswith((".html", ".vue", ".svelte")):
         regions += re.findall(r"<style[^>]*>(.*?)</style>", text, re.S | re.I)
     regions += re.findall(r"`([^`]*)`", text, re.S)
-    return [re.sub(r"\$\{[^{}]*\}", "INTERPOLATED", region) for region in regions]
+    return [_neutralise_interpolation(region) for region in regions]
+
+
+def _neutralise_interpolation(text: str) -> str:
+    """Replace `${…}` with a placeholder, counting nested braces.
+
+    `${({ theme }) => theme.brand}` — a destructured arrow parameter — is the
+    commonest styled-components spelling, and a non-nesting pattern left its
+    inner brace behind, which then opened a phantom block.
+    """
+    out: List[str] = []
+    i, n = 0, len(text)
+    while i < n:
+        if text[i] == "$" and i + 1 < n and text[i + 1] == "{":
+            depth = 0
+            j = i + 1
+            while j < n:
+                if text[j] == "{":
+                    depth += 1
+                elif text[j] == "}":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                j += 1
+            out.append("INTERPOLATED")
+            i = j + 1
+            continue
+        out.append(text[i])
+        i += 1
+    return "".join(out)
 
 
 def classify(path: str, added: str) -> Optional[str]:
