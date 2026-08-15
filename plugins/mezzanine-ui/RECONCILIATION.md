@@ -254,7 +254,7 @@ the failure mode this file exists to prevent, and it nearly happened here.
 | Curated docs vs exhaustive source (`+prop` 361 / 28) | every large component | doc right | Docs table the props a consumer sets; source merges every sub-component and inherited base. `Breadcrumb` extracts 45 props it shares with the collapsed-menu Dropdown. Closing it means tabling internal API — forbidden by this file |
 | DOM-inherited props (`children`, `className`, `style`, `ref`) | ~30 react components | scanner-limited | The base is `NativeElementPropsWithoutKeyAndRef` → React's own typings, outside the monorepo |
 | Sub-component props sharing a name | `Checkbox.label`, `Cropper.*`, `Input.strength*` | doc right | One doc covers the family; `Checkbox.md:118` already explains that the JSDoc says `'Select all'` while the runtime fallback is `''` — more precise than the comparer |
-| Cross-package type aliases the map misses | react 8, ng 3 | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
+| Cross-package type aliases the map misses | react 6, ng 3 *(the compared-and-differing subset of the row above)* | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
 | Deliberately unexported config shapes | `Navigation.items` (ng) | doc right | `Navigation.md:23` states the config types are internal and unexported, and gives the shape inline — exactly the "do not document internal API to chase zero" rule |
 | Required-ness not stated in prose | 34 react, 3 ng | doc incomplete | Source is authoritative (`?` absent) but the blast radius is a compile error, not silent wrong behaviour. Mechanical to fix, deliberately not batch-applied without per-row review |
 | Types skipped, not verified | 177 react, 4 ng | scanner-limited | Cross-package aliases, doc abbreviations, generic parameters. Closing it needs a real TypeScript resolver, not more regex |
@@ -320,7 +320,16 @@ independent audit used to break the first version:
 - Element scanning is brace-aware, so `<Badge onClick={() => x} style={{…}} />`
   no longer slips through on the `>` inside the arrow.
 - A `.mzn-` mention inside a CSS comment no longer arms the following rule.
-- `.ts` is scanned for CSS smells (styled-components), not for JSX.
+- `.ts` is scanned for CSS smells (styled-components) inside template literals
+  only — scanning the whole file hard-blocked Playwright/Cypress selector maps.
+- Rules are parsed with a brace-depth walker that resolves SCSS nesting, so
+  `.mzn-tag { &__label { color: … } }` and declarations sitting beside a nested
+  block are both attributed to the component. The flat regex missed the
+  idiomatic spelling of the forbidden rule entirely.
+- A theme root must be the WHOLE selector and every branch of a group, and only
+  `:root` / `html` / `body` / `:host` / `[data-*]` (optionally compounded) count.
+  Appending `, :root` used to disarm the check, and `.theme-*` / `.dark` matched
+  ordinary component-scoped class names.
 
 Two honest limits remain. The segment mis-use has no CSS smell and is
 shape-matched, so a different spelling passes. And a status chip written as an

@@ -27,10 +27,22 @@ APPEARANCE = r"(background(-color|-image)?|border(-radius|-color)?|box-shadow|co
 # Selectors that legitimately declare or re-theme design tokens. The project
 # rule permits adjusting styles THROUGH tokens; what it forbids is re-pointing a
 # token inside a component-scoped rule to forge that component's semantics.
-THEME_ROOT = re.compile(
-    r"(^|[\s,>+~])(:root|html|body|:host(\([^)]*\))?|\[data-[\w-]+[^\]]*\]|\.theme[\w-]*|\.dark|\.light)\s*$",
+# A theme root is the whole selector, not merely its tail: `.mzn-tag, :root {}`
+# used to disarm the token check by appending a root, and `.theme[\w-]*` matched
+# `.theme-chip` / `.themed-badge`, which are ordinary component-scoped classes.
+# Class-based theme names are gone; the real spellings are attribute or
+# pseudo-class based, optionally compounded (`:root.dark`, `html[data-theme]`).
+THEME_ROOT_ONE = re.compile(
+    r"^(:root|html|body|:host(\([^)]*\))?|\[data-[\w-]+[^\]]*\])"
+    r"([.#][\w-]+|\[[^\]]*\]|:[\w-]+(\([^)]*\))?)*$",
     re.I,
 )
+
+
+def is_theme_root(selector: str) -> bool:
+    """True only when EVERY comma-separated selector is a theming root."""
+    parts = [p.strip() for p in selector.split(",") if p.strip()]
+    return bool(parts) and all(THEME_ROOT_ONE.match(p) for p in parts)
 
 COMPONENTS = (
     "Badge|Tag|Button|ButtonGroup|Chip|Card|Modal|Table|Select|TextField|Input|"
@@ -43,7 +55,17 @@ COMPONENTS = (
 # `[class*= "mzn-tag"]` with a space after `=` is valid CSS and evaded the first
 # attribute-selector fix. Custom-property case IS significant, so `--MZN-…` is a
 # different property and is deliberately not matched here.
-COMPONENT_SELECTOR = re.compile(r"\.mzn-[\w-]|\[class[*^~|$]?=\s*[\"']\s*mzn-", re.I)
+# Whitespace and quoting are both optional in an attribute selector, and both
+# spellings were used to walk past the first two versions of this check.
+COMPONENT_SELECTOR = re.compile(
+    r"\.mzn-[\w-]|&[\w-]*|\[\s*class\s*[*^~|$]?=\s*[\"']?\s*mzn-", re.I
+)
+COMPONENT_LITERAL = re.compile(r"\.mzn-[\w-]|\[\s*class\s*[*^~|$]?=\s*[\"']?\s*mzn-", re.I)
+
+# Text that is code, not a selector. `css_rules` used to hand everything before
+# a `{` to the matcher, so a Playwright locator constant followed by any object
+# literal produced a hard block with an unreadable "selector".
+NOT_A_SELECTOR = re.compile(r"[;=]|\breturn\b|\b(const|let|var|function|await|import|export)\b")
 
 
 def strip_css_comments(text: str) -> str:
@@ -89,9 +111,81 @@ def jsx_elements(text: str, names: str):
 
 
 def css_rules(text: str):
-    """Yield (selector, body) for top-level-ish rules."""
-    for match in re.finditer(r"([^{}]*)\{([^{}]*)\}", text, re.S):
-        yield match.group(1).strip(), match.group(2)
+    r"""Yield (effective selector, declarations) for every rule, nesting resolved.
+
+    The previous flat regex `([^{}]*)\{([^{}]*)\}` could not see a rule that
+    contains a nested block, so the idiomatic SCSS spelling of the forbidden
+    rule was invisible:
+
+        .mzn-tag { &:hover { color: red; } background-color: #16a34a; }
+
+    The outer declarations belong to `.mzn-tag` and must be attributed to it,
+    and `&__label` must resolve to `.mzn-tag__label`. This walks brace depth and
+    keeps a selector stack instead.
+    """
+    stack: List[str] = []
+    buffer = ""
+    i, n = 0, len(text)
+    while i < n:
+        ch = text[i]
+        if ch in "'\"`":
+            quote = ch
+            j = i + 1
+            while j < n and text[j] != quote:
+                j += 2 if text[j] == "\\" else 1
+            buffer += text[i : j + 1]
+            i = j + 1
+            continue
+        if ch == "{":
+            # Declarations can precede a nested block:
+            #   .mzn-button { background-color: red; &:hover { … } }
+            # Everything up to the last `;` belongs to the CURRENT rule; only the
+            # tail is the nested selector. Treating the whole buffer as a
+            # selector swallowed `background-color: red` and the rule went
+            # silent.
+            head, _, tail = buffer.rpartition(";")
+            if head.strip() and stack:
+                yield stack[-1], head
+            selector = " ".join((tail if head or _ else buffer).split())
+            parent = stack[-1] if stack else ""
+            if selector.startswith("&"):
+                effective = parent + selector[1:] if parent else selector
+            elif parent:
+                effective = f"{parent} {selector}"
+            else:
+                effective = selector
+            stack.append(effective)
+            buffer = ""
+            i += 1
+            continue
+        if ch == "}":
+            if stack:
+                yield stack[-1], buffer
+                stack.pop()
+            buffer = ""
+            i += 1
+            continue
+        if ch == ";":
+            buffer += ch
+            i += 1
+            continue
+        buffer += ch
+        i += 1
+    if stack:
+        yield stack[-1], buffer
+
+
+def css_regions(path: str, text: str) -> List[str]:
+    """The parts of a file that can contain CSS.
+
+    In a `.ts`/`.tsx` file only template literals qualify. Scanning the whole
+    file meant a selector constant (`const SEL = '.mzn-tag';`) followed by any
+    object literal was parsed as a rule and hard-blocked — Playwright and Cypress
+    selector maps are exactly that shape.
+    """
+    if path.endswith((".css", ".scss", ".sass", ".less")):
+        return [text]
+    return re.findall(r"`([^`]*)`", text, re.S)
 
 
 def classify(path: str, added: str) -> Optional[str]:
@@ -105,12 +199,14 @@ def classify(path: str, added: str) -> Optional[str]:
 
     blocking: List[str] = []
 
-    if is_style or is_css_in_js or is_markup:
-        source = strip_css_comments(added)
+    for region in css_regions(path, added):
+        source = strip_css_comments(region)
         for selector, body in css_rules(source):
-            if not selector:
+            # `=` is code punctuation everywhere EXCEPT inside an attribute
+            # selector, so test the selector with `[...]` spans removed.
+            if not selector or NOT_A_SELECTOR.search(re.sub(r"\[[^\]]*\]", "", selector)):
                 continue
-            targets_component = bool(COMPONENT_SELECTOR.search(selector))
+            targets_component = bool(COMPONENT_LITERAL.search(selector))
             paints = re.search(rf"(^|[;{{\s]){APPEARANCE}\s*:", body)
             if targets_component and paints:
                 flat = " ".join(selector.split())
@@ -119,7 +215,7 @@ def classify(path: str, added: str) -> Optional[str]:
                 # Declaring tokens on a theme root is the sanctioned way to
                 # re-theme; re-pointing one inside a component-scoped rule is
                 # forging the component's semantics while looking compliant.
-                if THEME_ROOT.search(" ".join(selector.split())):
+                if is_theme_root(" ".join(selector.split())):
                     continue
                 flat = " ".join(selector.split())
                 blocking.append(f"`{selector.split()[0]}` redefines `{token.group(1)}`")
