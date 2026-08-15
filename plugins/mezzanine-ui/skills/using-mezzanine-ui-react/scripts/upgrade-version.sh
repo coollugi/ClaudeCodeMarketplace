@@ -739,8 +739,20 @@ fetch_component_props_diff() {
         return
     fi
 
+    # One-line `export type A = B;` aliases in @mezzanine-ui/core, so a doc naming
+    # `RadioSize` and a source naming `InputCheckSize` are not reported as a
+    # mismatch. Only available from a local checkout.
+    local alias_args=()
+    if [ -n "$SOURCE_DIR" ] && [ -d "$SOURCE_DIR/packages/core/src" ]; then
+        python3 "$SCRIPT_DIR/extract-api.py" --framework "$FRAMEWORK" \
+            --alias-root "$SOURCE_DIR/packages/core/src" \
+            --alias-out "$WORK_DIR/aliases.json" > /dev/null 2>&1 || true
+        [ -s "$WORK_DIR/aliases.json" ] && alias_args=(--aliases "$WORK_DIR/aliases.json")
+    fi
+
     python3 "$SCRIPT_DIR/reconcile-api.py" --framework "$FRAMEWORK" \
-        --docs "$WORK_DIR/doc-api.json" --source "$WORK_DIR/source-api.json" --summary \
+        --docs "$WORK_DIR/doc-api.json" --source "$WORK_DIR/source-api.json" \
+        "${alias_args[@]+"${alias_args[@]}"}" --summary \
         > /tmp/mzn_props_diff.json
 
     local changed

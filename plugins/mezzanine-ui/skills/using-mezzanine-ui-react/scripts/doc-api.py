@@ -66,7 +66,26 @@ def _type_and_required(cell: str) -> (Optional[str], bool):
     text = _plain(cell)
     required = bool(re.search(r"\((?:required|必填)\)|必填", text, re.I))
     text = re.sub(r"\((?:required|必填|optional|選填)\)", "", text, flags=re.I).strip()
+    # React docs write unions with a slash in some tables:
+    # `TableActions<T> / TableActionsWithMinWidth<T>`.
+    text = re.sub(r"\s+/\s+", " | ", text)
+    # `RadioSize ('main' | 'sub')` — the alias is the type, the parenthetical is
+    # its expansion for the reader.
+    alias = re.match(r"^([A-Za-z_$][\w$]*(?:<[^<>]*>)?)\s*\((.+)\)$", text)
+    if alias:
+        text = alias.group(1)
     return (text or None), required
+
+
+def _required_from_description(cell: str) -> bool:
+    """React tables carry requiredness in the Description column.
+
+    A row reads `| variant | BadgeCountVariant | - | Required, count variant |`;
+    reading only the Type column reported 65 correctly-documented props as
+    "required in source, optional in docs".
+    """
+    text = _plain(cell)
+    return bool(re.match(r"^(required|必填|必要)\b", text, re.I))
 
 
 def _default(cell: str) -> Optional[str]:
@@ -78,15 +97,27 @@ def _default(cell: str) -> Optional[str]:
     return text or None
 
 
+HOOK_HEADING = re.compile(r"^#{2,4}\s.*\b(hooks?|use[A-Z]\w*)\b", re.I)
+
+
 def parse_tables(lines: List[str]) -> (Dict[str, Dict[str, object]], Dict[str, Dict[str, object]]):
     props: Dict[str, Dict[str, object]] = {}
     outputs: Dict[str, Dict[str, object]] = {}
     i, n = 0, len(lines)
     in_fence = False
+    in_hook_section = False
     while i < n:
         line = lines[i]
         if line.lstrip().startswith("```"):
             in_fence = not in_fence
+            i += 1
+            continue
+        if not in_fence and line.startswith("#"):
+            # A hook's return value is not a component prop. `useStepper` returns
+            # goToStep/isFirstStep/nextStep, and reading those tables as props
+            # reported them as "documented but absent from source".
+            in_hook_section = bool(HOOK_HEADING.match(line))
+        if in_hook_section:
             i += 1
             continue
         if in_fence or "|" not in line:
@@ -117,6 +148,9 @@ def parse_tables(lines: List[str]) -> (Dict[str, Dict[str, object]], Dict[str, D
             if name:
                 type_text, required = _type_and_required(row[type_idx]) if type_idx is not None and type_idx < len(row) else (None, False)
                 default = _default(row[default_idx]) if default_idx is not None and default_idx < len(row) else None
+                description_idx = next((k for k, h in enumerate(keys) if h.startswith("desc") or h in {"說明", "描述"}), None)
+                if description_idx is not None and description_idx < len(row):
+                    required = required or _required_from_description(row[description_idx])
                 entry = {"type": type_text, "default": default, "required": required}
                 # A later table (a "新增的 Inputs" section) refines an earlier row
                 # rather than replacing it; keep the first non-empty values.
@@ -132,17 +166,25 @@ def parse_tables(lines: List[str]) -> (Dict[str, Dict[str, object]], Dict[str, D
     return props, outputs
 
 
+def _kebab(name: str) -> str:
+    return re.sub(r"(?<!^)(?=[A-Z])", "-", name).lower()
+
+
 def parse_imports(text: str, package: str) -> List[str]:
-    """Value imports from the component's own package sub-path.
+    """Value imports from the component's OWN package sub-path.
 
     `import type { BadgeVariant }` is a type-only import and never goes into an
-    Angular `imports: []`, so it is excluded.
+    Angular `imports: []`, so it is excluded. Neither do symbols a usage example
+    imports from a *different* sub-path: `Button.md` importing `MznIcon` from
+    `@mezzanine-ui/ng/icon` says nothing about what `@mezzanine-ui/ng/button`
+    exports, and counting them reported 22 phantom "documented but not exported"
+    symbols across 17 components.
     """
     symbols: List[str] = []
     for m in re.finditer(r"^\s*import\s+(type\s+)?\{([^}]*)\}\s*from\s*'([^']+)'", text, re.M):
         if m.group(1):
             continue
-        if not m.group(3).startswith(package):
+        if m.group(3) != package:
             continue
         for raw in m.group(2).split(","):
             name = raw.strip().split(" as ")[0].strip()
@@ -172,7 +214,10 @@ def parse_doc(path: str, framework: str) -> Dict[str, object]:
         text = handle.read()
     lines = text.splitlines()
     props, outputs = parse_tables(lines)
-    package = "@mezzanine-ui/ng" if framework == "ng" else "@mezzanine-ui/react"
+    component = os.path.basename(path)[:-3]
+    package = (
+        f"@mezzanine-ui/ng/{_kebab(component)}" if framework == "ng" else "@mezzanine-ui/react"
+    )
     verified = None
     m = re.search(r"Verified\s+([0-9][\w.\-]*)", text)
     if m:

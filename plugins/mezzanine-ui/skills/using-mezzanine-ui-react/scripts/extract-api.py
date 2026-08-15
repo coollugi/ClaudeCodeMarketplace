@@ -322,6 +322,47 @@ def _clean_type(text: str) -> Optional[str]:
     return cleaned or None
 
 
+def _body_brace(text: str, start: int) -> int:
+    """Index of an interface's body `{`, skipping braces inside type arguments.
+
+    `interface AutoCompleteBaseProps extends Omit<Rename<X, { options: 'popperOptions' }>, ...> {`
+    — taking the first `{` after the name landed inside the type argument, so the
+    "body" was one bogus member and 32 real props were reported as removed.
+    """
+    angle = round_depth = square = 0
+    i, n = start, len(text)
+    while i < n:
+        ch = text[i]
+        if ch in "'\"`":
+            quote = ch
+            i += 1
+            while i < n and text[i] != quote:
+                i += 2 if text[i] == "\\" else 1
+            i += 1
+            continue
+        if ch == "<":
+            angle += 1
+        elif ch == ">" and text[i - 1] != "=":
+            angle = max(0, angle - 1)
+        elif ch == "(":
+            round_depth += 1
+        elif ch == ")":
+            round_depth -= 1
+        elif ch == "[":
+            square += 1
+        elif ch == "]":
+            square -= 1
+        elif ch == "{":
+            if angle == 0 and round_depth == 0 and square == 0:
+                return i
+            i = match_block(text, i)
+            continue
+        elif ch == ";":
+            return -1
+        i += 1
+    return -1
+
+
 class TypeIndex:
     """Every `interface`/`type` declaration in a component family, by name."""
 
@@ -333,7 +374,7 @@ class TypeIndex:
             stripped = strip_comments(text)
             for m in re.finditer(r"\b(?:export\s+)?interface\s+([A-Za-z_$][\w$]*)", stripped):
                 name = m.group(1)
-                brace = stripped.find("{", m.end())
+                brace = _body_brace(stripped, m.end())
                 if brace == -1:
                     continue
                 heritage = stripped[m.end() : brace]
@@ -427,6 +468,24 @@ class TypeIndex:
                         continue
                     part, missed = self.resolve(ident.group(1), seen)
                     unresolved += missed
+                    # An unknown generic wrapper carries the real props type as a
+                    # type ARGUMENT: `ButtonProps<C> =
+                    # ComponentOverridableForwardRefComponentPropsFactory<
+                    #   ButtonComponent, C, ButtonPropsBase>`. Resolving only the
+                    # wrapper yielded 1 prop and reported the other 8 as removed
+                    # on every component built through the factory.
+                    generic = re.match(r"^[A-Za-z_$][\w$]*\s*<(.*)>$", operand, re.S)
+                    if generic:
+                        for arg in split_top_level(generic.group(1), ","):
+                            arg = arg.strip()
+                            if not re.fullmatch(r"[A-Za-z_$][\w$]*", arg):
+                                continue
+                            extra, extra_missed = self.resolve(arg, seen)
+                            if extra:
+                                for k, v in extra.items():
+                                    part.setdefault(k, v)
+                            else:
+                                unresolved += extra_missed
             for key, value in part.items():
                 existing = members.get(key)
                 if existing is None:
@@ -504,10 +563,35 @@ def _alias_end(seg: str) -> int:
     return n
 
 
+# Every distinct default seen for a prop name anywhere in the family. A folder
+# routinely declares the same name twice — Cropper.tsx has `size = 'main'` and
+# `size = 'wide'` for two different components, dropdown/ declares `mode` on four
+# directives — and picking one made 20 correct Default columns look wrong.
+candidates: Dict[str, List[str]] = {}
+# Defaults destructured in the component's OWN file. These beat a `@default`
+# JSDoc tag inherited from a base type: `PickerTriggerProps.clearable` is
+# tagged `@default false` upstream while every picker destructures
+# `clearable = true`, and the tag is what the consumer does NOT get.
+own: Dict[str, str] = {}
+
+
 def react_defaults(sources: Dict[str, str], component: str) -> Dict[str, str]:
-    """Destructuring defaults in the component body: `const { size = 'medium' } = props`."""
+    """Destructuring defaults in the component body: `const { size = 'medium' } = props`.
+
+    Files are read in preference order — `<Comp>.tsx` first, siblings after — so a
+    default belonging to another component in the same folder cannot be attributed
+    to this one. Alphabetical order made `Modal.size` look like `'wide'`, which is
+    `MediaPreviewModal`'s value, and would have "fixed" a correct table entry into
+    a wrong one.
+    """
     defaults: Dict[str, str] = {}
-    for name, text in sources.items():
+    candidates.clear()
+    own.clear()
+    preferred = [f"{component}.tsx", f"{component}.ts"]
+    ordered = [n for n in preferred if n in sources] + [n for n in sorted(sources) if n not in preferred]
+    for name in ordered:
+        text = sources[name]
+        is_own = name in preferred
         stripped = strip_comments(text)
         for m in re.finditer(r"(?:const|let|var)?\s*\{", stripped):
             open_idx = m.end() - 1
@@ -519,7 +603,13 @@ def react_defaults(sources: Dict[str, str], component: str) -> Dict[str, str]:
             for part in split_top_level(body, ","):
                 dm = re.match(r"^([A-Za-z_$][\w$]*)\s*=\s*(.+)$", part.strip(), re.S)
                 if dm:
-                    defaults.setdefault(dm.group(1), " ".join(dm.group(2).split()))
+                    value = " ".join(dm.group(2).split())
+                    defaults.setdefault(dm.group(1), value)
+                    if is_own:
+                        own.setdefault(dm.group(1), value)
+                    candidates.setdefault(dm.group(1), [])
+                    if value not in candidates[dm.group(1)]:
+                        candidates[dm.group(1)].append(value)
     return defaults
 
 
@@ -548,12 +638,50 @@ def extract_react(directory: str, component: str, fallback: "Optional[TypeIndex]
             existing = props.get(key)
             if existing is None:
                 props[key] = value
-            elif existing.get("type") in (None, "never") and value.get("type") not in (None, "never"):
+                continue
+            # Optional in ANY declaration wins, the same rule resolve_type_expr
+            # applies inside a single union: a prop the Card variant makes
+            # optional is not "required" just because ActionCard demands it.
+            if not value.get("required"):
+                existing["required"] = False
+            a, b = existing.get("type"), value.get("type")
+            if a in (None, "never") and b not in (None, "never"):
+                merged_required = existing.get("required") and value.get("required")
                 props[key] = value
+                props[key]["required"] = bool(merged_required)
+            elif b not in (None, "never") and a != b:
+                # Same union-arm rule as resolve_type_expr: `CardProps` and
+                # `ActionCardProps` each pin `type` to their own literal, and
+                # keeping the first made the doc's `'default'` look wrong.
+                parts = [x.strip() for x in str(a).split("|")] + [x.strip() for x in str(b).split("|")]
+                merged: List[str] = []
+                for part in parts:
+                    if part and part != "never" and part not in merged:
+                        merged.append(part)
+                existing["type"] = " | ".join(merged)
     defaults = react_defaults(sources, component)
+    constants = literal_constants(sources)
     for key, value in props.items():
-        if value.get("default") is None and key in defaults:
+        # Destructuring beats JSDoc wherever it is found in the family: the tag
+        # documents the base type's intent, the destructuring is what the
+        # consumer actually gets when the prop is omitted.
+        if key in own:
+            value["default"] = own[key]
+            value["defaultFrom"] = "destructuring"
+        elif key in defaults:
             value["default"] = defaults[key]
+            value["defaultFrom"] = "destructuring"
+        elif value.get("default") is not None:
+            # Came from a `@default` JSDoc tag, possibly on an inherited base in
+            # another package folder. That tag documents intent upstream; it is
+            # not what the component does, and several are stale.
+            value["defaultFrom"] = "jsdoc"
+        resolved = constants.get(str(value.get("default")))
+        if resolved is not None:
+            value["default"] = resolved
+        alternatives = [constants.get(c, c) for c in candidates.get(key, [])]
+        if len(set(alternatives)) > 1:
+            value["defaultCandidates"] = alternatives
     return {
         "props": props,
         "outputs": {},
@@ -570,17 +698,20 @@ def extract_react(directory: str, component: str, fallback: "Optional[TypeIndex]
 
 SIGNAL_INPUT_RE = re.compile(
     r"^[ \t]*(?:public\s+|protected\s+|private\s+)?(?:readonly\s+)?"
-    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=]*?)?=\s*input(?P<required>\.required)?\s*(?P<generic><)?",
+    # `[^=\n]` not `[^=]`: an annotation that may span newlines let the regex
+    # start at any earlier `name:` line — `deps: [MznAccordion],` two lines above
+    # an input() became an input called `deps` with the input's type and default.
+    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=\n]*)?=\s*input(?P<required>\.required)?\s*(?P<generic><)?",
     re.M,
 )
 OUTPUT_RE = re.compile(
     r"^[ \t]*(?:public\s+|protected\s+|private\s+)?(?:readonly\s+)?"
-    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=]*?)?=\s*output\s*(?P<generic><)?",
+    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=\n]*)?=\s*output\s*(?P<generic><)?",
     re.M,
 )
 MODEL_RE = re.compile(
     r"^[ \t]*(?:public\s+|protected\s+|private\s+)?(?:readonly\s+)?"
-    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=]*?)?=\s*model(?P<required>\.required)?\s*(?P<generic><)?",
+    r"(?P<name>[A-Za-z_$][\w$]*)\s*(?::[^=\n]*)?=\s*model(?P<required>\.required)?\s*(?P<generic><)?",
     re.M,
 )
 
@@ -654,7 +785,26 @@ def extract_ng(directory: str, component: str) -> Dict[str, object]:
                         type_text = _infer_type(default)
                     entry = {"type": type_text, "required": required, "default": default}
                     prev = props.get(key)
+                    if prev is not None and type_text is not None:
+                        # Same name on two directives in one family: Upload.md
+                        # documents MznUploader's `type: UploadType` while
+                        # upload-item declares `type: UploadItemType`. Recording
+                        # both lets the comparer see the doc matches one of them.
+                        seen_types = prev.setdefault("typeCandidates", [])
+                        if prev.get("type") is not None and prev["type"] not in seen_types:
+                            seen_types.append(prev["type"])
+                        if type_text not in seen_types:
+                            seen_types.append(type_text)
+                        entry["typeCandidates"] = seen_types
+                    if prev is not None and default is not None:
+                        seen_defaults = prev.setdefault("defaultCandidates", [])
+                        if prev.get("default") is not None and prev["default"] not in seen_defaults:
+                            seen_defaults.append(prev["default"])
+                        if default not in seen_defaults:
+                            seen_defaults.append(default)
                     if prev is None or (prev.get("type") is None and entry["type"] is not None):
+                        if prev is not None and prev.get("defaultCandidates"):
+                            entry["defaultCandidates"] = prev["defaultCandidates"]
                         props[key] = entry
 
         for m in re.finditer(r"@Input\((?P<opts>[^)]*)\)\s*(?:readonly\s+)?(?P<name>[A-Za-z_$][\w$]*)\s*(?::\s*(?P<type>[^=;\n]+))?(?:=\s*(?P<default>[^;\n]+))?", text):
@@ -694,6 +844,11 @@ def extract_ng(directory: str, component: str) -> Dict[str, object]:
 
     if main_selector is None and selectors:
         main_selector = selectors[0]
+    constants = literal_constants(sources)
+    for entry in props.values():
+        resolved = constants.get(str(entry.get("default")))
+        if resolved is not None:
+            entry["default"] = resolved
     return {
         "props": props,
         "outputs": outputs,
@@ -703,10 +858,32 @@ def extract_ng(directory: str, component: str) -> Dict[str, object]:
         "providesTokens": sorted(set(tokens)),
         # Consumer-facing: what goes into a standalone component's `imports: []`.
         "standaloneImports": sorted(exported & decorated),
+        # Everything index.ts re-exports as a value. A doc may legitimately tell
+        # consumers to import a service or a state class (MznPortalRegistry,
+        # MznStepperState) that is NOT a directive and must not go in imports: [].
+        "exportedSymbols": sorted(exported),
         # Implementation detail: what this component's own decorator imports.
         "internalImports": sorted(set(imports)),
         "unresolvedBases": [],
     }
+
+
+def literal_constants(sources: Dict[str, str]) -> Dict[str, str]:
+    """`const DEFAULT_MIN_HEIGHT = 50;` -> {"DEFAULT_MIN_HEIGHT": "50"}.
+
+    Lets a default declared as a named constant compare against the literal the
+    docs print, instead of being reported as a mismatch against its own name.
+    """
+    constants: Dict[str, str] = {}
+    for text in sources.values():
+        stripped = strip_comments(text)
+        for m in re.finditer(
+            r"""^\s*(?:export\s+)?const\s+([A-Za-z_$][\w$]*)\s*(?::[^=]+)?=\s*('[^']*'|"[^"]*"|-?\d+(?:\.\d+)?|true|false)\s*;""",
+            stripped,
+            re.M,
+        ):
+            constants.setdefault(m.group(1), m.group(2))
+    return constants
 
 
 def _infer_type(default: str) -> Optional[str]:
@@ -731,11 +908,30 @@ def main() -> int:
         help="JSON file: [{\"component\": \"Badge\", \"dir\": \"...\"}]. Emits {component: api}.",
     )
     parser.add_argument(
+        "--alias-out",
+        help="Write a {alias: target} map of one-line `export type A = B;` declarations "
+        "found under --alias-root. Lets the comparer see that a doc naming "
+        "`RadioSize` and a source naming `InputCheckSize` mean the same type.",
+    )
+    parser.add_argument("--alias-root", help="Package root to scan for type aliases (packages/core/src)")
+    parser.add_argument(
         "--root",
         help="Package source root (packages/react/src). Lets bases declared in a "
         "sibling component folder resolve instead of being reported unresolved.",
     )
     args = parser.parse_args()
+
+    if args.alias_out and args.alias_root and os.path.isdir(args.alias_root):
+        aliases: Dict[str, str] = {}
+        for text in read_sources(args.alias_root, recursive=True).values():
+            for m in re.finditer(
+                r"^\s*export\s+type\s+([A-Za-z_$][\w$]*)\s*=\s*([A-Za-z_$][\w$]*)\s*;",
+                strip_comments(text),
+                re.M,
+            ):
+                aliases.setdefault(m.group(1), m.group(2))
+        with open(args.alias_out, "w", encoding="utf-8") as handle:
+            json.dump(aliases, handle, ensure_ascii=False, sort_keys=True)
 
     fallback = None
     if args.root and os.path.isdir(args.root):
