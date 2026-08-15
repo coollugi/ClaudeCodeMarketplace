@@ -370,9 +370,16 @@ def classify(path: str, added: str) -> Optional[str]:
                 continue
             targets_component = bool(COMPONENT_LITERAL.search(selector))
             paints = re.search(rf"(^|[;{{\s]){APPEARANCE}\s*:", body)
+            # `any`, not `all`: nesting INTERSECTS, exactly like `and` within a
+            # branch, so one environmental ancestor already restricts the rule to
+            # that environment. Requiring all of them meant the same condition was
+            # judged differently depending on spelling — `@media print and (min-width:
+            # 768px)` warned while `@media print { @media (min-width: 768px) { … } }`
+            # blocked. There is no nesting arrangement where an ancestor widens,
+            # so this cannot reopen a bypass; the value gate still applies.
             environment = (
                 bool(at_rules)
-                and all(is_environment_at_rule(rule) for rule in at_rules)
+                and any(is_environment_at_rule(rule) for rule in at_rules)
                 and environment_appropriate(at_rules, body)
             )
             if targets_component and paints:
