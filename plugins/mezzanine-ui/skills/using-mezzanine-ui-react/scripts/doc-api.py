@@ -166,11 +166,18 @@ def parse_tables(lines: List[str]) -> (Dict[str, Dict[str, object]], Dict[str, D
     return props, outputs
 
 
-def _kebab(name: str) -> str:
-    return re.sub(r"(?<!^)(?=[A-Z])", "-", name).lower()
+def _slug(name: str) -> str:
+    """Compare package sub-paths ignoring case and word separators.
+
+    The doc is `AutoComplete.md` while the package path is
+    `@mezzanine-ui/ng/autocomplete` — deriving `auto-complete` from the filename
+    matched nothing, so the doc's Import block parsed as empty and every real
+    export was reported as undocumented.
+    """
+    return re.sub(r"[^a-z0-9]", "", name.lower())
 
 
-def parse_imports(text: str, package: str) -> List[str]:
+def parse_imports(text: str, package_root: str, component_slug: str) -> List[str]:
     """Value imports from the component's OWN package sub-path.
 
     `import type { BadgeVariant }` is a type-only import and never goes into an
@@ -184,7 +191,8 @@ def parse_imports(text: str, package: str) -> List[str]:
     for m in re.finditer(r"^\s*import\s+(type\s+)?\{([^}]*)\}\s*from\s*'([^']+)'", text, re.M):
         if m.group(1):
             continue
-        if m.group(3) != package:
+        module = m.group(3)
+        if not module.startswith(package_root) or _slug(module[len(package_root) :]) != _slug(component_slug):
             continue
         for raw in m.group(2).split(","):
             name = raw.strip().split(" as ")[0].strip()
@@ -215,9 +223,6 @@ def parse_doc(path: str, framework: str) -> Dict[str, object]:
     lines = text.splitlines()
     props, outputs = parse_tables(lines)
     component = os.path.basename(path)[:-3]
-    package = (
-        f"@mezzanine-ui/ng/{_kebab(component)}" if framework == "ng" else "@mezzanine-ui/react"
-    )
     verified = None
     m = re.search(r"Verified\s+([0-9][\w.\-]*)", text)
     if m:
@@ -225,7 +230,9 @@ def parse_doc(path: str, framework: str) -> Dict[str, object]:
     return {
         "props": props,
         "outputs": outputs,
-        "standaloneImports": parse_imports(text, package) if framework == "ng" else [],
+        "standaloneImports": (
+            parse_imports(text, "@mezzanine-ui/ng/", component) if framework == "ng" else []
+        ),
         "providesTokens": parse_tokens(text) if framework == "ng" else [],
         "verified": verified,
     }

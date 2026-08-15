@@ -675,10 +675,29 @@ prepare_source_batch() {
         local dir=""
         if [ -n "$SOURCE_DIR" ]; then
             case "$FRAMEWORK" in
-                react) dir="$SOURCE_DIR/packages/react/src/$component" ;;
+                react)
+                    dir="$SOURCE_DIR/packages/react/src/$component"
+                    if [ ! -d "$dir" ]; then
+                        # Same case-insensitivity guard as ng, for a doc whose
+                        # name differs from the folder only by capitalisation.
+                        local match
+                        match=$(ls -1 "$SOURCE_DIR/packages/react/src" 2>/dev/null \
+                            | awk -v c="$component" 'tolower($0) == tolower(c) { print; exit }')
+                        [ -n "$match" ] && dir="$SOURCE_DIR/packages/react/src/$match"
+                    fi
+                    ;;
                 ng)
+                    # Case-insensitive: the doc is `AutoComplete.md` while the
+                    # folder `autocomplete/` derives `Autocomplete`. An exact
+                    # match dropped the component from the run entirely, and on a
+                    # case-insensitive filesystem which spelling lands on disk can
+                    # change with a checkout — so the same commit could report a
+                    # different coverage count.
                     local rel
-                    rel=$(jq -r --arg c "$component" '.[$c].sourceDir // empty' "$NG_COMPONENT_MAP_FILE" 2>/dev/null)
+                    rel=$(jq -r --arg c "$component" '
+                        (.[$c].sourceDir)
+                        // (to_entries[] | select((.key | ascii_downcase) == ($c | ascii_downcase)) | .value.sourceDir)
+                        // empty' "$NG_COMPONENT_MAP_FILE" 2>/dev/null | head -n1)
                     [ -n "$rel" ] && dir="$SOURCE_DIR/$rel"
                     ;;
             esac
