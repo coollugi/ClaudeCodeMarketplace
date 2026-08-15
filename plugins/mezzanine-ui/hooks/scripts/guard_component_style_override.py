@@ -94,6 +94,15 @@ SYSTEM_COLORS = {
 }
 
 
+# Non-colour parts of a shorthand: they carry no palette information either way.
+BORDER_KEYWORDS = {
+    "solid", "dashed", "dotted", "double", "hidden", "groove", "ridge", "inset",
+    "outset", "thin", "medium", "thick", "repeat", "no-repeat", "center", "cover",
+    "contain", "top", "bottom", "left", "right", "round", "space", "border-box",
+    "padding-box", "content-box", "!important",
+}
+
+
 def environment_appropriate(at_rules: tuple, body: str) -> bool:
     """Does every appearance value in this rule fit the environment it claims?
 
@@ -109,13 +118,19 @@ def environment_appropriate(at_rules: tuple, body: str) -> bool:
     ]
     if not values:
         return False
+    allows_system = "forced-colors" in context or "prefers-contrast" in context
     for value in values:
-        token = value.split()[0] if value.split() else value
-        if ACHROMATIC.match(token):
-            continue
-        if ("forced-colors" in context or "prefers-contrast" in context) and token.lower() in SYSTEM_COLORS:
-            continue
-        return False
+        # EVERY token, not just the first: `border: 1px solid red` passed the
+        # check because `1px` is achromatic and the colour sat in position three.
+        for token in re.findall(r"[^\s]+\([^)]*\)|[^\s]+", value):
+            token = token.strip(",")
+            if not token:
+                continue
+            if ACHROMATIC.match(token) or token.lower() in BORDER_KEYWORDS:
+                continue
+            if allows_system and token.lower() in SYSTEM_COLORS:
+                continue
+            return False
     return True
 
 
