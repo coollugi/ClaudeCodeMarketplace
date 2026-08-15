@@ -64,14 +64,59 @@ COMPONENT_LITERAL = re.compile(r"\.mzn-[\w-]|\[\s*class\s*[*^~|$]?=\s*[\"']?\s*m
 # literal produced a hard block with an unreadable "selector".
 NOT_A_SELECTOR = re.compile(r"[;=]|\breturn\b|\b(const|let|var|function|await|import|export)\b")
 
-# A component rule inside one of these is responding to the environment, not
-# restyling the design system: print stylesheets drop ink, and forced-colors /
-# prefers-contrast exist to satisfy accessibility requirements the component's
-# own props cannot express. Warn, never block.
-ENVIRONMENT_AT_RULE = re.compile(
-    r"@media[^{]*\b(print|forced-colors|prefers-contrast|prefers-reduced-motion|prefers-reduced-transparency)\b",
+# A component rule inside one of these MAY be responding to the environment
+# rather than restyling the design system. The at-rule name alone is not
+# evidence: `@media print { .mzn-badge { background: hotpink } }` is a plain
+# design override wearing a print wrapper, and softening on the name turned the
+# whole guard into a one-line bypass. The declared VALUE has to fit the claim.
+ENVIRONMENT_AT_RULE = re.compile(r"@media[^{]*\b(print|forced-colors|prefers-contrast)\b", re.I)
+
+# Values that genuinely belong to an ink-saving print rule: achromatic, or an
+# instruction to drop the paint entirely.
+ACHROMATIC = re.compile(
+    r"^(none|transparent|currentcolor|inherit|initial|unset|revert|auto|white|black"
+    # Grey means the channels are EQUAL: `#ff00ff` is magenta, and a pattern
+    # that only checked for repeated digit PAIRS let it through as achromatic.
+    r"|#(?P<short>[0-9a-f])(?P=short){2}"
+    r"|#(?P<long>[0-9a-f]{2})(?P=long){2}"
+    r"|rgba?\(\s*(?P<r>\d+)\s*,\s*(?P=r)\s*,\s*(?P=r)\s*(,[^)]*)?\)"
+    r"|gray|grey|silver|[\d.]+(px|rem|em|%)?)$",
     re.I,
 )
+
+# The palette a forced-colors / prefers-contrast override is supposed to use:
+# the OS's own colours, not the app's.
+SYSTEM_COLORS = {
+    "canvas", "canvastext", "linktext", "visitedtext", "activetext", "buttonface",
+    "buttontext", "buttonborder", "field", "fieldtext", "highlight", "highlighttext",
+    "selecteditem", "selecteditemtext", "mark", "marktext", "graytext", "accentcolor",
+    "accentcolortext",
+}
+
+
+def environment_appropriate(at_rules: tuple, body: str) -> bool:
+    """Does every appearance value in this rule fit the environment it claims?
+
+    Without this the exemption is a free pass: wrap anything in `@media print`
+    and a hard block becomes an ignorable warning.
+    """
+    context = " ".join(at_rules).lower()
+    values = [
+        # `str.rstrip("!important")` strips CHARACTERS, not the suffix — it
+        # turned `CanvasText` into `CanvasTex` and rejected a valid system colour.
+        re.sub(r"\s*!\s*important\s*$", "", m.group("value").strip(), flags=re.I).strip()
+        for m in re.finditer(rf"{APPEARANCE}\s*:\s*(?P<value>[^;{{}}]+)", body, re.I)
+    ]
+    if not values:
+        return False
+    for value in values:
+        token = value.split()[0] if value.split() else value
+        if ACHROMATIC.match(token):
+            continue
+        if ("forced-colors" in context or "prefers-contrast" in context) and token.lower() in SYSTEM_COLORS:
+            continue
+        return False
+    return True
 
 
 def strip_css_comments(text: str) -> str:
@@ -262,7 +307,7 @@ def classify(path: str, added: str) -> Optional[str]:
                 continue
             targets_component = bool(COMPONENT_LITERAL.search(selector))
             paints = re.search(rf"(^|[;{{\s]){APPEARANCE}\s*:", body)
-            environment = any(ENVIRONMENT_AT_RULE.search(rule) for rule in at_rules)
+            environment = any(ENVIRONMENT_AT_RULE.search(rule) for rule in at_rules) and environment_appropriate(at_rules, body)
             if targets_component and paints:
                 flat = " ".join(selector.split())
                 if environment:
@@ -275,9 +320,9 @@ def classify(path: str, added: str) -> Optional[str]:
                 # forging the component's semantics while looking compliant.
                 if is_theme_root(" ".join(selector.split())):
                     continue
-                if environment:
-                    softened.append(f"`{selector.split()[0]}` re-points {token.group(1)} inside {at_rules[-1]}")
-                    continue
+                # Deliberately NOT softened by the environment exemption: no
+                # print or forced-colors rule needs a component's semantic token
+                # re-pointed, so allowing it would only serve as a bypass.
                 flat = " ".join(selector.split())
                 blocking.append(f"`{selector.split()[0]}` redefines `{token.group(1)}`")
 

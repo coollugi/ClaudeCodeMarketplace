@@ -327,10 +327,13 @@ independent audit used to break the first version:
   because the suite had no case for them. `${…}` interpolation is neutralised
   first, since its brace opened a phantom block and hid the spelling
   styled-components users actually write.
-- A component rule inside `@media print`, `forced-colors`, `prefers-contrast` or
-  `prefers-reduced-motion` **warns instead of blocking**: those respond to the
-  environment, and two of them exist to meet accessibility requirements a
-  component's own props cannot express. An ordinary breakpoint query still blocks.
+- A component rule inside `@media print` / `forced-colors` / `prefers-contrast`
+  warns instead of blocking **only when the declared value fits the claim** —
+  achromatic or `none`/`transparent`/`currentColor` for print, a CSS system
+  colour (`CanvasText`, `ButtonText`, …) for forced-colors. Softening on the
+  at-rule name alone made `@media print { … }` a one-line bypass for the entire
+  guard, which is worse than the false positive it fixed. Token re-pointing is
+  never softened: no environment needs a component's semantic token changed.
 - Rules are parsed with a brace-depth walker that resolves SCSS nesting, so
   `.mzn-tag { &__label { color: … } }` and declarations sitting beside a nested
   block are both attributed to the component. The flat regex missed the
