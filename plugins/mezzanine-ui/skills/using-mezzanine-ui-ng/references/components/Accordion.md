@@ -2,7 +2,7 @@
 
 > **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/ng/accordion) · Verified 1.0.0-rc.4 (2026-04-24)
 
-Collapsible content block with animated expand/collapse. Supports controlled (`expanded`) and uncontrolled (`defaultExpanded`) modes. Sub-components communicate via the `MZN_ACCORDION_CONTROL` injection token. Use `MznAccordionGroup` to manage mutual exclusion.
+Collapsible content block with animated expand/collapse. Supports controlled (`expanded`) and uncontrolled (`defaultExpanded`) modes. Sub-components communicate via the `MZN_ACCORDION_CONTROL` injection token; the family also provides `MZN_ACCORDION_GROUP`（`MznAccordionGroup` 用來管理互斥展開）與 `MZN_BUTTON_GROUP`（`MznAccordionActions` 內部給按鈕群組用）—— 兩者皆為內部協作用，消費端不需要自行 provide。 Use `MznAccordionGroup` to manage mutual exclusion.
 
 ## Import
 

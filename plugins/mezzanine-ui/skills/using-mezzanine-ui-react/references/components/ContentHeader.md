@@ -34,7 +34,7 @@ import type { ContentHeaderProps } from '@mezzanine-ui/react/ContentHeader';
 | `size`           | `'main' \| 'sub'`                         | `'main'`   | Size                            |
 | `title`          | `string`                                  | **required** | Title text                    |
 | `titleComponent` | `'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6' \| 'p'` | by size | Title HTML element    |
-| `utilities`      | `(ButtonProps \| DropdownProps)[]`        | -          | Utility button configuration    |
+| `utilities`      | `((ButtonProps & { icon: IconDefinition }) \| DropdownProps)[]` | -   | Utility button configuration；Button 形式的項目 **`icon` 為必填**（`packages/react/src/ContentHeader/ContentHeader.tsx:93-98`），Dropdown 形式則照 `DropdownProps` |
 
 ---
 
