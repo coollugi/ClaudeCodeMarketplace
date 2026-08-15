@@ -353,15 +353,19 @@ intended spelling and none for its inverted or widened one. Every exemption in
 the suite now carries its negation, its default-state value and its comma-list
 widening alongside the happy case.
 
-Known residuals, kept rather than papered over. **All of these are misses, not
-nuisances** — the guard goes quiet rather than blocking correct work, so the
-exposure is an override that ships, not a developer who cannot ship: a
-hand-written CSS escape in an attribute selector (`[class*=mzn\2d tag]`); a
-property name hidden behind an interpolation (`${'background-color'}: red`); a
-template literal nested inside an interpolation (`` ${css`…`} ``), which ends the
-scanned region early; and a bare `.dark {}` token block, which is treated as
-component-scoped — class-based dark mode must anchor to the root (`html.dark`),
-which the block message says.
+Known residuals, kept rather than papered over. **Three are misses** — the guard
+goes quiet, so the exposure is an override that ships, not a developer who
+cannot ship: a hand-written CSS escape in an attribute selector
+(`[class*=mzn\2d tag]`); a property name hidden behind an interpolation
+(`${'background-color'}: red`); and a template literal nested inside an
+interpolation (`` ${css`…`} ``), which ends the scanned region early.
+
+**One is a deliberate nuisance in the other direction**: a bare `.dark {}` token
+block is treated as component-scoped and blocked, because it cannot be told
+apart from a component wrapper. Class-based dark mode must anchor to the root
+(`html.dark`, `:root.dark`), which the block message says. That one costs a
+developer a rewrite rather than letting an override through — the only item here
+where the friction, not the exposure, is the cost.
 
 Two honest limits remain. The segment mis-use has no CSS smell and is
 shape-matched, so a different spelling passes. And a status chip written as an
