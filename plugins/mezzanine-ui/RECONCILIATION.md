@@ -181,46 +181,62 @@ and let a human rewrite it.
 
 ## State of the last run (2026-08-15, react 1.4.2 / ng 1.0.0-rc.10, local checkout at `origin/main`)
 
-Reconciles clean:
+Reconciles clean — zero differences:
 
-- **Selectors and CVA, all 73 Angular components** — zero differences.
-- **Component lists** — zero additions; every removal is an exception row above.
+- **Selectors and CVA**, all 73 Angular components.
+- **Component lists**, both frameworks (every removal is an exception row above).
+- **Defaults**, Angular: 14 reported conflicts were all extractor artifacts, now zero.
+- **Outputs, DI tokens and Import blocks**, Angular: `outputsRemoved` 4 → 0,
+  `importsRemoved` 22 → 0, `tokensAdded` 2 → 0 (the last two were real doc gaps,
+  fixed in `Accordion.md`).
+- **Inputs documented but absent from source**, Angular: 27 → 1 (`Pagination.itemTemplate`,
+  an existing exception).
 
-Does **not** reconcile yet, and is now visible instead of invisible:
+| | react (start → now) | ng (start → now) |
+| - | ------------------ | ---------------- |
+| components with differences | 63 → 54 | 50 → 12 |
+| type mismatches | 73 → 8 | 59 → 3 |
+| default mismatches | 33 → 1 | 14 → 0 |
+| required mismatches | 65 → 34 | — → 3 |
+| documented, absent from source | 438 → 95 | 27 → 1 |
+| in source, not documented | 349 → 361 | 49 → 28 |
 
-| | react | ng |
-| - | ----- | -- |
-| components with API differences | 63 of 69 | 50 of 74 |
-| type mismatches | 73 | 59 |
-| default mismatches | 33 | 14 |
-| names in source, absent from docs | 349 | 49 |
-| names in docs, absent from source | 153 | 27 |
+**Almost every closed item was a tooling defect, not a doc edit.** Two docs were
+wrong and are fixed (`ContentHeader.utilities` omitted that a Button-shaped
+utility must carry `icon`; `Accordion.md` never mentioned two tokens the family
+provides). Everything else moved because the extractor stopped lying. Kept as
+regression comments at each site:
 
-None of that is triaged. It is a work list, not a defect list: the previous
-runs reported 3 react components and 57 ng components because 25 of 69 react
-cache entries held `props: {}` and the extractor could not read a `type X =
-A & B` alias — **both sides were empty, so both sides agreed**. Every number
-above needs the four-bucket triage before a single `.md` is edited.
+- The interface body brace was taken from inside the `extends` clause's type
+  arguments (`Rename<X, { options: 'popperOptions' }>`), which cost `AutoComplete`
+  32 props on its own.
+- `type X<T = D> =` was unreadable because the type parameter contains `=`.
+- A generic wrapper carrying the props type as an ARGUMENT
+  (`ComponentOverridableForwardRefComponentPropsFactory<..., ButtonPropsBase>`)
+  resolved to one prop, hitting every component built through the factory.
+- Cross-folder bases resolved to zero members because the recursion guard was
+  handed a set that already contained the name being resolved.
+- An Angular type annotation was allowed to span newlines, so `deps: [MznAccordion],`
+  two lines above an `input()` became an input named `deps`.
+- A default was taken from a sibling component in the same folder (`Cropper.tsx`
+  declares both `size = 'main'` and `size = 'wide'`), or from an inherited
+  `@default` JSDoc tag that contradicts the destructuring (every picker is
+  tagged `clearable false` upstream and destructures `clearable = true`).
 
-Known shape of the residuals, from sampling — not a substitute for triage:
+Had those been "fixed" in the docs instead, 20 correct Default columns and ~340
+correct prop rows would have been rewritten to match a broken scanner. That is
+the failure mode this file exists to prevent, and it nearly happened here.
 
-- React docs list props of sub-components and of composed bases; the extractor
-  now follows `extends`/`Omit`/`Pick` chains across folders, which is what
-  dropped the "documented but not in source" count from 438 to 153.
-- React source exposes many inherited DOM/TextField props the docs deliberately
-  do not table. Those are the bulk of the 349.
-- Angular `type` differences are concentrated in the picker family, where the
-  doc spells out a callback signature the source imports from `@mezzanine-ui/core`.
+### Residual classes — each is an exception, with what would close it
 
-Still never checked: usage examples, prop descriptions, and the `cache/` copies
-of the input lists (`component-index.json` still stores Angular inputs as bare
-names, with no types, defaults, `standaloneImports` or `providesTokens`; the
-comparison no longer depends on it, but `mzn-cache-updater` still writes it).
-- The agent workflow: `/sync-mezzanine-ui` phases 2–5 have never been run; the
-  rules added to the `mzn-*` agents are untested. Back up the plugin directory
-  before the first real run.
-
----
+| Class | Where | Bucket | Evidence |
+| ----- | ----- | ------ | -------- |
+| Curated docs vs exhaustive source (`+prop` 361 / 28) | every large component | doc right | Docs table the props a consumer sets; source merges every sub-component and inherited base. `Breadcrumb` extracts 45 props it shares with the collapsed-menu Dropdown. Closing it means tabling internal API — forbidden by this file |
+| DOM-inherited props (`children`, `className`, `style`, `ref`) | ~30 react components | scanner-limited | The base is `NativeElementPropsWithoutKeyAndRef` → React's own typings, outside the monorepo |
+| Sub-component props sharing a name | `Checkbox.label`, `Cropper.*`, `Input.strength*` | doc right | One doc covers the family; `Checkbox.md:118` already explains that the JSDoc says `'Select all'` while the runtime fallback is `''` — more precise than the comparer |
+| Cross-package type aliases the map misses | react 8, ng 3 | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
+| Deliberately unexported config shapes | `Navigation.items` (ng) | doc right | `Navigation.md:23` states the config types are internal and unexported, and gives the shape inline — exactly the "do not document internal API to chase zero" rule |
+| Required-ness not stated in prose | 34 react, 3 ng | doc incomplete | Source is authoritative (`?` absent) but the blast radius is a compile error, not silent wrong behaviour. Mechanical to fix, deliberately not batch-applied without per-row review |
 
 ## Static checks are not evidence
 
