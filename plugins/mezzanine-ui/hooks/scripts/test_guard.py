@@ -125,6 +125,28 @@ CASES = [
      "@media print { .mzn-tag { background: var(--brand); } }"),
     ("BLOCK", "system colour misused outside forced-colors", "a.scss",
      "@media print { .mzn-tag { color: Highlight; } }"),
+    # --- round 5: the INVERTED and WIDENED spellings of each exemption.
+    # Two rounds of holes came from testing only the intended spelling of a new
+    # rule, so every exemption now carries its negation, its default-state value
+    # and its comma-list widening.
+    ("BLOCK", "media list widened with screen", "a.scss",
+     "@media screen, print { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "media list widened with a breakpoint", "a.scss",
+     "@media print, (max-width: 600px) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "negated print selects everything else", "a.scss",
+     "@media not print { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "forced-colors: none is the default state", "a.scss",
+     "@media (forced-colors: none) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "prefers-contrast: no-preference is the default", "a.scss",
+     "@media (prefers-contrast: no-preference) { .mzn-tag { background-color: red; } }"),
+    ("WARN", "bare (forced-colors) feature query", "a.scss",
+     "@media (forced-colors) { .mzn-button { border-color: CanvasText; } }"),
+    ("WARN", "rgb(128 128 128) space-separated grey", "a.scss",
+     "@media print { .mzn-tag { color: rgb(128 128 128); } }"),
+    ("WARN", "hsl grey (zero saturation)", "a.scss",
+     "@media print { .mzn-tag { color: hsl(0, 0%, 50%); } }"),
+    ("BLOCK", "hsl with saturation is not achromatic", "a.scss",
+     "@media print { .mzn-tag { color: hsl(140, 60%, 45%); } }"),
     ("WARN", "ButtonGroup faking a segmented control", "S.tsx",
      '<ButtonGroup>\n<Button variant={s==="a"?"base-primary":"base-secondary"}>A</Button>\n'
      '<Button variant={s==="b"?"base-primary":"base-secondary"}>B</Button>\n</ButtonGroup>'),

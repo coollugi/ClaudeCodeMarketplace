@@ -334,6 +334,11 @@ independent audit used to break the first version:
   at-rule name alone made `@media print { … }` a one-line bypass for the entire
   guard, which is worse than the false positive it fixed. Token re-pointing is
   never softened: no environment needs a component's semantic token changed.
+  The query itself is parsed rather than substring-matched — every comma branch
+  must be environmental, `not` disqualifies, and `forced-colors: none` /
+  `prefers-contrast: no-preference` are the DEFAULT states, so they do not
+  count. `@media screen, print { … }` was a one-word rewrite that applied on
+  screen while downgrading the block.
 - Rules are parsed with a brace-depth walker that resolves SCSS nesting, so
   `.mzn-tag { &__label { color: … } }` and declarations sitting beside a nested
   block are both attributed to the component. The flat regex missed the
@@ -343,10 +348,16 @@ independent audit used to break the first version:
   Appending `, :root` used to disarm the check, and `.theme-*` / `.dark` matched
   ordinary component-scoped class names.
 
+Two rounds of holes came from the same habit: a new rule got a test for its
+intended spelling and none for its inverted or widened one. Every exemption in
+the suite now carries its negation, its default-state value and its comma-list
+widening alongside the happy case.
+
 Known residuals, kept rather than papered over: a hand-written CSS escape in an
 attribute selector (`[class*=mzn\2d tag]`) is not matched; a property name hidden
 behind an interpolation (`${'background-color'}: red`) is not resolved; and a
-bare `.dark {}` token block is treated as component-scoped — class-based dark
+a template literal nested inside an interpolation (`` ${css`…`} ``) ends the
+region early; and a bare `.dark {}` token block is treated as component-scoped — class-based dark
 mode must anchor to the root (`html.dark`), which the block message now says.
 
 Two honest limits remain. The segment mis-use has no CSS smell and is

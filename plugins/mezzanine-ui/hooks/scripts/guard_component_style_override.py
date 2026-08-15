@@ -69,7 +69,42 @@ NOT_A_SELECTOR = re.compile(r"[;=]|\breturn\b|\b(const|let|var|function|await|im
 # evidence: `@media print { .mzn-badge { background: hotpink } }` is a plain
 # design override wearing a print wrapper, and softening on the name turned the
 # whole guard into a one-line bypass. The declared VALUE has to fit the claim.
-ENVIRONMENT_AT_RULE = re.compile(r"@media[^{]*\b(print|forced-colors|prefers-contrast)\b", re.I)
+def is_environment_at_rule(rule: str) -> bool:
+    """Does this media query select ONLY an environment that justifies a restyle?
+
+    Substring-matching the feature name softened three families of query that
+    mean the opposite of what they look like:
+
+    * `@media not print` — matches everything EXCEPT print.
+    * `@media (forced-colors: none)` / `(prefers-contrast: no-preference)` — the
+      DEFAULT state, i.e. the ordinary user, not one who asked for an override.
+    * `@media screen, print` / `@media print, (max-width: 600px)` — a query LIST
+      applies when ANY branch matches, so appending a branch widens the rule.
+      `@media screen, print` is a one-word rewrite that applies unconditionally.
+
+    Every branch must be environmental, and none may be negated.
+    """
+    query = re.sub(r"^\s*@media\s*", "", rule.strip(), flags=re.I)
+    branches = [b.strip() for b in query.split(",") if b.strip()]
+    if not branches:
+        return False
+    for branch in branches:
+        if re.search(r"\bnot\b", branch, re.I):
+            return False
+        if re.fullmatch(r"print", branch.strip(), re.I):
+            continue
+        feature = re.fullmatch(r"\(\s*([\w-]+)\s*(?::\s*([^)]+?)\s*)?\)", branch, re.I)
+        if not feature:
+            return False
+        name = feature.group(1).lower()
+        value = (feature.group(2) or "").strip().lower()
+        if name not in ("forced-colors", "prefers-contrast"):
+            return False
+        # A bare feature query is true whenever the feature is not in its
+        # default state, so it counts; the explicit default does not.
+        if value in ("none", "no-preference"):
+            return False
+    return True
 
 # Values that genuinely belong to an ink-saving print rule: achromatic, or an
 # instruction to drop the paint entirely.
@@ -79,7 +114,11 @@ ACHROMATIC = re.compile(
     # that only checked for repeated digit PAIRS let it through as achromatic.
     r"|#(?P<short>[0-9a-f])(?P=short){2}"
     r"|#(?P<long>[0-9a-f]{2})(?P=long){2}"
-    r"|rgba?\(\s*(?P<r>\d+)\s*,\s*(?P=r)\s*,\s*(?P=r)\s*(,[^)]*)?\)"
+    # CSS Color 4 space-separated syntax is what browsers now serialise to, and
+    # an HSL grey is saturation 0 — both are genuinely achromatic.
+    r"|rgba?\(\s*(?P<r>\d+%?)\s*,\s*(?P=r)\s*,\s*(?P=r)\s*(,[^)]*)?\)"
+    r"|rgba?\(\s*(?P<rs>\d+%?)\s+(?P=rs)\s+(?P=rs)\s*([/][^)]*)?\)"
+    r"|hsla?\([^,)]+[,\s]+0%[,\s]+[^)]*\)"
     r"|gray|grey|silver|[\d.]+(px|rem|em|%)?)$",
     re.I,
 )
@@ -322,7 +361,11 @@ def classify(path: str, added: str) -> Optional[str]:
                 continue
             targets_component = bool(COMPONENT_LITERAL.search(selector))
             paints = re.search(rf"(^|[;{{\s]){APPEARANCE}\s*:", body)
-            environment = any(ENVIRONMENT_AT_RULE.search(rule) for rule in at_rules) and environment_appropriate(at_rules, body)
+            environment = (
+                bool(at_rules)
+                and all(is_environment_at_rule(rule) for rule in at_rules)
+                and environment_appropriate(at_rules, body)
+            )
             if targets_component and paints:
                 flat = " ".join(selector.split())
                 if environment:
