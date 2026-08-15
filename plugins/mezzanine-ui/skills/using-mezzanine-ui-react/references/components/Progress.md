@@ -8,6 +8,9 @@
 
 A progress bar component for displaying operation completion progress.
 
+> **Aliases** — ProgressBar · LinearProgress (MUI) · 進度條 · 百分比進度
+> **Not for** — 不知道進度的載入（用 [`Spin`](Spin.md)）；有版面結構的載入佔位（用 [`Skeleton`](Skeleton.md)）
+
 ## Import
 
 ```tsx

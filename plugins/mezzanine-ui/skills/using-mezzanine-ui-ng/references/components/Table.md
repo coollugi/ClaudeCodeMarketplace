@@ -223,6 +223,14 @@ Use `MznTableCellRender` directive on a `<ng-template>` inside the table host. T
 </div>
 ```
 
+### Inputs — MznTableCellRender
+
+**Selector**: `[mznTableCellRender]`（套用在 `<ng-template>` 上）
+
+| Input                | Type                | Default | Description                                        |
+| -------------------- | ------------------- | ------- | -------------------------------------------------- |
+| `mznTableCellRender` | `string` (required) | —       | 目標欄位的 key；與 `columns` 中的 `key` 對應      |
+
 ### MznTableCellRenderContext
 
 ```ts

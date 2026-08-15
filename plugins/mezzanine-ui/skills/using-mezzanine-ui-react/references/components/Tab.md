@@ -8,6 +8,9 @@
 
 Tab component for switching between different content views within the same area.
 
+> **Aliases** — Tabs · TabBar · 頁籤 · 分頁標籤 · Figma `Tab / *`
+> **Not for** — 互斥的檢視／排序切換（用 [`RadioGroup type="segment"`](Radio.md)）。另注意 `Tab` 只接受 `<TabItem>` children，其餘 JSX **靜默丟棄且不出 warning**。
+
 ## Import
 
 ```tsx

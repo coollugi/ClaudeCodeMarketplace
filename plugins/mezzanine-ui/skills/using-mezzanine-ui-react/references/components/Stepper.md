@@ -8,6 +8,9 @@
 
 Stepper component for guiding users through multi-step processes.
 
+> **Aliases** — Steps (Ant Design) · Wizard · Progress Steps · 步驟條 · 流程指示 · Figma `Stepper / *`
+> **Not for** — 百分比進度（用 [`Progress`](Progress.md)）
+
 ## Import
 
 ```tsx

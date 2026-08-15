@@ -8,6 +8,9 @@
 
 Tooltip component for displaying additional information on mouse hover. Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 
+> **Aliases** — Tooltip · Hint · 提示泡泡 · 滑過說明
+> **Not for** — 文字溢出才顯示完整內容（用 [`OverflowTooltip`](OverflowTooltip.md)）；需要互動內容的浮層（用 [`Popper`](Popper.md) / [`Dropdown`](Dropdown.md)）
+
 ## Import
 
 ```tsx
@@ -38,7 +41,7 @@ Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 | `onMouseLeave`    | `(event: MouseEvent) => void`                                                                                  | -      | Mouse leave callback           |
 | `onPlacementChange` | `(placement: PopperPlacement) => void`                                                                       | -      | Fired when the resolved placement changes (e.g. after a `flip` middleware adjustment) |
 | `open`            | `boolean`                                                                                                      | `false`| Controlled open state (auto-triggers on hover when not set) |
-| `options`         | `PopperOptions`                                                                                                | `{}`   | Popper configuration           |
+| `options`         | `UseFloatingOptions`                                                                                           | `{}`   | 轉發給 `Popper` 的 floating-ui 設定（`packages/react/src/Popper/Popper.tsx:65`）。**沒有 `PopperOptions` 這個型別** |
 | `ref`             | `RefObject<HTMLElement>`                                                                                       | -      | Tooltip root element ref       |
 | `title`           | `ReactNode`                                                                                                    | -      | Tooltip content                |
 

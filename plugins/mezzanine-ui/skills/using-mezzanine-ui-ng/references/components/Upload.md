@@ -338,8 +338,18 @@ Single-image preview overlay. Used internally by `MznUpload` when the user click
 
 `mzn-upload-media-preview-modal`
 
-Inputs: `open` (`boolean`, default `false`), `mediaItems` (`readonly string[]`, default `[]` — only the first item is displayed).  
-Output: `close` (`OutputEmitterRef<void>`) — fires on backdrop click, Escape key, or close button.
+### Inputs — MznUploadMediaPreviewModal
+
+| Input        | Type                | Default | Description                                    |
+| ------------ | ------------------- | ------- | ---------------------------------------------- |
+| `open`       | `boolean`           | `false` | 是否顯示預覽overlay                            |
+| `mediaItems` | `readonly string[]` | `[]`    | 預覽項目來源；**目前只會顯示第一筆**           |
+
+### Outputs — MznUploadMediaPreviewModal
+
+| Output  | Type                     | Description                                     |
+| ------- | ------------------------ | ----------------------------------------------- |
+| `close` | `OutputEmitterRef<void>` | 點擊 backdrop、按 Escape 或點關閉鈕時觸發        |
 
 ---
 

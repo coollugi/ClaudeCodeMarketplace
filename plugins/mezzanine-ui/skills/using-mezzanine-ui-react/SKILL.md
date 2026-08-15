@@ -1,15 +1,40 @@
 ---
 name: using-mezzanine-ui-react
-description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.4.1). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Also defines the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
+description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.4.1). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Defines the component-selection contract (a UI-concept-to-component reverse index — status chips are Badge not Tag, segmented controls are RadioGroup type="segment" not Buttons — plus the rule that needing a className override of background/color/border means the wrong component was chosen) and the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, picking which component to use, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
 ---
 
 # Mezzanine-UI Design System
 
 **Core principle: All frontend development MUST prefer the Mezzanine-UI design system.**
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-07-01.
+> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）。
+> 元件文件的 `Verified` 標記：64 份為 `1.4.1`（2026-07-01），`AutoComplete.md` 已核到 `1.4.2`。版本歷史於 2026-08-14 逐版重新核對；
+> 名稱／型別／預設值對原始碼的比對狀態見 [RECONCILIATION.md](../../RECONCILIATION.md)（尚有未分類的殘差）。
+>
+> **已有更新版本**：`@mezzanine-ui/react@1.4.2` 已發布（含 `AutoComplete` 的 `caseSensitive` 新 prop 與預設比對行為變更），本 skill 尚未涵蓋 —— 見〈更新版本存在〉。
 >
 > Check latest version: `npm view @mezzanine-ui/react versions` or see [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases).
+
+## 動手前 30 秒（選錯元件的成本比選慢高得多）
+
+**寫下第一行 JSX 之前**，先用「UI 概念」反查元件名 → [§元件選用](#元件選用必讀--先用ui-概念反查元件名)。
+Mezzanine 的元件名反映實作結構，照別的設計系統去猜會系統性選錯，而且**錯法看起來很合理**。
+
+兩個最常錯、且已在真實專案出包的：
+
+| 設計稿長這樣 | 正解 | 錯法（實際發生過） |
+| ------------ | ---- | ------------------ |
+| 表格裡的狀態欄，多種顏色 | `<Badge variant="dot-success" text="啟用" />` | `Tag` / `Badge variant="text-*"` 再補 `className` 上底色 |
+| 兩顆連在一起、選中的較深 | `<RadioGroup type="segment">` + `<Radio type="segment">` | 兩顆 `Button` 換 `variant` 假裝選中（`ButtonGroup` 也一樣錯） |
+
+**設計稿要求的效果，元件零覆寫做不到時 —— 停下來回報，不要自己補樣式。**
+把「用 design token 寫覆寫」當成合規的變通是**錯的**：token 只能用在你自己的版面元素上，
+不能拿來改元件外觀（完整規則見〈三條鐵則〉第 3 條）。這種情況的正確產出是：
+**先給零覆寫可交付的版本，再用一句話說明差在哪、需要設計確認**，例如
+
+> 目前用 `Badge variant="dot-*" text` 實作，狀態色與文字都到位；設計稿上那層**填色膠囊底**
+> 在 Mezzanine 的 Badge 上零覆寫做不出來（`dot-*` / `text-*` 沒有背景色，`count-*` 只吃數字），
+> 需要設計確認要改用圓點樣式，還是另外立一個新元件需求。
 
 ## Resource Overview
 
@@ -246,20 +271,111 @@ export default function ProductListPage(): JSX.Element {
 
 ---
 
+## 元件選用（必讀 — 先用「UI 概念」反查元件名）
+
+**放任何元件進畫面之前先讀這段。** Mezzanine 的元件名反映**實作結構**，不是使用者概念 —— 分段控制項的實作是 `RadioGroup type="segment"`，被歸類在 Data Entry；狀態標籤的實作是 `Badge`，不是 `Tag`。若照其他設計系統（MUI / Ant Design / Bootstrap）的先驗去猜元件名，會系統性地選錯，而且**錯法看起來很合理**：找不到 `color` prop 時，最自然的推論是「這個元件比較陽春，顏色要自己補」，而不是「顏色不在它的職責範圍內 → 我選錯元件了」。
+
+### 三條鐵則
+
+1. **先查下面的反查表**，用「我要做的 UI 長什麼樣」去找元件名，不要用「這東西在別的設計系統叫什麼」去猜。
+2. **表上沒有 → 全文搜尋 `references/components/` 的 `Aliases` 行**（各元件文件在摘要句下方列出了其他設計系統與 Figma 的慣用名）。還是找不到才考慮用既有元件組合，**永遠不要自建元件取代**。
+3. **Tripwire（最重要）：如果你需要覆寫元件的 `background` / `color` / `border` 才能做出設計稿 —— 停下來，這幾乎一定代表選錯元件。**
+   回頭查表，不要在專案裡長出一套與設計系統平行的私有色階。
+   （純排版位移的 `margin` / `width` / `flex` / `grid-area` 不算，那是版面職責。）
+
+   > **這條規則涵蓋「重新指定 CSS 變數」，不只是直接寫 `background:`。**
+   > 在某個 class 裡把元件內部用到的語意 token 指到別的 token —— 例如
+   > `.statusApproved { --mzn-color-background-brand-faint: var(--mzn-color-background-success-faint); }`
+   > —— **同樣是覆寫元件外觀**，而且更危險：它看起來像「只用了 design tokens」，實際上是在偽造元件的語意。
+   >
+   > 分清楚兩件事：
+   > - ✅ **用 design tokens** = 在**你自己的版面元素**上使用 `var(--mzn-spacing-*)`、`var(--mzn-color-*)`（例如 page body 的 `padding-inline`）
+   > - ❌ **重新定義 design tokens** = 在元件節點或其祖先上把 `--mzn-color-*` 指到別的值，藉此改變元件外觀
+   >
+   > 元件的語意色只能透過**元件自己的 prop**（`variant` / `severity` / `type`）選擇。
+   > 一個元件沒有提供選語意色的 prop，就代表**它不負責表達語意** —— 那是選錯元件，不是缺功能。
+
+> 鐵則 3 是本段唯一**可偵測**的訊號：它把「我推論錯了」這種看不見的失誤，轉成寫 SCSS 當下就能自問的條件。真實案例：某專案用 `Tag` + 五個自訂 class 覆寫底色做狀態晶片，違反了「樣式僅可透過 design tokens 調整」的規範**而當下沒有意識到**——因為它以為 Tag 就是狀態元件，只是剛好沒提供顏色 prop。
+
+### UI 概念 → 元件 反查表
+
+| 你要做的 UI（含他家設計系統慣用名）                                        | Mezzanine 元件                                        | 常見誤用                                 |
+| -------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------- |
+| 狀態晶片 / status chip / 已核准・失敗・停用                                | `Badge variant="dot-*" text="…"`                      | ❌ `Tag` + `className` 覆寫底色          |
+| 分類標籤 / Chip (MUI) / Tag (AntD) / Pill                                  | `Tag`（描邊外觀用 `readOnly`）                        | ❌ 自刻 `span` + border                  |
+| 分段控制項 / Segmented Control / 檢視切換 / 排序切換 / Toggle Button Group | `RadioGroup type="segment"` + `Radio type="segment"`  | ❌ 多顆 `Button` 用 variant 差異模擬選中 |
+| 開關 / Switch (MUI・AntD)                                                  | `Toggle`                                              | ❌ `Switch`（已不在公開 API）            |
+| 未讀數字氣泡 / 角落紅點                                                    | `Badge variant="count-*"` / `dot-*` + children        | ❌ 自刻絕對定位圓點                      |
+| 頁面級・系統級警示橫幅                                                     | `AlertBanner`（Portal `alert` 層，`sticky; top: 0`）  | ❌ 拿來當區塊內說明（它不會待在原地）    |
+| 區塊內說明 / 警語 / 表單提示                                               | `InlineMessage`（`content` prop）                     | ❌ `AlertBanner`                         |
+| Toast / Snackbar / 操作完成浮動提示                                        | `Message`（imperative API）                           | ❌ 自刻 toast                            |
+| 站內通知列表 / 通知中心                                                    | `NotificationCenter`                                  | ❌ 用 `Message` 堆疊                     |
+| 卡片式頁面區塊 / Panel / Fieldset                                          | `Section`（自帶內距與底色）                           | ❌ 自刻 `div` + box-shadow               |
+| 圖文卡片 / 商品卡                                                          | `Card` 家族（v2 已拆子元件）                          | ❌ `Section`                             |
+| 標題-內容成對的詳情資訊 / Descriptions (AntD)                              | `Description` + `DescriptionContent`                  | ❌ 兩欄 `Table`                          |
+| 空資料畫面 / Empty state                                                   | `Empty`                                               | ❌ `ResultState`                         |
+| 操作結果頁（成功 / 失敗 / 404）                                            | `ResultState`                                         | ❌ `Empty`                               |
+| 載入骨架 / Skeleton screen                                                 | `Skeleton`                                            | ❌ `Spin` 蓋整頁                         |
+| 轉圈 loading（無進度）                                                     | `Spin`                                                | ❌ `Progress`                            |
+| 有百分比的進度                                                             | `Progress`                                            | ❌ `Spin`                                |
+| 多步驟流程指示 / Steps (AntD)                                              | `Stepper`                                             | ❌ 自刻圓圈 + 連線                       |
+| 選「值」的下拉                                                             | `Select`                                              | ❌ `Dropdown`                            |
+| 選「動作」的下拉選單 / Menu                                                | `Dropdown`（`options` 陣列 + trigger children）       | ❌ `Select`                              |
+| 滑過顯示說明                                                               | `Tooltip`                                             | ❌ 原生 `title` 屬性                     |
+| 文字溢出才顯示完整內容                                                     | `OverflowTooltip`                                     | ❌ `Tooltip` + 自行量測寬度              |
+| 頁籤 / Tabs                                                                | `Tab` + `TabItem`（只收 `TabItem`，其餘**靜默丟棄**） | ❌ 自刻按鈕列                            |
+| 篩選列                                                                     | `FilterArea` + `FilterLine` + `Filter`                | ❌ 自排 `TextField` + `Button`           |
+
+### 兩組最常錯的，記判斷句
+
+- **Tag vs Badge** —— 問自己：**「這個標籤在說『它是什麼』，還是『它現在怎麼樣』？」**
+  「是什麼」（分類、屬性、可篩選的標籤）→ `Tag`；「現在怎麼樣」（狀態、結果、進度）→ `Badge variant="dot-*"`。
+  `Tag` **沒有**語意顏色，這是刻意的，不是缺漏。詳見 [Tag.md](references/components/Tag.md) 與 [Badge.md](references/components/Badge.md)。
+- **Segmented Control** —— 設計師講 `Segmented Control`（Figma 元件名），程式碼叫 `Radio`。互斥的檢視切換、排序切換、篩選切換一律用 `RadioGroup type="segment"`，**不要用多顆 `Button` 的 variant 差異模擬選中狀態**。詳見 [Radio.md](references/components/Radio.md)。
+
+### 自查清單（UI 寫完前逐項確認）
+
+- [ ] 每個區塊都在反查表上找得到對應元件，沒有自建元件取代 Mezzanine 既有元件？
+- [ ] **沒有任何 `className` 在覆寫元件的 `background` / `color` / `border`**（鐵則 3）？
+- [ ] 狀態類的呈現用的是 `Badge`，不是 `Tag` + 自訂色？
+- [ ] 互斥切換用的是 `RadioGroup type="segment"`，不是多顆 `Button`？
+- [ ] 區塊內的說明／警語用 `InlineMessage`，沒有誤用會浮到頁面頂端的 `AlertBanner`？
+- [ ] 沒有動到元件既有的 UX 行為（只透過 props 與 design tokens 調整）？
+
+完整對照表、Figma 名稱對應與「為什麼會選錯」的機制分析見 [references/COMPONENT_SELECTION.md](references/COMPONENT_SELECTION.md)。
+
+---
+
+## What's New in v1.4.2
+
+- **`AutoComplete`** — 選項比對預設從**大小寫敏感改為不敏感**（先前比對 RegExp 漏了 `i` flag，輸入 `vir` 找不到 `Virginia`）。新增 `caseSensitive?: boolean`（預設 `false`）供退回舊行為；`addable` 模式的重複檢查（`isSameOptionName()`）也一併尊重這個 flag，避免對只差大小寫的既有選項再提供「建立」動作。**這是行為變更，倚賴舊行為的專案升級後需明確傳 `caseSensitive`。**
+- **`Dropdown`** — option `mousedown` 時保留 trigger focus，修正 `AutoComplete` 篩選文字在 blur 時被清空。純內部修正，無 API 變更。
+
+> 1.4.2 只動到 `AutoComplete` 家族與 `Dropdown` 內部事件處理，其餘元件文件的 `Verified 1.4.1` 標記仍然成立。
+
+---
+
 ## What's New in v1.4.1
 
 > 涵蓋 1.2.0 – 1.4.1（5 個 release）累積變更。詳見各元件文件與 [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases)。
 
-### 元件正式移除 (Breaking — Removed)
+### 元件移除／未匯出狀況（已依 CHANGELOG 與 git tag 逐版核對）
 
-> 以下元件已**正式**從 `@mezzanine-ui/react` 公開 API 移除（1.1.0 起已標記為即將棄用，1.4.1 完成移除）。升級前請完成遷移：
+> **1.4.1 本身沒有移除任何元件。** 1.4.1 只有兩個 bug fix（見下方）。
+> 下表是這四個元件**目前**的實際狀態，以及它們真正變動的版本 —— 核對自 `packages/react/CHANGELOG.md` 與各 tag 的 `packages/react/src/index.ts`。
 
-| 元件            | 遷移指引                                                                    |
-| --------------- | --------------------------------------------------------------------------- |
-| `ClearActions`  | 無直接替代品，改以組合模式自行實作關閉按鈕                                  |
-| `ContentHeader` | 改以 `PageHeader` + `Section` + 自訂元素組合取代（`Section` / `PageHeader` 內部仍需透過 sub-path 匯入 `ContentHeader`）|
-| `Scrollbar`     | 改用原生滾動或 CSS 自訂捲軸樣式                                             |
-| `Switch`        | 已由 `Toggle` 正式取代，所有用法請直接改用 `<Toggle>`                       |
+| 元件            | 實際狀態                                                                                       | 變動版本                              | 遷移指引                                             |
+| --------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------- | ---------------------------------------------------- |
+| `Switch`        | **真的移除**：原始碼目錄 `src/Switch/` 已不存在，由 `Toggle` 取代                              | `1.0.0-canary.3`（canary.2 仍存在）   | 一律改用 `<Toggle>`，公開 API 刻意對齊               |
+| `ClearActions`  | **仍存在於原始碼**（`src/ClearActions/`），**從未**從主入口匯出，一直是 sub-path only            | 無 —— 從 0.0.1 至 1.4.2 都不在主入口 | 主入口取不到；需要時走 `@mezzanine-ui/react/ClearActions` |
+| `ContentHeader` | **仍存在於原始碼**（`src/ContentHeader/`），**從未**從主入口匯出；`PageHeader` / `Section` 內部仍**必須**用它 | 無 —— 同上                            | 走 sub-path `@mezzanine-ui/react/ContentHeader`      |
+| `Scrollbar`     | **仍存在於原始碼**（`src/Scrollbar/`），**從未**從主入口匯出                                    | 無 —— 同上                            | 走 sub-path，或改用原生滾動 / CSS 自訂捲軸樣式        |
+
+> **重要更正**：先前版本的本文件宣稱「這四個元件於 1.1.0 標記棄用、1.4.1 完成移除」，**與原始碼不符**。
+> 逐一比對 `0.0.1` → `1.4.2` 全部 tag 的 `src/index.ts` 後確認：
+> - `Switch` 從 `0.0.1` 起就在主入口，直到 `1.0.0-canary.3` 被 `Toggle` 取代；
+> - 另外三個**從未**出現在主入口，因此不存在「移除」這件事，也沒有任何 `@deprecated` 標記；
+> - `1.1.0` – `1.4.2` 之間的 CHANGELOG **沒有任何**元件移除或棄用紀錄。
 
 ### 新增功能 (Improvements)
 
@@ -276,11 +392,11 @@ export default function ProductListPage(): JSX.Element {
 - **`Navigation`**（1.4.1）— 修正只有 `Badge` 作為唯一子項的 `NavigationOption` 被誤判為可展開群組的問題（改依實際子選項數量 `items.length` 判斷，不再誤用原始 `children`）。
 - **`Dropdown` / `Select` / `AutoComplete`**（1.3.1）— 修正 React 18 開發模式下每次 render 觸發器都會出現的 `ref is not a prop` console 警告，純噪音修正，無行為變更。
 - **`Table`**（1.3.0）— 欄寬調整（resize）改為優先向最右側欄位借用空間，中間欄位在拖曳時維持穩定；僅當最右欄達 `minWidth` 才退回向相鄰欄借用。既有 `columns` / `minWidth` / `maxWidth` 設定不受影響。
-- **`Calendar` / `DatePicker` / `DateRangePicker` / `MultipleDatePicker`**（1.2.0）— 修正 Day.js / Moment adapter 對非 ISO 星期一起始 locale（`en-AU`、`zh-CN` 等）的週數計算錯誤（CLDR `minimalDays` 判斷），以及缺少 `.locale()` 呼叫導致的週邊界錯誤。顯示週數的 UI 建議重新驗證。
+- **`Calendar` / `DatePicker` / `DateRangePicker` / `MultipleDatePicker`**（修正在 **`@mezzanine-ui/core` 1.1.0**，非 react 1.2.0）— 修正 Day.js / Moment adapter 對非 ISO 星期一起始 locale 的週數計算錯誤。三個 commit：`1e736cc` 把 `ISO_WEEK_LOCALES` 對齊 CLDR `weekInfo`（修正 11 個誤分類地區，如 `pt-PT` / `he-IL` / `ar-SA` 實為週日起始，`en-AU` / `ro-RO` / `tr-TR` 等雖週一起始但 `minimalDays=1` 不算 ISO）；`c628e51`（Day.js）與 `b915ff6`（Moment）把 ISO 判定改為「週一起始 **且** `minimalDays=4`」雙條件，並補上遺漏的 `.locale()` 呼叫 —— 先前 `.week()` / `.startOf('week')` 未設 instance locale 會 fallback 到全域預設（通常 `en`，週日起始）。顯示週數的 UI 建議重新驗證。
 
-**相依套件要求**：`@mezzanine-ui/core` ≥ 1.1.0、`@mezzanine-ui/system` ≥ 1.0.2、`@mezzanine-ui/icons` ≥ 1.0.2
+  > 修正位於 core 的 calendar adapter 層，react / ng 的日期元件透過注入 `calendarMethods` 取用，因此**不需要** react 端另外修改；只要相依的 `@mezzanine-ui/core` 到 1.1.0 即生效。react 1.2.0 與 core 1.1.0 同日（2026-05-07）發布，先前本文件因此把它誤記在 react 1.2.0 名下。
 
----
+**相依套件版本**：`packages/react/package.json` 對三個套件都是**精確釘版（exact pin，無 `^` / `~` / `>=`）** —— `@mezzanine-ui/core` `1.1.0`、`@mezzanine-ui/system` `1.0.2`、`@mezzanine-ui/icons` `1.0.2`。不要寫成 `>=`，那會誤導成「更高版本也相容」。
 
 <details>
 <summary>Previous: What's New in 1.1.0</summary>
@@ -345,44 +461,32 @@ export default function ProductListPage(): JSX.Element {
 
 ### 元件移除（Breaking Changes）
 
-4 個元件從公開 API 中移除，不再從 `@mezzanine-ui/react` 主入口匯出：
+**只有一個元件真的被移除：`Switch`。**（發生在 `1.0.0-canary.3`，由 `Toggle` 取代。）
 
-- **ClearActions** — 無直接替代品，改用組合模式自行實作關閉按鈕
-- **ContentHeader** — 無直接替代品，改以 `PageHeader` + `Section` + utility components 組合取代
-- **Scrollbar** — 無直接替代品，改用原生滾動或 CSS 自訂捲軸樣式
-- **Switch** — 已正式由 `Toggle` 取代，所有 Switch 用法請直接改用 Toggle
+- **Switch** — 原始碼目錄已刪除，一律改用 `<Toggle>`；公開 API 刻意對齊（`checked` / `defaultChecked` / `disabled` / `onChange`），另增 `label` / `supportingText` / `size`。
 
-> 若專案中有使用上述元件，請在升級前完成遷移。詳見各元件 `.md` 的遷移說明。
+> **更正**：先前本節宣稱「4 個元件從主入口移除」。逐一比對 `0.0.1` → `1.4.2` 全部 tag 的 `src/index.ts` 後確認，
+> `ClearActions` / `ContentHeader` / `Scrollbar` **從未**出現在主入口 —— 它們一直都是 sub-path only，
+> 原始碼至今仍在（`src/ClearActions/`、`src/ContentHeader/`、`src/Scrollbar/`），也沒有任何 `@deprecated` 標記。
+> 所以對這三個元件而言不存在「1.0.0 移除」這件事。完整狀態見上方〈元件移除／未匯出狀況〉表。
 
-### API 重構
+### API 變更（已逐項對照 1.4.x 原始碼核實）
 
-- **Drawer** — 移除內建底部操作按鈕與篩選區域，改採明確的組合模式：`DrawerHeader` / `DrawerBody` / `DrawerFooter`
-- **Dropdown** — API 簡化，移除直接傳入 `options` / `onSelect` 的模式，改為 slot-based 組合
-- **Calendar** — 移除直接的 `mode` / `value` / `onChange` props，改為 `calendarDaysProps` / `calendarMonthsProps` 結構
+| 元件         | 敘述                                                                                          | 核實結果                                                                                                                                  |
+| ------------ | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `Calendar`   | 改為 `calendarDaysProps` / `calendarMonthsProps` 結構                                          | ✅ 屬實（`Calendar.tsx:75,89`）                                                                                                            |
+| `Toggle`     | 取代 `Switch`                                                                                  | ✅ 屬實，但發生在 `1.0.0-canary.3`（見上方移除表）                                                                                         |
+| `Upload`     | 新增 `dropzoneHints` prop                                                                      | ✅ 屬實                                                                                                                                    |
+| `Typography` | 新增 `align` / `color` / `display` / `ellipsis` / `noWrap` / `variant`                         | ✅ 屬實（`Typography.tsx:41-66`）                                                                                                          |
+| `Drawer`     | ~~移除內建底部操作按鈕，改採 `DrawerHeader` / `DrawerBody` / `DrawerFooter` 組合模式~~         | ❌ **不實**。這三個子元件**在整個 monorepo 都不存在**；底部操作按鈕也**沒有**被移除，仍是扁平 props（`bottomPrimaryActionText`、`bottomOnGhostActionClick` … 見 [Drawer.md](references/components/Drawer.md)） |
+| `Dropdown`   | ~~移除 `options` / `onSelect`，改為 slot-based 組合~~                                          | ❌ **不實**。`options: DropdownOption[]` 是**必填** prop（`Dropdown.tsx:170`），`onSelect?:` 也仍存在（`:166`）                             |
+| `Popper`     | 新增 `arrow` / `className` / `enabled` / `padding` props                                       | ⚠️ **部分不實**。`arrow` 是**物件**（`padding` 是它的欄位），**沒有**頂層的 `enabled` 或 `padding` prop（`Popper.tsx:37-65`）               |
 
-### 功能增強
-
-- **Toggle** — 正式取代 Switch，提供更簡潔一致的 API
-- **Upload** — 移除內建錯誤與刪除 handler，新增 `dropzoneHints` prop 供自訂提示
-- **Typography** — 新增 `align`、`color`、`display`、`ellipsis`、`noWrap`、`variant` props，排版控制更完整
-- **Popper** — 新增 `arrow`、`className`、`enabled`、`padding` props，定位控制更靈活
+> **注意**：`packages/react/CHANGELOG.md` 的 `1.0.0` release 區塊**只有 Bug Fixes、沒有 Features**。
+> 上表這些 API 變更是 `0.x` → `1.0.0` 整段 canary / rc 期間的累積結果，**不是 1.0.0 這個 release 當下發生的**。
+> 判斷某個 prop 現在到底存不存在時，**以各元件的 `references/components/*.md` 為準**（那些由 sync workflow 逐版對照 TypeScript 原始碼產生），不要以本節的歷史敘事為準。
 
 ---
-
-## Breaking Changes in 1.0.0
-
-- **4 個元件移除**：ClearActions、ContentHeader、Scrollbar、Switch
-  - ClearActions: 無直接替代品，改用組合模式
-  - ContentHeader: 無直接替代品，改用 PageHeader + Section + utility components
-  - Scrollbar: 無直接替代品，改用原生滾動或 CSS 樣式
-  - Switch: 已由 Toggle 取代，直接改用 Toggle
-- **Toggle** 取代 Switch — 全新元件，提供更簡潔的 API
-- **Drawer** 簡化 — 移除內建底部操作按鈕與篩選區域，改採組合模式（DrawerHeader / DrawerBody / DrawerFooter）
-- **Dropdown** 重構 — 簡化 API，移除直接傳入 options / onSelect 的模式
-- **Calendar** 重構 — 移除直接的 mode / value / onChange，改為 calendarDaysProps / calendarMonthsProps
-- **Upload** 簡化 — 移除內建錯誤與刪除 handler，新增 dropzoneHints
-- **Typography** 增強 — 新增 align、color、display、ellipsis、noWrap、variant props
-- **Popper** 增強 — 新增 arrow、className、enabled、padding props
 
 ---
 
@@ -422,7 +526,12 @@ export default function ProductListPage(): JSX.Element {
 
 | 元件 | 接受的 children | 被丟棄的 children | 失敗模式 |
 | --- | --- | --- | --- |
-| `ContentHeader` | `<a>` / 帶 `href` 元素（返回鈕）、`Input variant="search"`、`Select`、`Toggle`、`Checkbox`、`Button`（**限 `base-primary` / `base-secondary` / `destructive-secondary` / undefined**）、icon-only `Button` 包進 `Dropdown` | 一般 `<div>`、`Typography`、自訂 wrapper、其他 variant 的 `Button`、無 icon 的 `Button` 包進 `Dropdown`、`SegmentedControl` | console.warn + 不渲染 |
+| `ContentHeader` | `<a>` / 帶 `href` 元素（返回鈕）、`Input variant="search"`、`Select`、`Toggle`、`Checkbox`、`Button`（**限 `base-primary` / `base-secondary` / `destructive-secondary` / undefined**）、icon-only `Button` 包進 `Dropdown` | 一般 `<div>`、`Typography`、自訂 wrapper、其他 variant 的 `Button`、無 icon 的 `Button` 包進 `Dropdown`、`SegmentedControl`（見下方註） | console.warn + 不渲染 |
+
+> **註 — `SegmentedControl` 只是 `ContentHeader` 不吃它，不是 Mezzanine 沒有這個元件。**
+> `ContentHeaderProps` 的型別 union 含 `SegmentedControlProps` 但內部未實作渲染分支。
+> 分段控制項的真正實作是 [`RadioGroup type="segment"`](references/components/Radio.md)，功能完整。
+> 別因為搜到「未實作」就改用多顆 `Button` 模擬。
 | `PageHeader` | 至多一個 `Breadcrumb` + 必要一個 `ContentHeader`（強制 `size="main"`） | 任何其他元件、重複的 `Breadcrumb` / `ContentHeader` | console.warn + 不渲染 |
 | `Section` (props) | `contentHeader` 必為 `<ContentHeader>`、`filterArea` 必為 `<FilterArea>`、`tab` 必為 `<Tab>` | 其他元件型別 | console.warn + 不渲染 |
 | `Tab` | 只接受 `<TabItem>` | 任何其他元件、`<div>` 包裝、Fragment 中夾雜的非 TabItem | **靜默丟棄（無 warning）** |
@@ -590,7 +699,7 @@ Form and user input components.
 | `Select`              | Select dropdown      | [Select.md](references/components/Select.md)                           |
 | `SelectionCard`       | Selection card       | [SelectionCard.md](references/components/SelectionCard.md)             |
 | `Slider`              | Slider               | [Slider.md](references/components/Slider.md)                           |
-| `Switch` *(已移除 v1.4.1)* | Switch toggle — 已由 Toggle 取代 | [Switch.md](references/components/Switch.md)               |
+| `Switch` *(已移除 @ 1.0.0-canary.3)* | Switch toggle — 已由 Toggle 取代，原始碼已刪除 | [Switch.md](references/components/Switch.md)               |
 | `Textarea`            | Textarea             | [Textarea.md](references/components/Textarea.md)                       |
 | `TextField`           | Text field           | [TextField.md](references/components/TextField.md)                     |
 | `TimePicker`          | Time picker          | [TimePicker.md](references/components/TimePicker.md)                   |
@@ -657,10 +766,10 @@ Internal components, not typically used directly but available for advanced cust
 
 | Component                         | Description                          | Export                | Reference                                                    |
 | --------------------------------- | ------------------------------------ | --------------------- | ------------------------------------------------------------ |
-| `ClearActions` *(已移除 v1.4.1)* | Clear/close button                   | sub-path only         | [ClearActions.md](references/components/ClearActions.md)     |
-| `ContentHeader` *(已移除 v1.4.1)*| Content section header               | sub-path only         | [ContentHeader.md](references/components/ContentHeader.md)   |
+| `ClearActions` *(從未在主入口)*  | Clear/close button                   | sub-path only         | [ClearActions.md](references/components/ClearActions.md)     |
+| `ContentHeader` *(從未在主入口)* | Content section header — `PageHeader` / `Section` 內部仍必須用它 | sub-path only | [ContentHeader.md](references/components/ContentHeader.md)   |
 | `Dropdown`                        | Dropdown container (API 已重構)      | `@mezzanine-ui/react` | [Dropdown.md](references/components/Dropdown.md)             |
-| `Scrollbar` *(已移除 v1.4.1)*    | Custom scrollbar                     | sub-path only         | [Scrollbar.md](references/components/Scrollbar.md)           |
+| `Scrollbar` *(從未在主入口)*     | Custom scrollbar                     | sub-path only         | [Scrollbar.md](references/components/Scrollbar.md)           |
 
 ---
 
@@ -727,6 +836,7 @@ document.documentElement.setAttribute('data-density', 'compact');
 
 | Document                                    | Description                    |
 | ------------------------------------------- | ------------------------------ |
+| [references/COMPONENT_SELECTION.md](references/COMPONENT_SELECTION.md) | UI 概念 → 元件反查、選錯元件的三種機制、元件邊界事實 |
 | [references/DESIGN_TOKENS.md](references/DESIGN_TOKENS.md)   | Detailed design token definitions |
 | [references/ICONS.md](references/ICONS.md)                   | Complete icon list             |
 | [references/PATTERNS.md](references/PATTERNS.md)             | Common usage pattern examples  |
@@ -742,7 +852,7 @@ document.documentElement.setAttribute('data-density', 'compact');
 When Mezzanine-UI releases a new version, use the `/sync-mezzanine-ui` command to refresh all skill content:
 
 ```
-/sync-mezzanine-ui 1.4.1
+/sync-mezzanine-ui react 1.4.2
 ```
 
 This orchestrates a team of agents to:

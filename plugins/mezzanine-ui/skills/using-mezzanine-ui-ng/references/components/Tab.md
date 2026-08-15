@@ -6,6 +6,9 @@
 
 Tab 導航元件，用於組織多個內容面板之間的切換。`MznTabs` 為容器，管理 active bar 位置與 active key 狀態；`MznTabItem` 為單一 Tab 按鈕（host element 必須為 `<button>`）。支援受控（`[activeKey]`）與非受控（`[defaultActiveKey]`）兩種模式，以及水平/垂直方向。
 
+> **Aliases** — Tabs · TabBar · mat-tab-group (Angular Material) · 頁籤 · 分頁標籤 · Figma `Tab / *`
+> **Not for** — 互斥的檢視／排序切換（用 [`MznRadioGroup type="segment"`](Radio.md)）
+
 ## Import
 
 ```ts

@@ -19,6 +19,28 @@ import type { DropdownOption } from '@mezzanine-ui/core/dropdown';
 
 `<div mznInput ...>` — attribute-directive component
 
+> ⚠️ **必須掛在容器元素上，不能掛原生 `<input>` / `<textarea>`（`1.0.0-rc.7` 起會 throw）**
+>
+> `MznInput` 內部會自己渲染一個 `<input>`。把 directive 掛在原生表單元素上會讓 host 與內部的
+> `ControlValueAccessor` 脫鉤，導致 `ngModel` / `formControl` **靜默失效**——值綁不上、也不報錯。
+>
+> rc.7 起元件會在初始化時直接拋出明確錯誤，把這個原本無聲的失敗變成一眼可見的問題：
+>
+> ```
+> [mznInput] must be applied to a container element (e.g. <div mznInput>) —
+> the component renders its own <input> internally. Detected host: <input>.
+> ```
+>
+> ```html
+> <!-- ❌ rc.7 起會 throw；rc.6 以前是靜默失效 -->
+> <input mznInput [(ngModel)]="keyword" />
+>
+> <!-- ✅ -->
+> <div mznInput [(ngModel)]="keyword"></div>
+> ```
+>
+> 核對自 `packages/ng/input/input.component.ts:290-300`。
+
 ## Inputs
 
 | Input                         | Type                                                    | Default        | Description                                                           |

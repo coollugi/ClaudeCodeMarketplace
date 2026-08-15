@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0-rc.4",
-  "lastUpdated": "2026-04-24",
+  "version": "1.0.0-rc.10",
+  "lastUpdated": "2026-08-14T17:01:05Z",
   "framework": "angular",
   "sourcePackage": "@mezzanine-ui/ng",
   "componentCount": 72,
@@ -13,17 +13,55 @@
       "selector": "[mznAccordion]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Accordion.md"
+      "referenceDoc": "references/components/Accordion.md",
+      "inputs": [
+        "defaultExpanded",
+        "disabled",
+        "exclusive",
+        "expanded",
+        "fullWidth",
+        "orientation",
+        "size",
+        "title",
+        "variant"
+      ],
+      "outputs": [
+        "expandedChange"
+      ],
+      "familySelectors": [
+        "[mznAccordionActions]",
+        "[mznAccordionContent]",
+        "[mznAccordionGroup]",
+        "[mznAccordionTitle]",
+        "[mznAccordion]"
+      ]
     },
     "AlertBanner": {
-      "symbol": "MznAlertBannerContainer",
+      "symbol": "MznAlertBanner",
       "importPath": "@mezzanine-ui/ng/alert-banner",
       "sourceDir": "packages/ng/alert-banner",
       "selectorType": "component",
-      "selector": "mzn-alert-banner-container",
+      "selector": "[mznAlertBanner]",
       "category": "others",
       "cva": false,
-      "referenceDoc": "references/components/AlertBanner.md"
+      "referenceDoc": "references/components/AlertBanner.md",
+      "inputs": [
+        "actions",
+        "closable",
+        "createdAt",
+        "disablePortal",
+        "icon",
+        "message",
+        "reference",
+        "severity"
+      ],
+      "outputs": [
+        "closed"
+      ],
+      "familySelectors": [
+        "[mznAlertBanner]",
+        "mzn-alert-banner-container"
+      ]
     },
     "Anchor": {
       "symbol": "MznAnchorGroup",
@@ -33,7 +71,14 @@
       "selector": "[mznAnchorGroup]",
       "category": "others",
       "cva": false,
-      "referenceDoc": "references/components/Anchor.md"
+      "referenceDoc": "references/components/Anchor.md",
+      "inputs": [
+        "anchors",
+        "className"
+      ],
+      "familySelectors": [
+        "[mznAnchorGroup]"
+      ]
     },
     "Autocomplete": {
       "symbol": "MznAutocompletePrefix",
@@ -43,7 +88,59 @@
       "selector": "[mznAutocompletePrefix]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Autocomplete.md"
+      "referenceDoc": "references/components/Autocomplete.md",
+      "inputs": [
+        "active",
+        "addable",
+        "asyncData",
+        "caseSensitive",
+        "clearSearchText",
+        "clearable",
+        "createActionText",
+        "createActionTextTemplate",
+        "createSeparators",
+        "disabled",
+        "disabledOptionsFilter",
+        "dropdownZIndex",
+        "emptyText",
+        "error",
+        "id",
+        "inputPosition",
+        "loading",
+        "loadingPosition",
+        "loadingText",
+        "menuMaxHeight",
+        "mode",
+        "name",
+        "onInsert",
+        "onRemoveCreated",
+        "open",
+        "options",
+        "overflowStrategy",
+        "placeholder",
+        "readOnly",
+        "required",
+        "searchDebounceTime",
+        "size",
+        "stepByStepBulkCreate",
+        "trimOnCreate"
+      ],
+      "outputs": [
+        "cleared",
+        "inserted",
+        "leaveBottom",
+        "reachBottom",
+        "removeCreated",
+        "searchChange",
+        "searchTextChange",
+        "selectionChange",
+        "valueChange",
+        "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznAutocompletePrefix]",
+        "[mznAutocomplete]"
+      ]
     },
     "Backdrop": {
       "symbol": "MznBackdrop",
@@ -53,7 +150,22 @@
       "selector": "[mznBackdrop]",
       "category": "others",
       "cva": false,
-      "referenceDoc": "references/components/Backdrop.md"
+      "referenceDoc": "references/components/Backdrop.md",
+      "inputs": [
+        "container",
+        "disableCloseOnBackdropClick",
+        "disablePortal",
+        "disableScrollLock",
+        "open",
+        "variant"
+      ],
+      "outputs": [
+        "backdropClick",
+        "closed"
+      ],
+      "familySelectors": [
+        "[mznBackdrop]"
+      ]
     },
     "Badge": {
       "symbol": "MznBadge",
@@ -63,7 +175,19 @@
       "selector": "div[mznBadge]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Badge.md"
+      "referenceDoc": "references/components/Badge.md",
+      "inputs": [
+        "className",
+        "count",
+        "overflowCount",
+        "size",
+        "text",
+        "variant"
+      ],
+      "familySelectors": [
+        "[mznBadgeContainer]",
+        "div[mznBadge]"
+      ]
     },
     "Breadcrumb": {
       "symbol": "MznBreadcrumb",
@@ -73,7 +197,25 @@
       "selector": "[mznBreadcrumb]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/Breadcrumb.md"
+      "referenceDoc": "references/components/Breadcrumb.md",
+      "inputs": [
+        "condensed",
+        "current",
+        "href",
+        "itemId",
+        "items",
+        "name",
+        "target"
+      ],
+      "outputs": [
+        "itemClick"
+      ],
+      "familySelectors": [
+        "[mznBreadcrumbItem]",
+        "[mznBreadcrumbOverflowMenuItem]",
+        "[mznBreadcrumbOverflowMenu]",
+        "[mznBreadcrumb]"
+      ]
     },
     "Button": {
       "symbol": "MznButton",
@@ -83,37 +225,194 @@
       "selector": "[mznButton]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Button.md"
+      "referenceDoc": "references/components/Button.md",
+      "inputs": [
+        "disabled",
+        "disabledTooltip",
+        "fullWidth",
+        "icon",
+        "iconType",
+        "loading",
+        "orientation",
+        "size",
+        "tooltipPosition",
+        "tooltipText",
+        "variant"
+      ],
+      "familySelectors": [
+        "[mznButtonGroup]",
+        "[mznButton]"
+      ]
     },
     "Calendar": {
-      "symbol": "MznCalendarHalfYears",
+      "symbol": "MznCalendar",
       "importPath": "@mezzanine-ui/ng/calendar",
       "sourceDir": "packages/ng/calendar",
       "selectorType": "directive",
-      "selector": "[mznCalendarHalfYears]",
+      "selector": "[mznCalendar]",
       "category": "utility",
       "cva": false,
-      "referenceDoc": "references/components/Calendar.md"
+      "referenceDoc": "references/components/Calendar.md",
+      "inputs": [
+        "active",
+        "defaultDateFormat",
+        "defaultTimeFormat",
+        "disableOnDoubleNext",
+        "disableOnDoublePrev",
+        "disableOnNext",
+        "disableOnPrev",
+        "disabled",
+        "disabledFooterControl",
+        "disabledMonthSwitch",
+        "disabledYearSwitch",
+        "displayMonthLocale",
+        "displayWeekDayLocale",
+        "isDateDisabled",
+        "isDateInRange",
+        "isHalfYearDisabled",
+        "isHalfYearInRange",
+        "isMonthDisabled",
+        "isMonthInRange",
+        "isQuarterDisabled",
+        "isQuarterInRange",
+        "isRangeEnd",
+        "isRangeStart",
+        "isWeekDisabled",
+        "isWeekInRange",
+        "isWeekend",
+        "isYearDisabled",
+        "isYearInRange",
+        "locale",
+        "methods",
+        "mode",
+        "noShadow",
+        "quickSelect",
+        "referenceDate",
+        "renderAnnotations",
+        "role",
+        "showDoubleNext",
+        "showDoublePrev",
+        "showFooterActions",
+        "showNext",
+        "showPrev",
+        "today",
+        "value",
+        "withAnnotation"
+      ],
+      "outputs": [
+        "cancelled",
+        "cellHover",
+        "confirmed",
+        "dateChanged",
+        "doubleNextClicked",
+        "doublePrevClicked",
+        "monthControlClicked",
+        "nextClicked",
+        "prevClicked",
+        "rangeChanged",
+        "yearControlClicked"
+      ],
+      "familySelectors": [
+        "[mznCalendarCell]",
+        "[mznCalendarConfigProvider]",
+        "[mznCalendarControls]",
+        "[mznCalendarDayOfWeek]",
+        "[mznCalendarDays]",
+        "[mznCalendarFooterControl]",
+        "[mznCalendarHalfYears]",
+        "[mznCalendarMonths]",
+        "[mznCalendarQuarters]",
+        "[mznCalendarQuickSelect]",
+        "[mznCalendarWeeks]",
+        "[mznCalendarYears]",
+        "[mznCalendar]",
+        "[mznRangeCalendar]"
+      ]
     },
     "Card": {
-      "symbol": "MznCardGroup",
+      "symbol": "MznBaseCard",
       "importPath": "@mezzanine-ui/ng/card",
       "sourceDir": "packages/ng/card",
       "selectorType": "directive",
-      "selector": "[mznCardGroup]",
+      "selector": "[mznBaseCard]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Card.md"
+      "referenceDoc": "references/components/Card.md",
+      "inputs": [
+        "actionName",
+        "actionVariant",
+        "active",
+        "cardType",
+        "checked",
+        "defaultChecked",
+        "description",
+        "disabled",
+        "icon",
+        "loading",
+        "loadingCount",
+        "loadingThumbnailAspectRatio",
+        "loadingThumbnailWidth",
+        "mode",
+        "options",
+        "readOnly",
+        "showContent",
+        "subtitle",
+        "title",
+        "toggleLabel",
+        "toggleSize",
+        "toggleSupportingText",
+        "type"
+      ],
+      "outputs": [
+        "actionClick",
+        "optionSelect",
+        "toggleChange"
+      ],
+      "familySelectors": [
+        "[mznBaseCardSkeleton]",
+        "[mznBaseCard]",
+        "[mznCardGroup]",
+        "[mznQuickActionCardSkeleton]",
+        "[mznQuickActionCard]"
+      ]
     },
     "Cascader": {
-      "symbol": "MznCascaderPanel",
+      "symbol": "MznCascader",
       "importPath": "@mezzanine-ui/ng/cascader",
       "sourceDir": "packages/ng/cascader",
       "selectorType": "directive",
-      "selector": "[mznCascaderPanel]",
+      "selector": "[mznCascader]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/Cascader.md"
+      "referenceDoc": "references/components/Cascader.md",
+      "inputs": [
+        "activeOptionId",
+        "clearable",
+        "disabled",
+        "dropdownZIndex",
+        "error",
+        "focusedOptionId",
+        "fullWidth",
+        "globalPortal",
+        "menuMaxHeight",
+        "options",
+        "placeholder",
+        "readOnly",
+        "required",
+        "selectedOptionId",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "cascaderBlur",
+        "cascaderFocus",
+        "optionSelect",
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznCascaderPanel]",
+        "[mznCascader]"
+      ]
     },
     "Checkbox": {
       "symbol": "MznCheckbox",
@@ -123,7 +422,37 @@
       "selector": "[mznCheckbox]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Checkbox.md"
+      "referenceDoc": "references/components/Checkbox.md",
+      "inputs": [
+        "checked",
+        "description",
+        "detached",
+        "disabled",
+        "editableInput",
+        "error",
+        "hint",
+        "id",
+        "indeterminate",
+        "label",
+        "layout",
+        "level",
+        "mode",
+        "name",
+        "options",
+        "severity",
+        "size",
+        "value",
+        "withEditInput"
+      ],
+      "outputs": [
+        "editableInputChange",
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznCheckAll]",
+        "[mznCheckboxGroup]",
+        "[mznCheckbox]"
+      ]
     },
     "ClearActions": {
       "symbol": "MznClearActions",
@@ -133,7 +462,17 @@
       "selector": "button[mznClearActions]",
       "category": "internal",
       "cva": false,
-      "referenceDoc": "references/components/ClearActions.md"
+      "referenceDoc": "references/components/ClearActions.md",
+      "inputs": [
+        "type",
+        "variant"
+      ],
+      "outputs": [
+        "clicked"
+      ],
+      "familySelectors": [
+        "button[mznClearActions]"
+      ]
     },
     "ContentHeader": {
       "symbol": "MznContentHeader",
@@ -143,7 +482,21 @@
       "selector": "[mznContentHeader]",
       "category": "internal",
       "cva": false,
-      "referenceDoc": "references/components/ContentHeader.md"
+      "referenceDoc": "references/components/ContentHeader.md",
+      "inputs": [
+        "description",
+        "showBackButton",
+        "size",
+        "title",
+        "titleComponent"
+      ],
+      "outputs": [
+        "backClick"
+      ],
+      "familySelectors": [
+        "[mznContentHeaderResponsive]",
+        "[mznContentHeader]"
+      ]
     },
     "Cropper": {
       "symbol": "MznCropper",
@@ -153,17 +506,98 @@
       "selector": "[mznCropper]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Cropper.md"
+      "referenceDoc": "references/components/Cropper.md",
+      "inputs": [
+        "aspectRatio",
+        "cancelText",
+        "confirmText",
+        "cropperContentClassName",
+        "cropperProps",
+        "dialogStyle",
+        "disableCloseOnBackdropClick",
+        "disableCloseOnEscapeKeyDown",
+        "fullScreen",
+        "imageSrc",
+        "initialCropArea",
+        "loading",
+        "minHeight",
+        "minWidth",
+        "open",
+        "showModalFooter",
+        "showModalHeader",
+        "size",
+        "supportingText",
+        "title"
+      ],
+      "outputs": [
+        "cancelled",
+        "closed",
+        "confirmed",
+        "cropChange",
+        "cropDragEnd",
+        "imageDragEnd",
+        "imageError",
+        "imageLoad",
+        "scaleChange"
+      ],
+      "familySelectors": [
+        "[mznCropperElement]",
+        "[mznCropperModal]",
+        "[mznCropper]"
+      ]
     },
     "DatePicker": {
-      "symbol": "MznDatePickerPanel",
+      "symbol": "MznDatePicker",
       "importPath": "@mezzanine-ui/ng/date-picker",
       "sourceDir": "packages/ng/date-picker",
       "selectorType": "directive",
-      "selector": "[mznDatePickerPanel]",
+      "selector": "[mznDatePicker]",
       "category": "data-entry",
-      "cva": false,
-      "referenceDoc": "references/components/DatePicker.md"
+      "cva": true,
+      "referenceDoc": "references/components/DatePicker.md",
+      "inputs": [
+        "anchor",
+        "clearable",
+        "disableOnDoubleNext",
+        "disableOnDoublePrev",
+        "disableOnNext",
+        "disableOnPrev",
+        "disabled",
+        "disabledMonthSwitch",
+        "disabledYearSwitch",
+        "displayMonthLocale",
+        "displayWeekDayLocale",
+        "error",
+        "format",
+        "fullWidth",
+        "isDateDisabled",
+        "isHalfYearDisabled",
+        "isMonthDisabled",
+        "isQuarterDisabled",
+        "isWeekDisabled",
+        "isYearDisabled",
+        "mode",
+        "open",
+        "placeholder",
+        "popperOffsetOptions",
+        "popperPlacement",
+        "quickSelect",
+        "readOnly",
+        "referenceDate",
+        "renderAnnotations",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "calendarToggled",
+        "dateChanged",
+        "hover",
+        "leave"
+      ],
+      "familySelectors": [
+        "[mznDatePickerCalendar]",
+        "[mznDatePicker]"
+      ]
     },
     "DateRangePicker": {
       "symbol": "MznDateRangePicker",
@@ -173,7 +607,60 @@
       "selector": "[mznDateRangePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/DateRangePicker.md"
+      "referenceDoc": "references/components/DateRangePicker.md",
+      "inputs": [
+        "anchor",
+        "clearable",
+        "confirmMode",
+        "disableOnDoubleNext",
+        "disableOnDoublePrev",
+        "disableOnNext",
+        "disableOnPrev",
+        "disabled",
+        "disabledMonthSwitch",
+        "disabledYearSwitch",
+        "displayMonthLocale",
+        "displayWeekDayLocale",
+        "error",
+        "format",
+        "fullWidth",
+        "inputFromPlaceholder",
+        "inputToPlaceholder",
+        "isDateDisabled",
+        "isDateInRange",
+        "isHalfYearDisabled",
+        "isHalfYearInRange",
+        "isMonthDisabled",
+        "isMonthInRange",
+        "isQuarterDisabled",
+        "isQuarterInRange",
+        "isWeekDisabled",
+        "isWeekInRange",
+        "isYearDisabled",
+        "isYearInRange",
+        "mode",
+        "offsetOptions",
+        "open",
+        "placement",
+        "quickSelect",
+        "readOnly",
+        "referenceDate",
+        "renderAnnotations",
+        "showFooterActions",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "cancelled",
+        "cellHover",
+        "confirmed",
+        "mouseLeave",
+        "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznDateRangePickerCalendar]",
+        "[mznDateRangePicker]"
+      ]
     },
     "DateTimePicker": {
       "symbol": "MznDateTimePicker",
@@ -183,7 +670,78 @@
       "selector": "[mznDateTimePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/DateTimePicker.md"
+      "referenceDoc": "references/components/DateTimePicker.md",
+      "inputs": [
+        "calendarProps",
+        "clearable",
+        "defaultValue",
+        "disableOnDoubleNext",
+        "disableOnDoublePrev",
+        "disableOnNext",
+        "disableOnPrev",
+        "disabled",
+        "disabledMonthSwitch",
+        "disabledYearSwitch",
+        "displayMonthLocale",
+        "error",
+        "errorMessagesLeft",
+        "errorMessagesRight",
+        "forceShowClearable",
+        "formatDate",
+        "formatTime",
+        "fullWidth",
+        "hideHour",
+        "hideMinute",
+        "hideSecond",
+        "hideSuffixWhenClearable",
+        "hourStep",
+        "hoverValueLeft",
+        "inputLeftProps",
+        "inputRightProps",
+        "isDateDisabled",
+        "isHalfYearDisabled",
+        "isMonthDisabled",
+        "isQuarterDisabled",
+        "isWeekDisabled",
+        "isYearDisabled",
+        "minuteStep",
+        "mode",
+        "placeholderLeft",
+        "placeholderRight",
+        "popperProps",
+        "popperPropsTime",
+        "readOnly",
+        "referenceDate",
+        "required",
+        "secondStep",
+        "size",
+        "validateLeft",
+        "validateRight",
+        "value",
+        "warning"
+      ],
+      "outputs": [
+        "blurLeft",
+        "blurRight",
+        "cancel",
+        "change",
+        "changeLeft",
+        "changeRight",
+        "clear",
+        "confirm",
+        "focusLeft",
+        "focusRight",
+        "hover",
+        "leave",
+        "leftComplete",
+        "panelToggle",
+        "pasteIsoValueLeft",
+        "pasteIsoValueRight",
+        "rightComplete"
+      ],
+      "familySelectors": [
+        "[mznDateTimePicker]"
+      ]
     },
     "DateTimeRangePicker": {
       "symbol": "MznDateTimeRangePicker",
@@ -193,17 +751,66 @@
       "selector": "[mznDateTimeRangePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/DateTimeRangePicker.md"
+      "referenceDoc": "references/components/DateTimeRangePicker.md",
+      "inputs": [
+        "clearable",
+        "direction",
+        "disabled",
+        "error",
+        "formatDate",
+        "formatTime",
+        "fullWidth",
+        "hideHour",
+        "hideMinute",
+        "hideSecond",
+        "hourStep",
+        "isDateDisabled",
+        "minuteStep",
+        "placeholderLeft",
+        "placeholderRight",
+        "readOnly",
+        "required",
+        "secondStep",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznDateTimeRangePicker]"
+      ]
     },
     "Description": {
-      "symbol": "MznDescriptionGroup",
+      "symbol": "MznDescription",
       "importPath": "@mezzanine-ui/ng/description",
       "sourceDir": "packages/ng/description",
       "selectorType": "directive",
-      "selector": "[mznDescriptionGroup]",
+      "selector": "[mznDescription]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Description.md"
+      "referenceDoc": "references/components/Description.md",
+      "inputs": [
+        "badge",
+        "icon",
+        "orientation",
+        "size",
+        "text",
+        "title",
+        "tooltip",
+        "tooltipPlacement",
+        "variant",
+        "widthType"
+      ],
+      "outputs": [
+        "clickIcon"
+      ],
+      "familySelectors": [
+        "[mznDescriptionContent]",
+        "[mznDescriptionGroup]",
+        "[mznDescriptionTitle]",
+        "[mznDescription]"
+      ]
     },
     "Drawer": {
       "symbol": "MznDrawer",
@@ -213,7 +820,64 @@
       "selector": "[mznDrawer]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/Drawer.md"
+      "referenceDoc": "references/components/Drawer.md",
+      "inputs": [
+        "bottomGhostActionDisabled",
+        "bottomGhostActionIcon",
+        "bottomGhostActionIconType",
+        "bottomGhostActionLoading",
+        "bottomGhostActionSize",
+        "bottomGhostActionText",
+        "bottomGhostActionVariant",
+        "bottomPrimaryActionDisabled",
+        "bottomPrimaryActionIcon",
+        "bottomPrimaryActionIconType",
+        "bottomPrimaryActionLoading",
+        "bottomPrimaryActionSize",
+        "bottomPrimaryActionText",
+        "bottomPrimaryActionVariant",
+        "bottomSecondaryActionDisabled",
+        "bottomSecondaryActionIcon",
+        "bottomSecondaryActionIconType",
+        "bottomSecondaryActionLoading",
+        "bottomSecondaryActionSize",
+        "bottomSecondaryActionText",
+        "bottomSecondaryActionVariant",
+        "className",
+        "container",
+        "contentKey",
+        "disableCloseOnBackdropClick",
+        "disableCloseOnEscapeKeyDown",
+        "disablePortal",
+        "filterAreaAllRadioLabel",
+        "filterAreaCustomButtonLabel",
+        "filterAreaDefaultValue",
+        "filterAreaIsEmpty",
+        "filterAreaOptions",
+        "filterAreaReadRadioLabel",
+        "filterAreaShow",
+        "filterAreaShowUnreadButton",
+        "filterAreaUnreadRadioLabel",
+        "filterAreaValue",
+        "headerTitle",
+        "isBottomDisplay",
+        "isHeaderDisplay",
+        "open",
+        "size"
+      ],
+      "outputs": [
+        "backdropClick",
+        "bottomGhostActionClick",
+        "bottomPrimaryActionClick",
+        "bottomSecondaryActionClick",
+        "closed",
+        "filterAreaCustomButtonClick",
+        "filterAreaRadioChange",
+        "filterAreaSelect"
+      ],
+      "familySelectors": [
+        "[mznDrawer]"
+      ]
     },
     "Dropdown": {
       "symbol": "MznDropdown",
@@ -223,7 +887,83 @@
       "selector": "[mznDropdown]",
       "category": "internal",
       "cva": false,
-      "referenceDoc": "references/components/Dropdown.md"
+      "referenceDoc": "references/components/Dropdown.md",
+      "inputs": [
+        "actionCancelText",
+        "actionClearText",
+        "actionConfirmText",
+        "actionCustomButtonProps",
+        "actionText",
+        "active",
+        "activeIndex",
+        "anchor",
+        "appendContent",
+        "appendIcon",
+        "checkSite",
+        "checked",
+        "customWidth",
+        "disabled",
+        "emptyIcon",
+        "emptyText",
+        "extraClass",
+        "flip",
+        "followText",
+        "globalPortal",
+        "id",
+        "indeterminate",
+        "inputPosition",
+        "isMatchInputValue",
+        "keyboardActiveIndex",
+        "label",
+        "level",
+        "listboxId",
+        "listboxLabel",
+        "loadingPosition",
+        "loadingText",
+        "maxHeight",
+        "minWidth",
+        "mode",
+        "open",
+        "options",
+        "placement",
+        "prependIcon",
+        "sameWidth",
+        "showActionShowTopBar",
+        "showDropdownActions",
+        "showUnderline",
+        "status",
+        "subTitle",
+        "toggleCheckedOnClick",
+        "type",
+        "validate",
+        "value",
+        "zIndex"
+      ],
+      "outputs": [
+        "actionCancel",
+        "actionClear",
+        "actionConfirm",
+        "actionCustom",
+        "checkedChange",
+        "clicked",
+        "close",
+        "hovered",
+        "itemHover",
+        "leaveBottom",
+        "opened",
+        "reachBottom",
+        "scroll",
+        "select",
+        "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznDropdownAction]",
+        "[mznDropdownItemCard]",
+        "[mznDropdownItem]",
+        "[mznDropdownPopper]",
+        "[mznDropdownStatus]",
+        "[mznDropdown]"
+      ]
     },
     "Empty": {
       "symbol": "MznEmpty",
@@ -233,7 +973,18 @@
       "selector": "[mznEmpty]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Empty.md"
+      "referenceDoc": "references/components/Empty.md",
+      "inputs": [
+        "actions",
+        "description",
+        "pictogram",
+        "size",
+        "title",
+        "type"
+      ],
+      "familySelectors": [
+        "[mznEmpty]"
+      ]
     },
     "FilterArea": {
       "symbol": "MznFilterArea",
@@ -243,7 +994,30 @@
       "selector": "[mznFilterArea]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/FilterArea.md"
+      "referenceDoc": "references/components/FilterArea.md",
+      "inputs": [
+        "actionsAlign",
+        "align",
+        "grow",
+        "isDirty",
+        "minWidth",
+        "resetButtonType",
+        "resetText",
+        "rowAlign",
+        "size",
+        "span",
+        "submitButtonType",
+        "submitText"
+      ],
+      "outputs": [
+        "filterReset",
+        "filterSubmit"
+      ],
+      "familySelectors": [
+        "[mznFilterArea]",
+        "[mznFilterLine]",
+        "[mznFilter]"
+      ]
     },
     "FloatingButton": {
       "symbol": "MznFloatingButton",
@@ -253,17 +1027,63 @@
       "selector": "[mznFloatingButton]",
       "category": "others",
       "cva": false,
-      "referenceDoc": "references/components/FloatingButton.md"
+      "referenceDoc": "references/components/FloatingButton.md",
+      "inputs": [
+        "autoHideWhenOpen",
+        "disabled",
+        "disabledTooltip",
+        "icon",
+        "iconType",
+        "loading",
+        "open"
+      ],
+      "familySelectors": [
+        "[mznFloatingButton]"
+      ]
     },
     "Form": {
-      "symbol": "MznForm",
+      "symbol": "MznFormField",
       "importPath": "@mezzanine-ui/ng/form",
       "sourceDir": "packages/ng/form",
       "selectorType": "directive",
-      "selector": "[mznForm]",
+      "selector": "[mznFormField]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/Form.md"
+      "referenceDoc": "references/components/Form.md",
+      "inputs": [
+        "controlFieldSlotColumns",
+        "controlFieldSlotLayout",
+        "counter",
+        "counterColor",
+        "density",
+        "disabled",
+        "fieldsContainerClassName",
+        "fullWidth",
+        "hintText",
+        "hintTextIcon",
+        "htmlFor",
+        "informationIcon",
+        "informationText",
+        "label",
+        "labelInformationIcon",
+        "labelInformationText",
+        "labelOptionalMarker",
+        "labelSpacing",
+        "labelText",
+        "layout",
+        "name",
+        "optionalMarker",
+        "required",
+        "severity",
+        "showHintTextIcon",
+        "title"
+      ],
+      "familySelectors": [
+        "[mznFormField]",
+        "[mznFormGroup]",
+        "[mznFormHintText]",
+        "[mznFormLabel]"
+      ]
     },
     "FourThumbnailCard": {
       "symbol": "MznFourThumbnailCard",
@@ -273,7 +1093,29 @@
       "selector": "[mznFourThumbnailCard]",
       "category": "angular-only",
       "cva": false,
-      "referenceDoc": "references/components/FourThumbnailCard.md"
+      "referenceDoc": "references/components/FourThumbnailCard.md",
+      "inputs": [
+        "actionName",
+        "filetype",
+        "options",
+        "personalActionActive",
+        "personalActionActiveIcon",
+        "personalActionIcon",
+        "subtitle",
+        "tag",
+        "thumbnailWidth",
+        "title",
+        "type"
+      ],
+      "outputs": [
+        "actionClick",
+        "optionSelect",
+        "personalActionClick"
+      ],
+      "familySelectors": [
+        "[mznFourThumbnailCardSkeleton]",
+        "[mznFourThumbnailCard]"
+      ]
     },
     "Icon": {
       "symbol": "MznIcon",
@@ -283,7 +1125,18 @@
       "selector": "[mznIcon]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Icon.md"
+      "referenceDoc": "references/components/Icon.md",
+      "inputs": [
+        "clickable",
+        "color",
+        "icon",
+        "size",
+        "spin",
+        "title"
+      ],
+      "familySelectors": [
+        "[mznIcon]"
+      ]
     },
     "InlineMessage": {
       "symbol": "MznInlineMessage",
@@ -293,7 +1146,21 @@
       "selector": "[mznInlineMessage]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/InlineMessage.md"
+      "referenceDoc": "references/components/InlineMessage.md",
+      "inputs": [
+        "content",
+        "icon",
+        "items",
+        "severity"
+      ],
+      "outputs": [
+        "closed",
+        "itemClose"
+      ],
+      "familySelectors": [
+        "[mznInlineMessageGroup]",
+        "[mznInlineMessage]"
+      ]
     },
     "Input": {
       "symbol": "MznInput",
@@ -303,7 +1170,54 @@
       "selector": "[mznInput]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Input.md"
+      "referenceDoc": "references/components/Input.md",
+      "inputs": [
+        "actionButton",
+        "active",
+        "clearable",
+        "defaultValue",
+        "disabled",
+        "dropdownMaxHeight",
+        "dropdownPlacement",
+        "dropdownWidth",
+        "error",
+        "formatter",
+        "fullWidth",
+        "inputId",
+        "inputName",
+        "inputType",
+        "max",
+        "min",
+        "parser",
+        "passwordStrengthIndicator",
+        "placeholder",
+        "prefixIcon",
+        "prefixText",
+        "readonly",
+        "selectButton",
+        "selectOptions",
+        "showPasswordStrengthIndicator",
+        "showSpinner",
+        "size",
+        "step",
+        "suffixText",
+        "typing",
+        "value",
+        "variant"
+      ],
+      "outputs": [
+        "selectOptionSelected",
+        "spinDown",
+        "spinUp",
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznInputActionButton]",
+        "[mznInputSelectButton]",
+        "[mznInputSpinnerButton]",
+        "[mznInput]",
+        "[mznPasswordStrengthIndicator]"
+      ]
     },
     "Layout": {
       "symbol": "MznLayout",
@@ -313,7 +1227,26 @@
       "selector": "[mznLayout]",
       "category": "layout",
       "cva": false,
-      "referenceDoc": "references/components/Layout.md"
+      "referenceDoc": "references/components/Layout.md",
+      "inputs": [
+        "className",
+        "contentWrapperClassName",
+        "defaultWidth",
+        "navigationClassName",
+        "open",
+        "scrollbarDisabled",
+        "scrollbarMaxHeight",
+        "scrollbarMaxWidth"
+      ],
+      "outputs": [
+        "widthChange"
+      ],
+      "familySelectors": [
+        "[mznLayoutLeftPanel]",
+        "[mznLayoutMain]",
+        "[mznLayoutRightPanel]",
+        "[mznLayout]"
+      ]
     },
     "MediaPreviewModal": {
       "symbol": "MznMediaPreviewModal",
@@ -323,7 +1256,29 @@
       "selector": "[mznMediaPreviewModal]",
       "category": "angular-only",
       "cva": false,
-      "referenceDoc": "references/components/MediaPreviewModal.md"
+      "referenceDoc": "references/components/MediaPreviewModal.md",
+      "inputs": [
+        "currentIndex",
+        "defaultIndex",
+        "disableCloseOnBackdropClick",
+        "disableCloseOnEscapeKeyDown",
+        "disableNext",
+        "disablePortal",
+        "disablePrev",
+        "enableCircularNavigation",
+        "mediaItems",
+        "open",
+        "showPaginationIndicator"
+      ],
+      "outputs": [
+        "closed",
+        "indexChange",
+        "next",
+        "prev"
+      ],
+      "familySelectors": [
+        "[mznMediaPreviewModal]"
+      ]
     },
     "Message": {
       "symbol": "MznMessage",
@@ -333,7 +1288,21 @@
       "selector": "[mznMessage]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/Message.md"
+      "referenceDoc": "references/components/Message.md",
+      "inputs": [
+        "duration",
+        "icon",
+        "message",
+        "messageKey",
+        "reference",
+        "severity"
+      ],
+      "outputs": [
+        "closed"
+      ],
+      "familySelectors": [
+        "[mznMessage]"
+      ]
     },
     "Modal": {
       "symbol": "MznModal",
@@ -343,7 +1312,70 @@
       "selector": "[mznModal]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/Modal.md"
+      "referenceDoc": "references/components/Modal.md",
+      "inputs": [
+        "actionsButtonLayout",
+        "annotation",
+        "autoFocus",
+        "auxiliaryContentButtonText",
+        "auxiliaryContentChecked",
+        "auxiliaryContentLabel",
+        "auxiliaryContentType",
+        "backdropClassName",
+        "cancelText",
+        "confirmButtonVariant",
+        "confirmText",
+        "dialogStyle",
+        "disableCloseOnBackdropClick",
+        "disableCloseOnEscapeKeyDown",
+        "disablePortal",
+        "disabled",
+        "error",
+        "fullScreen",
+        "length",
+        "loading",
+        "modalStatusType",
+        "modalType",
+        "open",
+        "passwordButtonText",
+        "passwordChecked",
+        "passwordCheckedLabel",
+        "readOnly",
+        "resendPrompt",
+        "resendText",
+        "showCancelButton",
+        "showDismissButton",
+        "showModalFooter",
+        "showModalHeader",
+        "showStatusTypeIcon",
+        "size",
+        "statusTypeIconLayout",
+        "supportingText",
+        "supportingTextAlign",
+        "title",
+        "titleAlign",
+        "value"
+      ],
+      "outputs": [
+        "auxiliaryContentChanged",
+        "auxiliaryContentClicked",
+        "backdropClick",
+        "cancelled",
+        "closed",
+        "completed",
+        "confirmed",
+        "passwordCheckedChanged",
+        "passwordClicked",
+        "resent",
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznModalBodyContainer]",
+        "[mznModalBodyForVerification]",
+        "[mznModalFooter]",
+        "[mznModalHeader]",
+        "[mznModal]"
+      ]
     },
     "MultipleDatePicker": {
       "symbol": "MznMultipleDatePicker",
@@ -353,7 +1385,38 @@
       "selector": "[mznMultipleDatePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/MultipleDatePicker.md"
+      "referenceDoc": "references/components/MultipleDatePicker.md",
+      "inputs": [
+        "active",
+        "cancelText",
+        "clearable",
+        "confirmText",
+        "disabled",
+        "error",
+        "format",
+        "fullWidth",
+        "isDateDisabled",
+        "maxSelections",
+        "mode",
+        "overflowStrategy",
+        "placeholder",
+        "readOnly",
+        "referenceDate",
+        "required",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "cleared",
+        "datesChanged",
+        "focused",
+        "suffixClicked",
+        "tagClosed"
+      ],
+      "familySelectors": [
+        "[mznMultipleDatePickerTrigger]",
+        "[mznMultipleDatePicker]"
+      ]
     },
     "Navigation": {
       "symbol": "MznNavigation",
@@ -363,7 +1426,43 @@
       "selector": "[mznNavigation]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/Navigation.md"
+      "referenceDoc": "references/components/Navigation.md",
+      "inputs": [
+        "activatedPath",
+        "active",
+        "collapsed",
+        "collapsedPlacement",
+        "defaultOpen",
+        "exactActivatedMatch",
+        "filter",
+        "hasChildren",
+        "href",
+        "icon",
+        "imgSrc",
+        "items",
+        "optionId",
+        "options",
+        "placement",
+        "title"
+      ],
+      "outputs": [
+        "brandClick",
+        "closed",
+        "collapseChange",
+        "optionClick",
+        "optionSelected",
+        "triggerClick",
+        "visibilityChange"
+      ],
+      "familySelectors": [
+        "[mznNavigationFooter]",
+        "[mznNavigationHeader]",
+        "[mznNavigationIconButton]",
+        "[mznNavigation]",
+        "div[mznNavigationUserMenu]",
+        "mzn-navigation-option",
+        "mzn-navigation-option-category"
+      ]
     },
     "NotificationCenter": {
       "symbol": "MznNotificationCenter",
@@ -373,7 +1472,63 @@
       "selector": "[mznNotificationCenter]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/NotificationCenter.md"
+      "referenceDoc": "references/components/NotificationCenter.md",
+      "inputs": [
+        "appendTips",
+        "cancelButtonText",
+        "confirmButtonText",
+        "description",
+        "drawerSize",
+        "duration",
+        "earlierLabel",
+        "emptyNotificationDescription",
+        "emptyNotificationTitle",
+        "filterBarAllRadioLabel",
+        "filterBarCustomButtonLabel",
+        "filterBarDefaultValue",
+        "filterBarOptions",
+        "filterBarReadRadioLabel",
+        "filterBarShow",
+        "filterBarShowUnreadButton",
+        "filterBarUnreadRadioLabel",
+        "filterBarValue",
+        "from",
+        "items",
+        "maxVisibleNotifications",
+        "notificationList",
+        "open",
+        "options",
+        "past7DaysLabel",
+        "prependTips",
+        "reference",
+        "severity",
+        "showBadge",
+        "showCancelButton",
+        "showConfirmButton",
+        "timeStamp",
+        "timeStampLocale",
+        "title",
+        "todayLabel",
+        "type",
+        "viewAllButtonText",
+        "yesterdayLabel"
+      ],
+      "outputs": [
+        "badgeClicked",
+        "badgeSelected",
+        "cancelled",
+        "closed",
+        "confirmed",
+        "filterBarOnCustomButtonClick",
+        "filterBarOnRadioChange",
+        "filterBarOnSelect",
+        "viewAllClicked"
+      ],
+      "familySelectors": [
+        "[mznNotificationCenterContainer]",
+        "[mznNotificationCenterDrawer]",
+        "[mznNotificationCenter]"
+      ]
     },
     "OverflowTooltip": {
       "symbol": "MznOverflowTooltip",
@@ -383,7 +1538,24 @@
       "selector": "[mznOverflowTooltip]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/OverflowTooltip.md"
+      "referenceDoc": "references/components/OverflowTooltip.md",
+      "inputs": [
+        "anchor",
+        "className",
+        "disabled",
+        "open",
+        "placement",
+        "readOnly",
+        "tagSize",
+        "tags"
+      ],
+      "outputs": [
+        "tagDismiss"
+      ],
+      "familySelectors": [
+        "[mznOverflowCounterTag]",
+        "[mznOverflowTooltip]"
+      ]
     },
     "PageFooter": {
       "symbol": "MznPageFooter",
@@ -393,7 +1565,23 @@
       "selector": "[mznPageFooter]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/PageFooter.md"
+      "referenceDoc": "references/components/PageFooter.md",
+      "inputs": [
+        "annotation",
+        "hostClass",
+        "supportingActionIcon",
+        "supportingActionName",
+        "supportingActionType",
+        "supportingActionVariant",
+        "type",
+        "warningMessage"
+      ],
+      "outputs": [
+        "supportingActionClick"
+      ],
+      "familySelectors": [
+        "[mznPageFooter]"
+      ]
     },
     "PageHeader": {
       "symbol": "MznPageHeader",
@@ -403,7 +1591,10 @@
       "selector": "[mznPageHeader]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/PageHeader.md"
+      "referenceDoc": "references/components/PageHeader.md",
+      "familySelectors": [
+        "[mznPageHeader]"
+      ]
     },
     "Pagination": {
       "symbol": "MznPagination",
@@ -413,17 +1604,131 @@
       "selector": "[mznPagination]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Pagination.md"
+      "referenceDoc": "references/components/Pagination.md",
+      "inputs": [
+        "active",
+        "boundaryCount",
+        "buttonText",
+        "current",
+        "disabled",
+        "hintText",
+        "inputPlaceholder",
+        "itemTemplate",
+        "label",
+        "options",
+        "page",
+        "pageSize",
+        "pageSizeLabel",
+        "pageSizeOptions",
+        "renderOptionName",
+        "renderPageSizeOptionName",
+        "renderResultSummary",
+        "showJumper",
+        "showPageSizeOptions",
+        "siblingCount",
+        "total",
+        "type",
+        "value"
+      ],
+      "outputs": [
+        "itemClick",
+        "pageChanged",
+        "pageSizeChanged"
+      ],
+      "familySelectors": [
+        "[mznPaginationItem]",
+        "[mznPaginationJumper]",
+        "[mznPaginationPageSize]",
+        "[mznPagination]"
+      ]
     },
     "Picker": {
-      "symbol": "MznPickerPanel",
+      "symbol": "MznPickerTrigger",
       "importPath": "@mezzanine-ui/ng/picker",
       "sourceDir": "packages/ng/picker",
       "selectorType": "directive",
-      "selector": "[mznPickerPanel]",
+      "selector": "[mznPickerTrigger]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/Picker.md"
+      "referenceDoc": "references/components/Picker.md",
+      "inputs": [
+        "ariaLabel",
+        "ariaMultiline",
+        "ariaReadonly",
+        "ariaRequired",
+        "clearable",
+        "disabled",
+        "error",
+        "errorMessages",
+        "errorMessagesFrom",
+        "errorMessagesLeft",
+        "errorMessagesRight",
+        "errorMessagesTo",
+        "format",
+        "formatLeft",
+        "formatRight",
+        "fullWidth",
+        "hostClassModifier",
+        "hoverFromValue",
+        "hoverToValue",
+        "hoverValue",
+        "hoverValueLeft",
+        "inputFromPlaceholder",
+        "inputFromValue",
+        "inputSize",
+        "inputToPlaceholder",
+        "inputToValue",
+        "placeholder",
+        "placeholderLeft",
+        "placeholderRight",
+        "readOnly",
+        "required",
+        "size",
+        "validate",
+        "validateFrom",
+        "validateLeft",
+        "validateRight",
+        "validateTo",
+        "value",
+        "valueLeft",
+        "valueRight"
+      ],
+      "outputs": [
+        "cleared",
+        "fromBlurred",
+        "fromFocused",
+        "fromValueCleared",
+        "iconClick",
+        "inputBlurred",
+        "inputFocused",
+        "inputFromChanged",
+        "inputKeydown",
+        "inputToChanged",
+        "leftBlurred",
+        "leftChanged",
+        "leftComplete",
+        "leftFocused",
+        "leftValueCleared",
+        "pasteIsoValue",
+        "pasteIsoValueLeft",
+        "pasteIsoValueRight",
+        "rightBlurred",
+        "rightChanged",
+        "rightComplete",
+        "rightFocused",
+        "rightValueCleared",
+        "toBlurred",
+        "toFocused",
+        "toValueCleared",
+        "valueChanged",
+        "valueCleared"
+      ],
+      "familySelectors": [
+        "[mznFormattedInput]",
+        "[mznPickerTriggerWithSeparator]",
+        "[mznPickerTrigger]",
+        "[mznRangePickerTrigger]"
+      ]
     },
     "Popper": {
       "symbol": "MznPopper",
@@ -433,17 +1738,41 @@
       "selector": "[mznPopper]",
       "category": "utility",
       "cva": false,
-      "referenceDoc": "references/components/Popper.md"
+      "referenceDoc": "references/components/Popper.md",
+      "inputs": [
+        "anchor",
+        "arrowOptions",
+        "disableFlip",
+        "middleware",
+        "offsetOptions",
+        "open",
+        "placement",
+        "strategy"
+      ],
+      "outputs": [
+        "positionUpdated"
+      ],
+      "familySelectors": [
+        "[mznPopper]"
+      ]
     },
     "Portal": {
       "symbol": "MznPortal",
       "importPath": "@mezzanine-ui/ng/portal",
       "sourceDir": "packages/ng/portal",
       "selectorType": "component",
-      "selector": "ng-container",
+      "selector": "[mznPortal]",
       "category": "utility",
       "cva": false,
-      "referenceDoc": "references/components/Portal.md"
+      "referenceDoc": "references/components/Portal.md",
+      "inputs": [
+        "container",
+        "disablePortal",
+        "layer"
+      ],
+      "familySelectors": [
+        "[mznPortal]"
+      ]
     },
     "Progress": {
       "symbol": "MznProgress",
@@ -453,7 +1782,18 @@
       "selector": "[mznProgress]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/Progress.md"
+      "referenceDoc": "references/components/Progress.md",
+      "inputs": [
+        "icons",
+        "percent",
+        "percentProps",
+        "status",
+        "tick",
+        "type"
+      ],
+      "familySelectors": [
+        "[mznProgress]"
+      ]
     },
     "Radio": {
       "symbol": "MznRadio",
@@ -463,7 +1803,28 @@
       "selector": "[mznRadio]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Radio.md"
+      "referenceDoc": "references/components/Radio.md",
+      "inputs": [
+        "checked",
+        "disabled",
+        "error",
+        "hint",
+        "icon",
+        "name",
+        "options",
+        "orientation",
+        "size",
+        "type",
+        "value",
+        "withInputConfig"
+      ],
+      "outputs": [
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznRadioGroup]",
+        "[mznRadio]"
+      ]
     },
     "ResultState": {
       "symbol": "MznResultState",
@@ -473,7 +1834,16 @@
       "selector": "[mznResultState]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/ResultState.md"
+      "referenceDoc": "references/components/ResultState.md",
+      "inputs": [
+        "description",
+        "size",
+        "title",
+        "type"
+      ],
+      "familySelectors": [
+        "[mznResultState]"
+      ]
     },
     "Scrollbar": {
       "symbol": "MznScrollbar",
@@ -483,7 +1853,21 @@
       "selector": "[mznScrollbar]",
       "category": "internal",
       "cva": false,
-      "referenceDoc": "references/components/Scrollbar.md"
+      "referenceDoc": "references/components/Scrollbar.md",
+      "inputs": [
+        "defer",
+        "disabled",
+        "events",
+        "maxHeight",
+        "maxWidth",
+        "options"
+      ],
+      "outputs": [
+        "viewportReady"
+      ],
+      "familySelectors": [
+        "[mznScrollbar]"
+      ]
     },
     "Section": {
       "symbol": "MznSection",
@@ -493,17 +1877,81 @@
       "selector": "[mznSection]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Section.md"
+      "referenceDoc": "references/components/Section.md",
+      "inputs": [
+        "direction"
+      ],
+      "familySelectors": [
+        "[mznSectionGroup]",
+        "[mznSection]"
+      ]
     },
     "Select": {
-      "symbol": "MznSelectTrigger",
+      "symbol": "MznSelect",
       "importPath": "@mezzanine-ui/ng/select",
       "sourceDir": "packages/ng/select",
       "selectorType": "directive",
-      "selector": "[mznSelectTrigger]",
+      "selector": "[mznSelect]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Select.md"
+      "referenceDoc": "references/components/Select.md",
+      "inputs": [
+        "active",
+        "className",
+        "clearable",
+        "defaultValue",
+        "disabled",
+        "displayText",
+        "dropdownZIndex",
+        "error",
+        "flip",
+        "forceHideSuffixActionIcon",
+        "forceShowClearable",
+        "fullWidth",
+        "globalPortal",
+        "hasValue",
+        "hideSuffixWhenClearable",
+        "inputProps",
+        "isForceClearable",
+        "listboxId",
+        "loading",
+        "loadingPosition",
+        "loadingText",
+        "menuMaxHeight",
+        "mode",
+        "options",
+        "overflowStrategy",
+        "placeholder",
+        "prefix",
+        "readOnly",
+        "required",
+        "searchText",
+        "showTextInputAfterTags",
+        "size",
+        "suffixAction",
+        "suffixActionIcon",
+        "type",
+        "value",
+        "warning"
+      ],
+      "outputs": [
+        "blur",
+        "change",
+        "clear",
+        "cleared",
+        "focus",
+        "leaveBottom",
+        "reachBottom",
+        "scroll",
+        "tagClose",
+        "tagClosed",
+        "triggerClicked"
+      ],
+      "familySelectors": [
+        "[mznSelectTriggerTags]",
+        "[mznSelectTrigger]",
+        "[mznSelect]"
+      ]
     },
     "SelectionCard": {
       "symbol": "MznSelectionCard",
@@ -512,8 +1960,31 @@
       "selectorType": "directive",
       "selector": "[mznSelectionCard]",
       "category": "data-entry",
-      "cva": false,
-      "referenceDoc": "references/components/SelectionCard.md"
+      "cva": true,
+      "referenceDoc": "references/components/SelectionCard.md",
+      "inputs": [
+        "checked",
+        "customIcon",
+        "defaultChecked",
+        "direction",
+        "disabled",
+        "image",
+        "imageObjectFit",
+        "name",
+        "readonly",
+        "selector",
+        "supportingText",
+        "supportingTextMaxWidth",
+        "text",
+        "textMaxWidth",
+        "value"
+      ],
+      "outputs": [
+        "onClick"
+      ],
+      "familySelectors": [
+        "[mznSelectionCard]"
+      ]
     },
     "Separator": {
       "symbol": "MznSeparator",
@@ -523,7 +1994,13 @@
       "selector": "[mznSeparator]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Separator.md"
+      "referenceDoc": "references/components/Separator.md",
+      "inputs": [
+        "orientation"
+      ],
+      "familySelectors": [
+        "[mznSeparator]"
+      ]
     },
     "SingleThumbnailCard": {
       "symbol": "MznSingleThumbnailCard",
@@ -533,7 +2010,30 @@
       "selector": "[mznSingleThumbnailCard]",
       "category": "angular-only",
       "cva": false,
-      "referenceDoc": "references/components/SingleThumbnailCard.md"
+      "referenceDoc": "references/components/SingleThumbnailCard.md",
+      "inputs": [
+        "actionName",
+        "filetype",
+        "options",
+        "personalActionActive",
+        "personalActionActiveIcon",
+        "personalActionIcon",
+        "subtitle",
+        "tag",
+        "thumbnailAspectRatio",
+        "thumbnailWidth",
+        "title",
+        "type"
+      ],
+      "outputs": [
+        "actionClick",
+        "optionSelect",
+        "personalActionClick"
+      ],
+      "familySelectors": [
+        "[mznSingleThumbnailCardSkeleton]",
+        "[mznSingleThumbnailCard]"
+      ]
     },
     "Skeleton": {
       "symbol": "MznSkeleton",
@@ -543,7 +2043,16 @@
       "selector": "[mznSkeleton]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/Skeleton.md"
+      "referenceDoc": "references/components/Skeleton.md",
+      "inputs": [
+        "circle",
+        "height",
+        "variant",
+        "width"
+      ],
+      "familySelectors": [
+        "[mznSkeleton]"
+      ]
     },
     "Slider": {
       "symbol": "MznSlider",
@@ -553,7 +2062,28 @@
       "selector": "[mznSlider]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Slider.md"
+      "referenceDoc": "references/components/Slider.md",
+      "inputs": [
+        "disabled",
+        "max",
+        "min",
+        "onPrefixIconClick",
+        "onSuffixIconClick",
+        "prefixIcon",
+        "step",
+        "suffixIcon",
+        "value",
+        "withInput",
+        "withTick"
+      ],
+      "outputs": [
+        "prefixIconClick",
+        "suffixIconClick",
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznSlider]"
+      ]
     },
     "Spin": {
       "symbol": "MznSpin",
@@ -563,7 +2093,20 @@
       "selector": "[mznSpin]",
       "category": "feedback",
       "cva": false,
-      "referenceDoc": "references/components/Spin.md"
+      "referenceDoc": "references/components/Spin.md",
+      "inputs": [
+        "backdropProps",
+        "color",
+        "description",
+        "descriptionClassName",
+        "loading",
+        "size",
+        "stretch",
+        "trackColor"
+      ],
+      "familySelectors": [
+        "[mznSpin]"
+      ]
     },
     "Stepper": {
       "symbol": "MznStepper",
@@ -573,27 +2116,102 @@
       "selector": "[mznStepper]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/Stepper.md"
+      "referenceDoc": "references/components/Stepper.md",
+      "inputs": [
+        "connectLineDistance",
+        "currentStep",
+        "description",
+        "disabled",
+        "error",
+        "index",
+        "interactive",
+        "orientation",
+        "status",
+        "title",
+        "type"
+      ],
+      "outputs": [
+        "stepChange"
+      ],
+      "familySelectors": [
+        "[mznStep]",
+        "[mznStepper]"
+      ]
     },
     "Tab": {
-      "symbol": "MznTabGroup",
+      "symbol": "MznTabs",
       "importPath": "@mezzanine-ui/ng/tab",
       "sourceDir": "packages/ng/tab",
       "selectorType": "directive",
-      "selector": "[mznTabGroup]",
+      "selector": "[mznTabs]",
       "category": "navigation",
       "cva": false,
-      "referenceDoc": "references/components/Tab.md"
+      "referenceDoc": "references/components/Tab.md",
+      "inputs": [
+        "activeKey",
+        "badgeCount",
+        "defaultActiveKey",
+        "direction",
+        "disabled",
+        "error",
+        "icon",
+        "key",
+        "size"
+      ],
+      "outputs": [
+        "activeKeyChange",
+        "clicked"
+      ],
+      "familySelectors": [
+        "[mznTabItem]",
+        "[mznTabs]"
+      ]
     },
     "Table": {
-      "symbol": "MznTableContainer",
+      "symbol": "MznTable",
       "importPath": "@mezzanine-ui/ng/table",
       "sourceDir": "packages/ng/table",
       "selectorType": "directive",
-      "selector": "[mznTableContainer]",
+      "selector": "[mznTable]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Table.md"
+      "referenceDoc": "references/components/Table.md",
+      "inputs": [
+        "actions",
+        "collectable",
+        "columns",
+        "dataSource",
+        "draggable",
+        "emptyProps",
+        "emptyText",
+        "expandable",
+        "fullWidth",
+        "highlight",
+        "loading",
+        "loadingRowsCount",
+        "minHeight",
+        "mznTableCellRender",
+        "nested",
+        "pagination",
+        "pinnable",
+        "resizable",
+        "rowHeightPreset",
+        "rowSelection",
+        "rowState",
+        "scroll",
+        "selectedRowKeys",
+        "separatorAtRowIndexes",
+        "showHeader",
+        "size",
+        "sticky",
+        "toggleable",
+        "transitionState",
+        "zebraStriping"
+      ],
+      "familySelectors": [
+        "[mznTableCellRender]",
+        "[mznTable]"
+      ]
     },
     "Tag": {
       "symbol": "MznTag",
@@ -603,7 +2221,25 @@
       "selector": "[mznTag]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Tag.md"
+      "referenceDoc": "references/components/Tag.md",
+      "inputs": [
+        "active",
+        "count",
+        "disabled",
+        "label",
+        "readOnly",
+        "size",
+        "transition",
+        "type"
+      ],
+      "outputs": [
+        "close",
+        "tagClick"
+      ],
+      "familySelectors": [
+        "[mznTagGroup]",
+        "[mznTag]"
+      ]
     },
     "TextField": {
       "symbol": "MznTextField",
@@ -613,7 +2249,33 @@
       "selector": "[mznTextField]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/TextField.md"
+      "referenceDoc": "references/components/TextField.md",
+      "inputs": [
+        "active",
+        "clearable",
+        "disabled",
+        "error",
+        "forceShowClearable",
+        "fullWidth",
+        "hasPrefix",
+        "hasSuffix",
+        "hideSuffixWhenClearable",
+        "noPadding",
+        "readonly",
+        "size",
+        "typing",
+        "warning"
+      ],
+      "outputs": [
+        "cleared",
+        "focusedChange",
+        "hasValueChange",
+        "hoveredChange"
+      ],
+      "familySelectors": [
+        "[mznTextFieldHost]",
+        "[mznTextField]"
+      ]
     },
     "Textarea": {
       "symbol": "MznTextarea",
@@ -623,7 +2285,21 @@
       "selector": "[mznTextarea]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Textarea.md"
+      "referenceDoc": "references/components/Textarea.md",
+      "inputs": [
+        "disabled",
+        "placeholder",
+        "readonly",
+        "resize",
+        "rows",
+        "type"
+      ],
+      "outputs": [
+        "valueChange"
+      ],
+      "familySelectors": [
+        "[mznTextarea]"
+      ]
     },
     "Thumbnail": {
       "symbol": "MznThumbnail",
@@ -633,7 +2309,13 @@
       "selector": "[mznThumbnail]",
       "category": "angular-only",
       "cva": false,
-      "referenceDoc": "references/components/Thumbnail.md"
+      "referenceDoc": "references/components/Thumbnail.md",
+      "inputs": [
+        "title"
+      ],
+      "familySelectors": [
+        "[mznThumbnail]"
+      ]
     },
     "ThumbnailCardInfo": {
       "symbol": "MznThumbnailCardInfo",
@@ -643,7 +2325,24 @@
       "selector": "[mznThumbnailCardInfo]",
       "category": "angular-only",
       "cva": false,
-      "referenceDoc": "references/components/ThumbnailCardInfo.md"
+      "referenceDoc": "references/components/ThumbnailCardInfo.md",
+      "inputs": [
+        "actionName",
+        "actionVariant",
+        "disabled",
+        "filetype",
+        "options",
+        "subtitle",
+        "title",
+        "type"
+      ],
+      "outputs": [
+        "actionClick",
+        "optionSelect"
+      ],
+      "familySelectors": [
+        "[mznThumbnailCardInfo]"
+      ]
     },
     "TimePanel": {
       "symbol": "MznTimePanel",
@@ -653,17 +2352,71 @@
       "selector": "[mznTimePanel]",
       "category": "utility",
       "cva": false,
-      "referenceDoc": "references/components/TimePanel.md"
+      "referenceDoc": "references/components/TimePanel.md",
+      "inputs": [
+        "activeUnit",
+        "cellHeight",
+        "hideHour",
+        "hideMinute",
+        "hideSecond",
+        "hourStep",
+        "minuteStep",
+        "secondStep",
+        "units",
+        "value"
+      ],
+      "outputs": [
+        "cancelled",
+        "confirmed",
+        "timeChanged",
+        "unitChanged"
+      ],
+      "familySelectors": [
+        "[mznTimePanelColumn]",
+        "[mznTimePanel]"
+      ]
     },
     "TimePicker": {
-      "symbol": "MznTimePickerPanel",
+      "symbol": "MznTimePicker",
       "importPath": "@mezzanine-ui/ng/time-picker",
       "sourceDir": "packages/ng/time-picker",
       "selectorType": "directive",
-      "selector": "[mznTimePickerPanel]",
+      "selector": "[mznTimePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/TimePicker.md"
+      "referenceDoc": "references/components/TimePicker.md",
+      "inputs": [
+        "anchor",
+        "clearable",
+        "disabled",
+        "error",
+        "format",
+        "fullWidth",
+        "hideHour",
+        "hideMinute",
+        "hideSecond",
+        "hourStep",
+        "minuteStep",
+        "open",
+        "placeholder",
+        "popperOffsetOptions",
+        "popperPlacement",
+        "readOnly",
+        "required",
+        "secondStep",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "cancelled",
+        "confirmed",
+        "panelToggled",
+        "timeChanged"
+      ],
+      "familySelectors": [
+        "[mznTimePickerPanel]",
+        "[mznTimePicker]"
+      ]
     },
     "TimeRangePicker": {
       "symbol": "MznTimeRangePicker",
@@ -673,7 +2426,32 @@
       "selector": "[mznTimeRangePicker]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/TimeRangePicker.md"
+      "referenceDoc": "references/components/TimeRangePicker.md",
+      "inputs": [
+        "clearable",
+        "disabled",
+        "error",
+        "format",
+        "fullWidth",
+        "hideHour",
+        "hideMinute",
+        "hideSecond",
+        "hourStep",
+        "minuteStep",
+        "placeholder",
+        "readOnly",
+        "required",
+        "secondStep",
+        "size",
+        "value"
+      ],
+      "outputs": [
+        "panelToggled",
+        "rangeChanged"
+      ],
+      "familySelectors": [
+        "[mznTimeRangePicker]"
+      ]
     },
     "Toggle": {
       "symbol": "MznToggle",
@@ -683,7 +2461,17 @@
       "selector": "[mznToggle]",
       "category": "data-entry",
       "cva": true,
-      "referenceDoc": "references/components/Toggle.md"
+      "referenceDoc": "references/components/Toggle.md",
+      "inputs": [
+        "checked",
+        "disabled",
+        "label",
+        "size",
+        "supportingText"
+      ],
+      "familySelectors": [
+        "[mznToggle]"
+      ]
     },
     "Tooltip": {
       "symbol": "MznTooltip",
@@ -693,17 +2481,57 @@
       "selector": "[mznTooltip]",
       "category": "data-display",
       "cva": false,
-      "referenceDoc": "references/components/Tooltip.md"
+      "referenceDoc": "references/components/Tooltip.md",
+      "inputs": [
+        "mznTooltip",
+        "tooltipArrow",
+        "tooltipDisablePortal",
+        "tooltipMouseLeaveDelay",
+        "tooltipOffset",
+        "tooltipOpen",
+        "tooltipPlacement"
+      ],
+      "familySelectors": [
+        "[mznTooltip]"
+      ]
     },
     "Transition": {
-      "symbol": "MznScale",
+      "symbol": "MznCollapse",
       "importPath": "@mezzanine-ui/ng/transition",
       "sourceDir": "packages/ng/transition",
       "selectorType": "directive",
-      "selector": "[mznScale]",
+      "selector": "[mznCollapse]",
       "category": "utility",
       "cva": false,
-      "referenceDoc": "references/components/Transition.md"
+      "referenceDoc": "references/components/Transition.md",
+      "inputs": [
+        "appear",
+        "collapsedHeight",
+        "degrees",
+        "delay",
+        "duration",
+        "easing",
+        "from",
+        "in",
+        "keepMount",
+        "transformOrigin"
+      ],
+      "outputs": [
+        "onEnter",
+        "onEntered",
+        "onEntering",
+        "onExit",
+        "onExited",
+        "onExiting"
+      ],
+      "familySelectors": [
+        "[mznCollapse]",
+        "[mznFade]",
+        "[mznRotate]",
+        "[mznScale]",
+        "[mznSlide]",
+        "[mznTranslate]"
+      ]
     },
     "Typography": {
       "symbol": "MznTypography",
@@ -713,17 +2541,92 @@
       "selector": "[mznTypography]",
       "category": "general",
       "cva": false,
-      "referenceDoc": "references/components/Typography.md"
+      "referenceDoc": "references/components/Typography.md",
+      "inputs": [
+        "align",
+        "color",
+        "display",
+        "ellipsis",
+        "noWrap",
+        "variant"
+      ],
+      "familySelectors": [
+        "[mznTypography]"
+      ]
     },
     "Upload": {
-      "symbol": "MznUploader",
+      "symbol": "MznUpload",
       "importPath": "@mezzanine-ui/ng/upload",
       "sourceDir": "packages/ng/upload",
       "selectorType": "directive",
-      "selector": "[mznUploader]",
+      "selector": "[mznUpload]",
       "category": "data-entry",
       "cva": false,
-      "referenceDoc": "references/components/Upload.md"
+      "referenceDoc": "references/components/Upload.md",
+      "inputs": [
+        "accept",
+        "ariaLabels",
+        "disabled",
+        "downloadEnabled",
+        "dropzoneHints",
+        "errorIcon",
+        "errorMessage",
+        "externalHints",
+        "file",
+        "fileName",
+        "fileSize",
+        "files",
+        "fillWidth",
+        "hints",
+        "icon",
+        "id",
+        "imageFit",
+        "inputProps",
+        "label",
+        "maxFiles",
+        "mediaItems",
+        "mode",
+        "multiple",
+        "name",
+        "open",
+        "readable",
+        "replaceEnabled",
+        "showFileSize",
+        "size",
+        "status",
+        "thumbnailUrl",
+        "type",
+        "uploadHandler",
+        "uploaderIcon",
+        "uploaderLabel",
+        "url",
+        "zoomInEnabled"
+      ],
+      "outputs": [
+        "cancel",
+        "change",
+        "close",
+        "delete",
+        "deleted",
+        "download",
+        "downloaded",
+        "fileSelect",
+        "filesChange",
+        "maxFilesExceeded",
+        "reload",
+        "reloaded",
+        "replaced",
+        "upload",
+        "zoomIn",
+        "zoomed"
+      ],
+      "familySelectors": [
+        "[mznUploadItem]",
+        "[mznUploadPictureCard]",
+        "[mznUpload]",
+        "[mznUploader]",
+        "mzn-upload-media-preview-modal"
+      ]
     }
   }
 }

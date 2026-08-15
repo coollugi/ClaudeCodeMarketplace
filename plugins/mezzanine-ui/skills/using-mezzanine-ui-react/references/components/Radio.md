@@ -8,6 +8,17 @@
 
 Radio button component supporting normal mode and segment mode.
 
+> **別名（重要）** — `type="segment"` 的 `RadioGroup` 就是一般所稱的
+> **Segmented Control / 分段控制項 / 分段切換 / Toggle Button Group / Segmented (Ant Design) / ToggleButtonGroup (MUI)**
+> （Figma 元件名為 `Segmented Control` / `Segmented Control Set`）。
+> 互斥的**檢視切換、排序切換、篩選切換**一律用它，
+> **不要用多顆 `Button` 的 variant 差異模擬選中狀態**。
+
+> **Aliases** — Radio · Radio Button · 單選 · Segmented Control · 分段控制項 · 分段切換 · 檢視切換 · 排序切換 · Toggle Button Group · Segmented (AntD) · Figma `Segmented Control`
+> **Not for** — 多選（用 [`Checkbox`](Checkbox.md) / `CheckboxGroup`）；卡片式選取（用 [`SelectionCard`](SelectionCard.md)）
+
+> **這個元件歸類在 Data Entry，但 `segment` 模式不限於表單。** 排序切換、檢視切換這類非表單的互斥切換也用它 —— 見下方 [Segment Mode](#segment-mode) 的排序切換範例。
+
 ## Import
 
 ```tsx
@@ -264,6 +275,50 @@ import { HomeIcon, UserIcon, SettingIcon } from '@mezzanine-ui/icons';
 </RadioGroup>
 ```
 
+### Segment Mode — 非表單情境（排序切換 / 檢視切換）
+
+`segment` 模式最常見的用途其實**不是表單欄位**，而是列表上方的排序、檢視、篩選切換。這種情境不需要 `Form` / `FormField`，直接用受控的 `RadioGroup` 即可。
+
+```tsx
+const SORTS = [
+  { key: 'sla', label: '時效由近到遠' },
+  { key: 'amount', label: '金額由大到小' },
+] as const;
+
+function OrderListToolbar(): JSX.Element {
+  const [sort, setSort] = useState<string>('sla');
+
+  return (
+    <RadioGroup
+      type="segment"
+      size="sub"
+      value={sort}
+      onChange={(e) => setSort(e.target.value)}
+    >
+      {SORTS.map((option) => (
+        <Radio key={option.key} type="segment" value={option.key}>
+          {option.label}
+        </Radio>
+      ))}
+    </RadioGroup>
+  );
+}
+```
+
+```tsx
+// ❌ 反例：用兩顆 Button 的 variant 差異模擬選中狀態
+// 語意不對（不是 radiogroup，鍵盤操作與 a11y 都不同）、視覺也不是設計稿上的 Segmented Control
+{SORTS.map((option) => (
+  <Button
+    key={option.key}
+    variant={sort === option.key ? 'base-secondary' : 'base-tertiary'}
+    onClick={() => setSort(option.key)}
+  >
+    {option.label}
+  </Button>
+))}
+```
+
 ### Error State
 
 ```tsx
@@ -330,6 +385,7 @@ function FormExample() {
 | 單個獨立單選項 | 直接使用 `<Radio />` 搭配 `checked` 和 `onChange` | 簡單場景不需要 RadioGroup 的複雜度 |
 | 多個相關選項的單選 | 使用 `<RadioGroup>` 包裝多個 `<Radio />` | RadioGroup 負責管理單選邏輯，自動排斥其他選項 |
 | 視圖切換或顯示模式選擇 | 使用 `type="segment"` 配合 icon | Segment 模式視覺上明確區分不同狀態，適合模式切換 |
+| 排序切換 / 篩選切換（非表單） | 使用 `type="segment"` 的受控 `RadioGroup` | 這就是設計稿上的 Segmented Control，不需要 Form 也能用 |
 | 選項需要額外說明 | 使用 `hint` prop | 為複雜或不明確的選項提供補充說明，減少用戶困惑 |
 | 用戶需要在選項旁輸入值 | 使用 `withInputConfig` | 例如「自訂金額」場景，讓用戶既選擇又輸入 |
 
@@ -340,11 +396,12 @@ function FormExample() {
 - **Segment 模式搭配 hint**：Segment 模式不支援 hint，會被忽略。應改用 normal 模式或在其他位置提供說明
 - **在 Segment 模式使用 withInputConfig**：Segment 模式不支援附加輸入框，應改用 normal 模式
 - **icon 搭配 normal 模式**：Normal 模式的 icon 類型為 `never`，Segment 模式才支援 icon
+- **用多顆 `Button` 模擬分段控制項**：設計稿上的 Segmented Control 一律是 `RadioGroup type="segment"`。用 `Button` 的 variant 差異模擬選中狀態，語意（不是 radiogroup）、鍵盤操作與視覺都不對
 
 ## Best Practices
 
 1. **Use RadioGroup for grouping**: Ensures correct single-selection behavior
 2. **Provide value**: Each Radio must have a unique `value`
-3. **Segment for view switching**: Suitable for view switching or mode selection
+3. **Segment for view switching**: Suitable for view switching or mode selection. **`type="segment"` 就是 Segmented Control** —— 排序 / 檢視 / 篩選切換都用它，不要用多顆 `Button` 模擬
 4. **Pair with FormField**: Use FormField when labels and validation are needed
 5. **Use hint appropriately**: Provide additional explanation for complex options

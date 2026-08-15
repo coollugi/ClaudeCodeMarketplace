@@ -154,6 +154,16 @@ Self-verification (5 sampled):
 
 If any discrepancy is found, fix it before reporting completion.
 
+## JSDoc `@example` 是不可信來源（必讀）
+
+**絕對不要**把 JSDoc `@example` 區塊裡的字面值當成有效值抄進文件。上游原始碼的範例會與型別定義不同步 —— 實證：`packages/react/src/Badge/Badge.tsx` 的 `@example` 使用 `variant="dot-alert"`（第 37 行）與 `variant="text-brand"`（第 42 行），**這兩個值都不存在於 `BadgeVariant` union**。照抄的下游文件因此長出 `text-alert` / `text-brand` / `dot-neutral` 等假 variant，直接誤導消費端。
+
+規則：
+
+1. 枚舉型 prop（`variant` / `type` / `severity` / `size` …）的合法值**只能**來自型別定義本身（`packages/core/src/<component>/<component>.ts` 的 union type），不能來自 `@example`、不能來自既有文件、不能來自 Storybook 標題。
+2. 文件裡列舉枚舉值時要**窮舉並明說「沒有其他成員」**，不要用「等」「etc.」這類開放式結尾 —— 開放式結尾會讓讀者以為還有未列出的值，進而自行發明。
+3. 若 `@example` 用到的值不在 union 裡，**在回報中指出這個上游瑕疵**，並在文件範例中改用真實存在的值。
+
 ## Rules
 
 1. **Never invent props** — only document what exists in the TypeScript source
@@ -166,3 +176,4 @@ If any discrepancy is found, fix it before reporting completion.
 8. **Verify defaults against source destructuring** — not JSDoc @default annotations (which can be stale)
 9. **Remove stale annotations** — if a "Removed in rc.X" note contradicts the source, remove it
 10. **Read the FULL file** — never edit based on partial reads
+11. **Hand-curated selection guidance is protected — NEVER delete or rewrite it** — the `> **Aliases**` / `> **Not for**` lines under a component's summary, and boundary sections such as 「Tag 沒有語意顏色」/「沒有膠囊底色」/「表格狀態欄用 dot-*」, are written by humans to intercept a predictable mis-selection. They are not generated from source and will not match any TypeScript interface. Leave them byte-for-byte intact. If the source genuinely gains a capability that invalidates one (e.g. `Tag` acquires a `color` prop), **report it to the caller** and let a human rewrite it — do not edit it yourself

@@ -308,6 +308,32 @@ These are internal pieces normally composed inside `MznCalendar` / `MznRangeCale
 | `MznCalendarHalfYears`  | `[mznCalendarHalfYears]` | Half-year-mode panel — 5 years × 2 halves grid                      |
 | `MznCalendarYears`      | `[mznCalendarYears]`     | Year-mode panel — 20-year grid                                      |
 
+### MznCalendarCell — Inputs
+
+**Selector**: `[mznCalendarCell]`
+
+| Input            | Type                  | Default     | Description                                    |
+| ---------------- | --------------------- | ----------- | ---------------------------------------------- |
+| `active`         | `boolean`             | `false`     | 此格為目前選取值                               |
+| `today`          | `boolean`             | `false`     | 此格為今天                                     |
+| `disabled`       | `boolean`             | `false`     | 停用（不可選）                                 |
+| `isRangeStart`   | `boolean`             | `false`     | 區間選取的起點格                               |
+| `isRangeEnd`     | `boolean`             | `false`     | 區間選取的終點格                               |
+| `isWeekend`      | `boolean`             | `false`     | 週末樣式                                       |
+| `withAnnotation` | `boolean`             | `false`     | 顯示註記標記（搭配 `CalendarDayAnnotation`）   |
+| `role`           | `string \| undefined` | `undefined` | 覆寫 host 的 `role` 屬性（無障礙用）           |
+
+### MznCalendarControls — Inputs
+
+**Selector**: `[mznCalendarControls]`
+
+| Input            | Type      | Default | Description                        |
+| ---------------- | --------- | ------- | ---------------------------------- |
+| `showPrev`       | `boolean` | `false` | 顯示上一頁箭頭                     |
+| `showNext`       | `boolean` | `false` | 顯示下一頁箭頭                     |
+| `showDoublePrev` | `boolean` | `false` | 顯示快速上一頁（雙箭頭，跳一個年度單位） |
+| `showDoubleNext` | `boolean` | `false` | 顯示快速下一頁（雙箭頭）           |
+
 `CalendarConfigs` / `CalendarConfigOptions` types (imported above) describe the value supplied to `MZN_CALENDAR_CONFIG` / `createCalendarConfig` — useful when you need to accept or re-expose the config from your own service.
 
 ---

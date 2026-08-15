@@ -6,6 +6,9 @@
 
 進度條元件，支援百分比文字與狀態圖示兩種顯示類型。`percent` 介於 0~100；未達 100 時狀態自動為 `enabled`，達到 100 時自動切換為 `success`（可強制指定 `status="error"`）。`tick` 可在進度條上標記特定位置（如目標值）。
 
+> **Aliases** — ProgressBar · mat-progress-bar (Angular Material) · 進度條 · 百分比進度
+> **Not for** — 不知道進度的載入（用 [`MznSpin`](Spin.md)）；有版面結構的載入佔位（用 [`MznSkeleton`](Skeleton.md)）
+
 ## Import
 
 ```ts

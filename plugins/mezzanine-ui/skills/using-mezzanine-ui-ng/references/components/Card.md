@@ -4,6 +4,9 @@
 
 Card family for content containers. Includes `MznBaseCard` (titled card with optional action / overflow / toggle in the header), `MznQuickActionCard` (icon + title entry point), and `MznCardGroup` (CSS Grid layout wrapper with built-in skeleton loading).
 
+> **Aliases** — Card · Tile · mat-card (Angular Material) · 卡片 · 商品卡 · 圖文卡 · Figma `Card / *`
+> **Not for** — 頁面級的內容區塊（用 [`MznSection`](Section.md)）；可選取的卡片（用 [`MznSelectionCard`](SelectionCard.md)）
+
 ## Import
 
 ```ts

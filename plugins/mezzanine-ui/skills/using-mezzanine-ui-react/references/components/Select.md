@@ -8,6 +8,9 @@
 
 Dropdown select component supporting single-select and multi-select modes. Internally uses the Dropdown component to render the option list.
 
+> **Aliases** — Select · Combobox · 下拉選單 · 下拉選擇
+> **Not for** — 觸發動作的選單（用 [`Dropdown`](Dropdown.md)）；邊打字邊過濾（用 [`AutoComplete`](AutoComplete.md)）；有階層的選項（用 [`Cascader`](Cascader.md)）
+
 ## Import
 
 ```tsx

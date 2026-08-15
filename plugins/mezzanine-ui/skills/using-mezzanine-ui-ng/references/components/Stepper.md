@@ -6,6 +6,9 @@
 
 步驟進度指示器元件，以線性流程呈現多個步驟的完成狀態。子元件 `MznStep` 透過 `MZN_STEPPER_CONTEXT` DI token 從父層 `MznStepper` 取得 `currentStep`/`orientation`/`type`，並自動計算連接線距離。支援水平/垂直排列，以及數字/圓點兩種指示器樣式。
 
+> **Aliases** — Steps (Ant Design) · mat-stepper (Angular Material) · Wizard · 步驟條 · 流程指示 · Figma `Stepper / *`
+> **Not for** — 百分比進度（用 [`MznProgress`](Progress.md)）
+
 ## Import
 
 ```ts
@@ -51,6 +54,7 @@ import type {
 | `interactive` | `boolean`      | `false` | 是否可互動（加入 `role="button"`、`tabindex="0"`，Enter/Space 觸發 click）  |
 | `status`      | `StepStatus`   | auto    | 手動覆蓋步驟狀態；未設定時由父 Stepper 依 `currentStep` 自動計算           |
 | `index`       | `number`       | auto    | 手動指定步驟索引；通常由 Stepper 自動注入                                  |
+| `connectLineDistance` | `string \| undefined` | — | 覆寫此步驟與下一步之間連接線的長度（CSS 長度字串）                 |
 
 > Inputs declared with signal API (`input()`, `input.required()`) accept both static and reactive values.
 >

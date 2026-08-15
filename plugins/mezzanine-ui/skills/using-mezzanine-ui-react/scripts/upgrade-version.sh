@@ -40,14 +40,25 @@ FRAMEWORK=""
 FROM_VERSION=""
 TO_VERSION=""
 DRY_RUN=false
+# Optional local monorepo checkout. RECONCILIATION.md makes the local repo the
+# source of truth; without it every component costs one HTTP round trip per file.
+SOURCE_DIR=""
+WORK_DIR=""
 
 GITHUB_BRANCH="main"
 GITHUB_RAW_BASE="https://raw.githubusercontent.com/Mezzanine-UI/mezzanine/$GITHUB_BRANCH"
 GITHUB_API_BASE="https://api.github.com/repos/Mezzanine-UI/mezzanine"
 
-# Cache: PascalCase component name → package sub-path + main source file (Angular only).
-# Populated by build_ng_component_source_map(), consumed by ng-specific diff steps.
-NG_COMPONENT_MAP_FILE="/tmp/mzn_ng_component_map.json"
+# Per-run scratch state. These were hardcoded /tmp paths shared by both
+# frameworks, and cleanup() deleted BOTH — so a react run finishing during an ng
+# run removed the ng component map mid-flight, and the ng run then reported
+# "Source located for 0 of 74" followed by "matches source for every component":
+# a vacuous all-green with exit 0. They now live in $WORK_DIR (mktemp -d).
+NG_COMPONENT_MAP_FILE=""
+COMPONENT_DIFF_FILE=""
+CHANGELOG_FILE=""
+PROPS_DIFF_FILE=""
+NG_SPECIFIC_FILE=""
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -64,6 +75,9 @@ show_help() {
     echo "  --to   <version>   Target version (e.g. 1.1.0, 1.0.0-rc.4)"
     echo ""
     echo "Options:"
+    echo "  --source-dir <path> Read source from a local mezzanine checkout instead of"
+    echo "                     raw.githubusercontent.com/main. Report it when the checkout"
+    echo "                     and main disagree; do not silently prefer one."
     echo "  --dry-run          Show what would be done without writing any files"
     echo "  --help             Show this help message"
     echo ""
@@ -85,6 +99,12 @@ check_dependencies() {
 
     if ! command -v jq &> /dev/null; then
         missing+=("jq")
+    fi
+
+    # The API extractor / doc parser / comparer are Python; comparing types and
+    # defaults needs the declaration text, not a grep.
+    if ! command -v python3 &> /dev/null; then
+        missing+=("python3")
     fi
 
     if [ ${#missing[@]} -gt 0 ]; then
@@ -127,6 +147,19 @@ parse_args() {
                 fi
                 shift 2
                 ;;
+            --source-dir)
+                SOURCE_DIR="${2:-}"
+                if [ -z "$SOURCE_DIR" ]; then
+                    error "--source-dir requires a path to a mezzanine checkout"
+                    exit 1
+                fi
+                SOURCE_DIR="${SOURCE_DIR%/}"
+                if [ ! -d "$SOURCE_DIR/packages" ]; then
+                    error "--source-dir does not look like a mezzanine checkout: $SOURCE_DIR"
+                    exit 1
+                fi
+                shift 2
+                ;;
             --dry-run)
                 DRY_RUN=true
                 shift
@@ -162,6 +195,13 @@ parse_args() {
         show_help
         exit 1
     fi
+
+    WORK_DIR=$(mktemp -d "${TMPDIR:-/tmp}/mzn-upgrade.XXXXXX")
+    NG_COMPONENT_MAP_FILE="$WORK_DIR/ng-component-map.json"
+    COMPONENT_DIFF_FILE="$WORK_DIR/component-diff.json"
+    CHANGELOG_FILE="$WORK_DIR/changelog.json"
+    PROPS_DIFF_FILE="$WORK_DIR/props-diff.json"
+    NG_SPECIFIC_FILE="$WORK_DIR/ng-specific.json"
 
     # Resolve framework-scoped paths.
     SKILL_DIR="$PLUGIN_SKILLS_DIR/using-mezzanine-ui-$FRAMEWORK"
@@ -212,6 +252,29 @@ component_source_path() {
     esac
 }
 
+# Concatenated source of every file in a component's family.
+# React has one file per component; Angular families span several, so diffing
+# only the "main" file produced phantom removals for every sibling directive.
+component_source_contents() {
+    local component="$1"
+    case "$FRAMEWORK" in
+        react)
+            curl -sf "$GITHUB_RAW_BASE/$(component_source_path "$component")" 2>/dev/null || true
+            ;;
+        ng)
+            [ -f "$NG_COMPONENT_MAP_FILE" ] || return 0
+            local files
+            files=$(jq -r --arg c "$component" '.[$c].allFiles // [] | .[]' "$NG_COMPONENT_MAP_FILE")
+            [ -z "$files" ] && files=$(jq -r --arg c "$component" '.[$c].mainFile // empty' "$NG_COMPONENT_MAP_FILE")
+            while IFS= read -r f; do
+                [ -z "$f" ] && continue
+                curl -sf "$GITHUB_RAW_BASE/$f" 2>/dev/null || true
+                echo ""
+            done <<< "$files"
+            ;;
+    esac
+}
+
 # Convert kebab-case to PascalCase: "date-picker" -> "DatePicker".
 kebab_to_pascal() {
     echo "$1" | awk -F'-' '{ for (i=1;i<=NF;i++) printf "%s%s", toupper(substr($i,1,1)), substr($i,2); print "" }'
@@ -228,6 +291,30 @@ kebab_to_pascal() {
 # diffing we treat the FOLDER as the unit, matching the .md docs layout.
 build_ng_component_source_map() {
     [ "$FRAMEWORK" = "ng" ] || return 0
+
+    # Local checkout: the folder listing IS the component list, no API calls.
+    if [ -n "$SOURCE_DIR" ]; then
+        local map='{}'
+        local folder base comp all_files main_file
+        for folder in "$SOURCE_DIR"/packages/ng/*/; do
+            base=$(basename "$folder")
+            case "$base" in _*|.*|services|utils|src) continue ;; esac
+            [ -f "$folder/index.ts" ] || continue
+            comp=$(kebab_to_pascal "$base")
+            all_files=$(ls "$folder"*.ts 2>/dev/null \
+                | grep -vE '\.(spec|stories)\.ts$' \
+                | sed "s|$SOURCE_DIR/||" | jq -R . | jq -sc .)
+            main_file="packages/ng/$base/$base.component.ts"
+            [ -f "$SOURCE_DIR/$main_file" ] || main_file="packages/ng/$base/$base.directive.ts"
+            [ -f "$SOURCE_DIR/$main_file" ] || main_file="packages/ng/$base/index.ts"
+            map=$(echo "$map" | jq --arg k "$comp" --arg folder "packages/ng/$base" \
+                --arg file "$main_file" --argjson all "$all_files" \
+                '. + {($k): {className: "", sourceDir: $folder, mainFile: $file, allFiles: $all}}')
+        done
+        echo "$map" > "$NG_COMPONENT_MAP_FILE"
+        info "Built Angular component source map from $SOURCE_DIR ($(echo "$map" | jq 'length') components)"
+        return
+    fi
 
     local ng_root_api="$GITHUB_API_BASE/contents/packages/ng?ref=$GITHUB_BRANCH"
     local folders_json
@@ -266,6 +353,13 @@ build_ng_component_source_map() {
         # (e.g. in accordion/, './accordion.component' -> MznAccordion is the
         # "main"). If none matches, fall back to the first Mzn class exported.
         local main_cls="" main_src="" first_cls="" first_src=""
+        # Every source path re-exported from index.ts. A component "family" is a
+        # folder, not a file: dropdown/ ships MznDropdown plus MznDropdownItem,
+        # MznDropdownAction and MznDropdownItemCard, and picker/ spans nine files.
+        # Diffing against a single arbitrarily-chosen main file reported every
+        # sibling directive's inputs/outputs as removed, and made an unrelated
+        # sibling's selector look like a rename.
+        local all_srcs=""
         local flat_exports
         flat_exports=$(echo "$idx_content" | awk '
             /^export[[:space:]]+\{/ && !/^export[[:space:]]+type/ {
@@ -291,6 +385,8 @@ build_ng_component_source_map() {
             local src
             src=$(echo "$line" | grep -oE "from '\./[^']+'" | sed -E "s|from '\./||; s|'||" || true)
             [ -z "$src" ] && continue
+
+            all_srcs="$all_srcs$src\n"
 
             # All Mzn* identifiers inside the braces are candidate class names.
             local classes
@@ -323,12 +419,18 @@ build_ng_component_source_map() {
         [ -z "$main_cls" ] && continue
 
         local main_file="packages/ng/$folder/$main_src.ts"
+        local all_files_json
+        all_files_json=$(printf '%b' "$all_srcs" \
+            | grep -v '^$' | sort -u \
+            | sed "s|^|packages/ng/$folder/|; s|$|.ts|" \
+            | jq -R . | jq -sc '[.[] | select(. != "")]')
         map=$(echo "$map" | jq \
             --arg k "$comp_name" \
             --arg cls "$main_cls" \
             --arg folder "packages/ng/$folder" \
             --arg file "$main_file" \
-            '. + {($k): {className: $cls, sourceDir: $folder, mainFile: $file}}')
+            --argjson all "$all_files_json" \
+            '. + {($k): {className: $cls, sourceDir: $folder, mainFile: $file, allFiles: $all}}')
     done <<< "$folders"
 
     echo "$map" > "$NG_COMPONENT_MAP_FILE"
@@ -359,14 +461,22 @@ fetch_and_compare_components() {
     local target_components
     case "$FRAMEWORK" in
         react)
-            local index_url="$GITHUB_RAW_BASE/packages/react/src/index.ts"
-            detail "Fetching: $index_url"
-
             local index_content
-            if ! index_content=$(curl -sf "$index_url" 2>/dev/null); then
-                warn "Could not fetch index.ts from GitHub. Skipping component list comparison."
-                echo "[]"
-                return
+            if [ -n "$SOURCE_DIR" ]; then
+                detail "Reading: $SOURCE_DIR/packages/react/src/index.ts"
+                if ! index_content=$(cat "$SOURCE_DIR/packages/react/src/index.ts" 2>/dev/null); then
+                    warn "Could not read index.ts from $SOURCE_DIR. Skipping component list comparison."
+                    echo "[]"
+                    return
+                fi
+            else
+                local index_url="$GITHUB_RAW_BASE/packages/react/src/index.ts"
+                detail "Fetching: $index_url"
+                if ! index_content=$(curl -sf "$index_url" 2>/dev/null); then
+                    warn "Could not fetch index.ts from GitHub. Skipping component list comparison."
+                    echo "[]"
+                    return
+                fi
             fi
 
             # Extract exported component names (uppercase-starting exports)
@@ -444,9 +554,9 @@ fetch_and_compare_components() {
         --argjson removed "$removed_json" \
         --argjson unchanged "$unchanged_json" \
         '{added: $added, removed: $removed, unchanged: $unchanged}' \
-        > /tmp/mzn_component_diff.json
+        > "$COMPONENT_DIFF_FILE"
 
-    info "Component diff written to /tmp/mzn_component_diff.json"
+    info "Component diff written to $COMPONENT_DIFF_FILE"
 }
 
 # ─── Step 2: Fetch release changelog between versions ─────────────────────────
@@ -466,7 +576,7 @@ fetch_changelog() {
             "$GITHUB_API_BASE/releases?per_page=30&page=$page" 2>/dev/null); then
             [ "$page" -eq 1 ] && {
                 warn "Could not fetch releases from GitHub API. Skipping changelog."
-                echo "[]" > /tmp/mzn_changelog.json
+                echo "[]" > "$CHANGELOG_FILE"
                 return
             }
             break
@@ -530,7 +640,7 @@ fetch_changelog() {
         })
     ')
 
-    echo "$changelog_json" > /tmp/mzn_changelog.json
+    echo "$changelog_json" > "$CHANGELOG_FILE"
 
     local count
     count=$(echo "$changelog_json" | jq 'length')
@@ -541,281 +651,207 @@ fetch_changelog() {
     fi
 }
 
-# ─── Step 3: Fetch component source and diff props ────────────────────────────
+# ─── Step 3: Compare documented API against source (names, types, defaults) ───
+#
+# Extraction lives in extract-api.py, doc parsing in doc-api.py, comparison in
+# reconcile-api.py. It used to be awk in this file, and every trap that produced
+# a wrong doc edit came from that: a 60-line scan window, a `}` that terminated
+# early inside a JSDoc @example, `readonly` before a signal input, an `alias:`
+# that renames the public input, a component family treated as a single file.
+# Those cases are now regression-documented at the point of parse. What the shell
+# still owns: deciding WHERE the source comes from, and folding results into the
+# manifest.
 
-fetch_component_props_diff() {
-    step "Step 3: Analyzing component props/inputs changes"
-
-    # Per-framework config: cache file holding the current (documented) prop list
-    # and the jq path that extracts prop names for a given component.
-    local api_index_file current_lookup_jq
-    case "$FRAMEWORK" in
-        react)
-            api_index_file="$CACHE_DIR/component-api-index.json"
-            current_lookup_jq='.[$comp].props // {} | keys[]'
-            ;;
-        ng)
-            api_index_file="$CACHE_DIR/component-index.json"
-            # ng component-index.json stores inputs/outputs under .components.<Name>.inputs
-            current_lookup_jq='.components[$comp].inputs // {} | keys[]'
-            ;;
-    esac
-
-    if [ ! -f "$api_index_file" ]; then
-        warn "$(basename "$api_index_file") not found. Skipping props diff."
-        echo "[]" > /tmp/mzn_props_diff.json
-        return
-    fi
-
-    # Get list of components to check from current .md files
+# Populate $WORK_DIR/src/<Component>/ with the component family's sources and
+# print a batch manifest for extract-api.py.
+prepare_source_batch() {
+    local batch="$WORK_DIR/batch.json"
     local components
     components=$(ls "$COMPONENTS_DIR"/*.md 2>/dev/null | xargs -I{} basename {} .md | sort -u)
 
-    local props_diff_entries=()
-
+    local entries='[]'
     while IFS= read -r component; do
-        local source_path
-        source_path=$(component_source_path "$component")
-        [ -z "$source_path" ] && continue
-
-        local source_url="$GITHUB_RAW_BASE/$source_path"
-        local source_content
-
-        if ! source_content=$(curl -sf "$source_url" 2>/dev/null); then
-            # Component source file not found under expected path
-            continue
-        fi
-
-        local source_prop_names=""
-
-        # `|| true` tolerates components whose Props are declared as a type union
-        # (e.g. `type FooProps = A & B`) rather than `interface FooProps`, where
-        # the grep produces no match and would otherwise trip `pipefail`.
-        if [ "$FRAMEWORK" = "react" ]; then
-            # Extract prop field names from the main Props interface (first one found).
-            local main_props_block
-            main_props_block=$(echo "$source_content" \
-                | grep -A 60 "interface ${component}Props" \
-                | awk '/^\}[[:space:]]*$/{exit} {print}' || true)
-
-            source_prop_names=$(echo "$main_props_block" \
-                | grep -oE '^[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*[?]?:' \
-                | grep -oE '[a-zA-Z_][a-zA-Z0-9_]*' \
-                | sort -u || true)
+        [ -z "$component" ] && continue
+        local dir=""
+        if [ -n "$SOURCE_DIR" ]; then
+            case "$FRAMEWORK" in
+                react) dir="$SOURCE_DIR/packages/react/src/$component" ;;
+                ng)
+                    local rel
+                    rel=$(jq -r --arg c "$component" '.[$c].sourceDir // empty' "$NG_COMPONENT_MAP_FILE" 2>/dev/null)
+                    [ -n "$rel" ] && dir="$SOURCE_DIR/$rel"
+                    ;;
+            esac
+            [ -d "$dir" ] || continue
         else
-            # Angular signal inputs: lines like "  foo = input<T>(...)" or "foo = input(...)"
-            # Also catches legacy "@Input() foo!: T" for safety.
-            local signal_inputs legacy_inputs
-            signal_inputs=$(echo "$source_content" \
-                | grep -oE '^[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*[[:space:]]*=[[:space:]]*input[.<(]' \
-                | sed -E 's/^[[:space:]]+//; s/[[:space:]]*=.*//' || true)
-            legacy_inputs=$(echo "$source_content" \
-                | grep -oE '@Input\([^)]*\)[[:space:]]+[a-zA-Z_][a-zA-Z0-9_]*' \
-                | grep -oE '[a-zA-Z_][a-zA-Z0-9_]*$' || true)
-            source_prop_names=$(printf '%s\n%s\n' "$signal_inputs" "$legacy_inputs" \
-                | grep -v '^$' | sort -u || true)
-        fi
-
-        # Get current (documented) prop names from the framework's api index.
-        local current_prop_names
-        current_prop_names=$(jq -r \
-            --arg comp "$component" \
-            "$current_lookup_jq" \
-            "$api_index_file" 2>/dev/null | sort -u || true)
-
-        # Compute prop-level diff
-        local props_added=()
-        local props_removed=()
-
-        if [ -n "$source_prop_names" ]; then
-            while IFS= read -r prop; do
-                [ -z "$prop" ] && continue
-                if ! echo "$current_prop_names" | grep -qx "$prop"; then
-                    props_added+=("$prop")
+            dir="$WORK_DIR/src/$component"
+            mkdir -p "$dir"
+            local files=""
+            case "$FRAMEWORK" in
+                react)
+                    files=$(curl -sfL -H "Accept: application/vnd.github+json" \
+                        "$GITHUB_API_BASE/contents/packages/react/src/$component?ref=$GITHUB_BRANCH" 2>/dev/null \
+                        | jq -r '.[]? | select(.type == "file") | .path' \
+                        | grep -E '\.tsx?$' | grep -vE '\.(spec|stories|test)\.' || true)
+                    ;;
+                ng)
+                    files=$(jq -r --arg c "$component" '.[$c].allFiles // [] | .[]' "$NG_COMPONENT_MAP_FILE" 2>/dev/null)
+                    local src_dir
+                    src_dir=$(jq -r --arg c "$component" '.[$c].sourceDir // empty' "$NG_COMPONENT_MAP_FILE" 2>/dev/null)
+                    # index.ts carries the public export list, which is what a
+                    # consumer puts in `imports: []`.
+                    [ -n "$src_dir" ] && files="$files
+$src_dir/index.ts"
+                    ;;
+            esac
+            local fetched=0
+            while IFS= read -r f; do
+                [ -z "$f" ] && continue
+                if curl -sfL "$GITHUB_RAW_BASE/$f" -o "$dir/$(basename "$f")" 2>/dev/null; then
+                    fetched=$((fetched + 1))
                 fi
-            done <<< "$source_prop_names"
+            done <<< "$files"
+            [ "$fetched" -eq 0 ] && continue
         fi
-
-        if [ -n "$current_prop_names" ]; then
-            while IFS= read -r prop; do
-                [ -z "$prop" ] && continue
-                if [ -n "$source_prop_names" ] && ! echo "$source_prop_names" | grep -qx "$prop"; then
-                    props_removed+=("$prop")
-                fi
-            done <<< "$current_prop_names"
-        fi
-
-        # Only record components with actual changes
-        if [ ${#props_added[@]} -gt 0 ] || [ ${#props_removed[@]} -gt 0 ]; then
-            local added_json removed_json
-            added_json=$(printf '%s\n' "${props_added[@]+"${props_added[@]}"}" | jq -R . | jq -sc .)
-            removed_json=$(printf '%s\n' "${props_removed[@]+"${props_removed[@]}"}" | jq -R . | jq -sc .)
-
-            local entry
-            entry=$(jq -n \
-                --arg comp "$component" \
-                --argjson added "$added_json" \
-                --argjson removed "$removed_json" \
-                '{component: $comp, propsAdded: $added, propsRemoved: $removed}')
-            props_diff_entries+=("$entry")
-
-            local label=""
-            [ ${#props_added[@]} -gt 0 ]   && label+="${GREEN}+${#props_added[@]} props${NC} "
-            [ ${#props_removed[@]} -gt 0 ]  && label+="${RED}-${#props_removed[@]} props${NC}"
-            echo -e "  ${BOLD}$component${NC}: $label"
-        fi
-
+        entries=$(echo "$entries" | jq --arg c "$component" --arg d "$dir" '. + [{component: $c, dir: $d}]')
     done <<< "$components"
 
-    # Write to temp file
-    if [ ${#props_diff_entries[@]} -eq 0 ]; then
-        echo "[]" > /tmp/mzn_props_diff.json
-        info "No prop-level changes detected"
+    echo "$entries" > "$batch"
+    echo "$batch"
+}
+
+fetch_component_props_diff() {
+    step "Step 3: Comparing documented API against source (names, types, defaults)"
+
+    local batch
+    batch=$(prepare_source_batch)
+    local count doc_count
+    count=$(jq 'length' "$batch")
+    doc_count=$(ls "$COMPONENTS_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
+    detail "Source located for $count of $doc_count documented component(s)$([ -n "$SOURCE_DIR" ] && echo " (local: $SOURCE_DIR)" || echo " (github: $GITHUB_BRANCH)")"
+
+    # A component whose source could not be fetched is skipped entirely, and a
+    # skipped component looks exactly like a component with no differences.
+    # Saying so is the difference between "42 differ" and "42 differ, 18 unchecked".
+    if [ "$count" -lt "$doc_count" ]; then
+        local missing
+        missing=$(comm -23 \
+            <(ls "$COMPONENTS_DIR"/*.md | xargs -n1 basename | sed 's/\.md$//' | sort) \
+            <(jq -r '.[].component' "$batch" | sort) | tr '\n' ' ')
+        warn "No source for $((doc_count - count)) documented component(s) — NOT checked: $missing"
+        [ -z "$SOURCE_DIR" ] && detail "Pass --source-dir <mezzanine checkout> for full coverage and cross-folder type resolution."
+    fi
+
+    # Zero coverage must never read as "everything matches".
+    if [ "$count" -eq 0 ] && [ "$doc_count" -gt 0 ]; then
+        error "Located source for 0 of $doc_count components — refusing to report a clean run."
+        error "Check network access, or pass --source-dir <mezzanine checkout>."
+        exit 1
+    fi
+
+    local root_args=()
+    if [ "$FRAMEWORK" = "react" ] && [ -n "$SOURCE_DIR" ]; then
+        # Lets a base declared in a sibling component folder resolve
+        # (DatePickerProps extends Omit<PickerTriggerProps, ...>) instead of
+        # being reported as 30 removed props.
+        root_args=(--root "$SOURCE_DIR/packages/react/src")
+    fi
+
+    if ! python3 "$SCRIPT_DIR/extract-api.py" --framework "$FRAMEWORK" --batch "$batch" \
+        "${root_args[@]+"${root_args[@]}"}" > "$WORK_DIR/source-api.json" 2>"$WORK_DIR/extract.err"; then
+        warn "extract-api.py failed: $(head -n3 "$WORK_DIR/extract.err")"
+        echo "[]" > "$PROPS_DIFF_FILE"
+        return
+    fi
+
+    if ! python3 "$SCRIPT_DIR/doc-api.py" --framework "$FRAMEWORK" \
+        --components-dir "$COMPONENTS_DIR" > "$WORK_DIR/doc-api.json" 2>"$WORK_DIR/doc.err"; then
+        warn "doc-api.py failed: $(head -n3 "$WORK_DIR/doc.err")"
+        echo "[]" > "$PROPS_DIFF_FILE"
+        return
+    fi
+
+    # One-line `export type A = B;` aliases in @mezzanine-ui/core, so a doc naming
+    # `RadioSize` and a source naming `InputCheckSize` are not reported as a
+    # mismatch. Only available from a local checkout.
+    local alias_args=()
+    if [ -n "$SOURCE_DIR" ] && [ -d "$SOURCE_DIR/packages/core/src" ]; then
+        python3 "$SCRIPT_DIR/extract-api.py" --framework "$FRAMEWORK" \
+            --alias-root "$SOURCE_DIR/packages/core/src" \
+            --alias-out "$WORK_DIR/aliases.json" > /dev/null 2>&1 || true
+        [ -s "$WORK_DIR/aliases.json" ] && alias_args=(--aliases "$WORK_DIR/aliases.json")
+    fi
+
+    python3 "$SCRIPT_DIR/reconcile-api.py" --framework "$FRAMEWORK" \
+        --docs "$WORK_DIR/doc-api.json" --source "$WORK_DIR/source-api.json" \
+        "${alias_args[@]+"${alias_args[@]}"}" --summary \
+        > "$PROPS_DIFF_FILE"
+
+    local changed
+    changed=$(jq 'length' "$PROPS_DIFF_FILE")
+    if [ "$changed" = "0" ]; then
+        info "Documented API matches source for every component"
     else
-        printf '%s\n' "${props_diff_entries[@]}" | jq -sc . > /tmp/mzn_props_diff.json
-        info "${#props_diff_entries[@]} component(s) have prop changes"
+        info "$changed component(s) differ from source — triage per RECONCILIATION.md before editing"
     fi
 }
 
 # ─── Step 3b: Angular-specific diff (selector / CVA / DI tokens / imports) ────
-
+#
+# Selector and CVA come from the source extraction and are compared against the
+# cache; tokens and standalone imports are compared against the DOCS by
+# reconcile-api.py (Step 3), because that is the claim a consumer copies.
 fetch_angular_specific_diff() {
-    [ "$FRAMEWORK" = "ng" ] || { echo "[]" > /tmp/mzn_ng_specific.json; return; }
+    [ "$FRAMEWORK" = "ng" ] || { echo "[]" > "$NG_SPECIFIC_FILE"; return; }
 
-    step "Step 3b: Analyzing Angular-specific changes"
+    step "Step 3b: Analyzing Angular-specific changes (selector / CVA)"
 
     local api_index="$CACHE_DIR/component-index.json"
-    [ -f "$api_index" ] || { warn "component-index.json missing — skipping ng-specific diff"; echo "[]" > /tmp/mzn_ng_specific.json; return; }
+    if [ ! -f "$api_index" ] || [ ! -f "$WORK_DIR/source-api.json" ]; then
+        warn "component-index.json or source extraction missing — skipping ng-specific diff"
+        echo "[]" > "$NG_SPECIFIC_FILE"
+        return
+    fi
 
-    local components
-    components=$(ls "$COMPONENTS_DIR"/*.md 2>/dev/null | xargs -I{} basename {} .md | sort -u)
+    # A cached selector that still exists on ANY directive in the family has not
+    # been renamed — the main-file heuristic just picked a different file. That
+    # check is why `[mznCardGroup] -> [mznBaseCard]` is not reported.
+    jq -n \
+        --slurpfile src "$WORK_DIR/source-api.json" \
+        --slurpfile cache "$api_index" \
+        '
+        ($src[0]) as $s | ($cache[0].components) as $c |
+        [ $c | to_entries[]
+          | .key as $name | .value as $entry
+          | ($s[$name] // empty) as $api
+          | {
+              component: $name,
+              selectorChanged: (
+                if ($api.selector // "") != "" and ($entry.selector // "") != ""
+                   and $api.selector != $entry.selector
+                   and (($api.selectors // []) | index($entry.selector)) == null
+                then {
+                  from: $entry.selector,
+                  to: $api.selector,
+                  typeChanged: ((($entry.selector | startswith("[")) != ($api.selector | startswith("["))))
+                } else null end
+              ),
+              cvaChange: (
+                if ($entry.cva // false) != ($api.cva // false)
+                then (if $api.cva then "added" else "removed" end)
+                else null end
+              )
+            }
+          | select(.selectorChanged != null or .cvaChange != null)
+        ]' > "$NG_SPECIFIC_FILE"
 
-    local entries=()
-
-    while IFS= read -r component; do
-        local source_path
-        source_path=$(component_source_path "$component")
-        [ -z "$source_path" ] && continue
-
-        local content
-        if ! content=$(curl -sf "$GITHUB_RAW_BASE/$source_path" 2>/dev/null); then
-            continue
-        fi
-
-        # Selector: first string inside @Component({ selector: '...' }) or @Directive.
-        # `|| true` guards against components with no explicit selector.
-        local source_selector
-        source_selector=$(echo "$content" \
-            | grep -oE "selector:[[:space:]]*['\"][^'\"]+['\"]" \
-            | head -n1 \
-            | sed -E "s/selector:[[:space:]]*['\"]//; s/['\"]//" || true)
-        local source_selector_kind="tag"
-        [[ "$source_selector" == \[*\] ]] && source_selector_kind="attribute"
-
-        # CVA: implements ControlValueAccessor or provideValueAccessor(X).
-        local source_has_cva="false"
-        if echo "$content" | grep -qE 'implements[[:space:]][^{]*ControlValueAccessor|provideValueAccessor\('; then
-            source_has_cva="true"
-        fi
-
-        # DI tokens provided BY this component: lines like "provide: MZN_XXX".
-        local source_tokens
-        source_tokens=$(echo "$content" \
-            | grep -oE 'provide:[[:space:]]*MZN_[A-Z_]+' \
-            | grep -oE 'MZN_[A-Z_]+' | sort -u || true)
-
-        # Standalone imports: extract the `imports: [...]` array from the
-        # decorator block (may span multiple lines). Awk grabs the first array
-        # starting at `imports:`; regex then strips identifiers. `|| true`
-        # tolerates components with no `imports` array.
-        local source_imports
-        source_imports=$(echo "$content" \
-            | awk '/imports:[[:space:]]*\[/{flag=1; buf=""} flag{buf=buf $0; if (index($0,"]")>0){print buf; flag=0}}' \
-            | head -n1 \
-            | grep -oE '[A-Z][A-Za-z0-9]+' \
-            | grep -v '^NgIf$\|^NgFor$\|^NgTemplateOutlet$' \
-            | sort -u || true)
-
-        # Cached (current documented) values.
-        local cache_selector cache_has_cva cache_tokens cache_imports
-        cache_selector=$(jq -r --arg c "$component" '.components[$c].selector // empty' "$api_index")
-        cache_has_cva=$(jq -r --arg c "$component" '.components[$c].cva // false | tostring' "$api_index")
-        cache_tokens=$(jq -r --arg c "$component" '.components[$c].providesTokens // [] | .[]' "$api_index" 2>/dev/null | sort -u)
-        cache_imports=$(jq -r --arg c "$component" '.components[$c].standaloneImports // [] | .[]' "$api_index" 2>/dev/null | sort -u)
-
-        # Skip if no cache entry for this component (can't diff what doesn't exist).
-        [ -z "$cache_selector" ] && continue
-
-        # Compute diffs.
-        local selector_change='null'
-        if [ -n "$source_selector" ] && [ "$source_selector" != "$cache_selector" ]; then
-            local cache_kind="tag"
-            [[ "$cache_selector" == \[*\] ]] && cache_kind="attribute"
-            local kind_changed="false"
-            [ "$cache_kind" != "$source_selector_kind" ] && kind_changed="true"
-            selector_change=$(jq -n \
-                --arg from "$cache_selector" \
-                --arg to   "$source_selector" \
-                --arg kc   "$kind_changed" \
-                '{from: $from, to: $to, typeChanged: ($kc == "true")}')
-        fi
-
-        local cva_change='null'
-        if [ "$cache_has_cva" != "$source_has_cva" ]; then
-            [ "$source_has_cva" = "true" ] && cva_change='"added"' || cva_change='"removed"'
-        fi
-
-        local tokens_added_json tokens_removed_json
-        tokens_added_json=$(comm -23 <(echo "$source_tokens") <(echo "$cache_tokens") | jq -R . | jq -sc '[.[] | select(. != "")]')
-        tokens_removed_json=$(comm -13 <(echo "$source_tokens") <(echo "$cache_tokens") | jq -R . | jq -sc '[.[] | select(. != "")]')
-
-        local imports_added_json imports_removed_json
-        imports_added_json=$(comm -23 <(echo "$source_imports") <(echo "$cache_imports") | jq -R . | jq -sc '[.[] | select(. != "")]')
-        imports_removed_json=$(comm -13 <(echo "$source_imports") <(echo "$cache_imports") | jq -R . | jq -sc '[.[] | select(. != "")]')
-
-        # Only emit entry if any field actually changed.
-        local any_change="false"
-        [ "$selector_change" != "null" ] && any_change="true"
-        [ "$cva_change" != "null" ]      && any_change="true"
-        [ "$(echo "$tokens_added_json"   | jq 'length')" != "0" ] && any_change="true"
-        [ "$(echo "$tokens_removed_json" | jq 'length')" != "0" ] && any_change="true"
-        [ "$(echo "$imports_added_json"   | jq 'length')" != "0" ] && any_change="true"
-        [ "$(echo "$imports_removed_json" | jq 'length')" != "0" ] && any_change="true"
-
-        [ "$any_change" = "false" ] && continue
-
-        local entry
-        entry=$(jq -n \
-            --arg comp "$component" \
-            --argjson selectorChanged "$selector_change" \
-            --argjson cvaChange        "$cva_change" \
-            --argjson tokensAdded      "$tokens_added_json" \
-            --argjson tokensRemoved    "$tokens_removed_json" \
-            --argjson importsAdded     "$imports_added_json" \
-            --argjson importsRemoved   "$imports_removed_json" \
-            '{
-                component: $comp,
-                selectorChanged: $selectorChanged,
-                cvaChange:       $cvaChange,
-                providersTokensChanged:  { added: $tokensAdded,  removed: $tokensRemoved  },
-                standaloneImportsChanged:{ added: $importsAdded, removed: $importsRemoved }
-             }')
-        entries+=("$entry")
-
-        local label=""
-        [ "$selector_change" != "null" ] && label+="${YELLOW}selector${NC} "
-        [ "$cva_change"      != "null" ] && label+="${CYAN}cva${NC} "
-        [ "$(echo "$tokens_added_json$tokens_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${BLUE}tokens${NC} "
-        [ "$(echo "$imports_added_json$imports_removed_json" | jq -s 'map(length) | add')" != "0" ] && label+="${GREEN}imports${NC}"
-        echo -e "  ${BOLD}$component${NC}: $label"
-    done <<< "$components"
-
-    if [ ${#entries[@]} -eq 0 ]; then
-        echo "[]" > /tmp/mzn_ng_specific.json
-        info "No Angular-specific changes detected"
+    local changed
+    changed=$(jq 'length' "$NG_SPECIFIC_FILE")
+    if [ "$changed" = "0" ]; then
+        info "No selector or CVA changes detected"
     else
-        printf '%s\n' "${entries[@]}" | jq -sc . > /tmp/mzn_ng_specific.json
-        info "${#entries[@]} component(s) have Angular-specific changes"
+        jq -r '.[] | "  \(.component): \(if .selectorChanged then "selector " else "" end)\(if .cvaChange then "cva" else "" end)"' "$NG_SPECIFIC_FILE"
+        info "$changed component(s) have Angular-specific changes"
     fi
 }
 
@@ -885,10 +921,10 @@ generate_manifest() {
     local props_diff="[]"
     local ng_specific="[]"
 
-    [ -f /tmp/mzn_component_diff.json ] && component_diff=$(cat /tmp/mzn_component_diff.json)
-    [ -f /tmp/mzn_changelog.json ]      && changelog=$(cat /tmp/mzn_changelog.json)
-    [ -f /tmp/mzn_props_diff.json ]     && props_diff=$(cat /tmp/mzn_props_diff.json)
-    [ -f /tmp/mzn_ng_specific.json ]    && ng_specific=$(cat /tmp/mzn_ng_specific.json)
+    [ -f "$COMPONENT_DIFF_FILE" ] && component_diff=$(cat "$COMPONENT_DIFF_FILE")
+    [ -f "$CHANGELOG_FILE" ]      && changelog=$(cat "$CHANGELOG_FILE")
+    [ -f "$PROPS_DIFF_FILE" ]     && props_diff=$(cat "$PROPS_DIFF_FILE")
+    [ -f "$NG_SPECIFIC_FILE" ]    && ng_specific=$(cat "$NG_SPECIFIC_FILE")
 
     # Build per-component work items with priority.
     # Every work item, regardless of priority, must be resolved during verification;
@@ -915,23 +951,85 @@ generate_manifest() {
             priority:   "HIGH"
         }) as $removed_items |
 
-        # Components with prop (or Angular input) changes
-        ($props_diff // []) | map({
-            component:  .component,
-            action:     "UPDATE_PROPS",
-            reason:     (
-                (if (.propsAdded | length) > 0 then
-                    "Props added: " + (.propsAdded | join(", "))
-                else "" end) +
-                (if (.propsAdded | length) > 0 and (.propsRemoved | length) > 0 then "; " else "" end) +
-                (if (.propsRemoved | length) > 0 then
-                    "Props removed: " + (.propsRemoved | join(", "))
-                else "" end)
-            ),
-            priority:   (if (.propsRemoved | length) > 0 then "HIGH" else "MEDIUM" end),
-            propsAdded:   .propsAdded,
-            propsRemoved: .propsRemoved
-        }) as $changed_items |
+        # Components whose documented API differs from source. Names, types and
+        # defaults are separate work items: a wrong type is not fixed by adding
+        # the missing prop, and reviewers triage them differently.
+        ($props_diff // []) | map(
+            . as $d |
+            [
+                (if ((.propsAdded | length) > 0 or (.propsRemoved | length) > 0) then {
+                    component: $d.component,
+                    action:    "UPDATE_PROPS",
+                    reason:    (
+                        (if (.propsAdded | length) > 0 then ("Undocumented in source: " + (.propsAdded | join(", "))) else "" end) +
+                        (if (.propsAdded | length) > 0 and (.propsRemoved | length) > 0 then "; " else "" end) +
+                        (if (.propsRemoved | length) > 0 then ("Documented but not found in source: " + (.propsRemoved | join(", "))) else "" end)
+                    ),
+                    priority:     (if (.propsRemoved | length) > 0 then "HIGH" else "MEDIUM" end),
+                    propsAdded:   .propsAdded,
+                    propsRemoved: .propsRemoved
+                } else empty end),
+                (if (.typeMismatches | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_TYPES",
+                    reason:    ("Type differs from source: " + ([.typeMismatches[] | "\(.prop // .output) doc=\(.doc) source=\(.source)"] | join("; "))),
+                    priority:  "HIGH",
+                    typeMismatches: .typeMismatches
+                } else empty end),
+                (if (.defaultMismatches | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_DEFAULTS",
+                    reason:    ("Default differs from source: " + ([.defaultMismatches[] | "\(.prop) doc=\(.doc) source=\(.source)"] | join("; "))),
+                    priority:  "HIGH",
+                    defaultMismatches: .defaultMismatches
+                } else empty end),
+                (if ((.defaultMissing // []) | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_DEFAULTS",
+                    reason:    ("Source sets a default the table leaves blank: " + ([.defaultMissing[] | "\(.prop)=\(.source)"] | join("; "))),
+                    priority:  "MEDIUM",
+                    defaultMissing: .defaultMissing
+                } else empty end),
+                (if ((.requiredMismatches // []) | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_REQUIRED",
+                    reason:    ("Required in source, optional in docs: " + ([.requiredMismatches[] | .prop] | join(", "))),
+                    priority:  "HIGH",
+                    requiredMismatches: .requiredMismatches
+                } else empty end),
+                (if ((.outputsAdded // []) | length) > 0 or ((.outputsRemoved // []) | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_OUTPUTS",
+                    reason:    (
+                        (if ((.outputsAdded // []) | length) > 0 then ("Undocumented outputs: " + (.outputsAdded | join(", "))) else "" end) +
+                        (if ((.outputsAdded // []) | length) > 0 and ((.outputsRemoved // []) | length) > 0 then "; " else "" end) +
+                        (if ((.outputsRemoved // []) | length) > 0 then ("Documented outputs absent from source: " + (.outputsRemoved | join(", "))) else "" end)
+                    ),
+                    priority:  "HIGH",
+                    outputsAdded:   (.outputsAdded // []),
+                    outputsRemoved: (.outputsRemoved // [])
+                } else empty end),
+                (if ((.tokensAdded // []) | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_PROVIDERS_TOKENS",
+                    reason:    ("Provided by the component but never mentioned in the doc: " + (.tokensAdded | join(", "))),
+                    priority:  "MEDIUM",
+                    tokens:    .tokensAdded
+                } else empty end),
+                (if ((.importsAdded // []) | length) > 0 or ((.importsRemoved // []) | length) > 0 then {
+                    component: $d.component,
+                    action:    "UPDATE_STANDALONE_IMPORTS",
+                    reason:    (
+                        (if ((.importsAdded // []) | length) > 0 then ("Exported but not in the doc Import block: " + (.importsAdded | join(", "))) else "" end) +
+                        (if ((.importsAdded // []) | length) > 0 and ((.importsRemoved // []) | length) > 0 then "; " else "" end) +
+                        (if ((.importsRemoved // []) | length) > 0 then ("Doc tells consumers to import a symbol the package does not export as a directive: " + (.importsRemoved | join(", "))) else "" end)
+                    ),
+                    priority:  (if ((.importsRemoved // []) | length) > 0 then "HIGH" else "MEDIUM" end),
+                    importsAdded:   (.importsAdded // []),
+                    importsRemoved: (.importsRemoved // [])
+                } else empty end)
+            ]
+        ) | add // [] as $changed_items |
 
         # Angular-specific work items — one per triggered field per component.
         # String-building uses jq interpolation `\(...)` everywhere to avoid
@@ -950,35 +1048,7 @@ generate_manifest() {
                     action:    "UPDATE_CVA",
                     reason:    "ControlValueAccessor \($c.cvaChange) - affects Reactive Forms integration docs",
                     priority:  "HIGH"
-                } else empty end),
-                (.providersTokensChanged.added   // [] | (if length > 0 then {
-                    component: $c.component,
-                    action:    "UPDATE_PROVIDERS_TOKENS",
-                    reason:    "DI tokens added (\(length))",
-                    priority:  "MEDIUM",
-                    tokens:    .
-                } else empty end)),
-                (.providersTokensChanged.removed // [] | (if length > 0 then {
-                    component: $c.component,
-                    action:    "UPDATE_PROVIDERS_TOKENS",
-                    reason:    "DI tokens removed (\(length))",
-                    priority:  "HIGH",
-                    tokens:    .
-                } else empty end)),
-                (.standaloneImportsChanged.added   // [] | (if length > 0 then {
-                    component: $c.component,
-                    action:    "UPDATE_STANDALONE_IMPORTS",
-                    reason:    "Imports added (\(length))",
-                    priority:  "MEDIUM",
-                    imports:   .
-                } else empty end)),
-                (.standaloneImportsChanged.removed // [] | (if length > 0 then {
-                    component: $c.component,
-                    action:    "UPDATE_STANDALONE_IMPORTS",
-                    reason:    "Imports removed (\(length))",
-                    priority:  "MEDIUM",
-                    imports:   .
-                } else empty end))
+                } else empty end)
             ]
         ) | add // [] as $ng_items |
 
@@ -1040,11 +1110,9 @@ generate_manifest() {
 # ─── Cleanup temp files ───────────────────────────────────────────────────────
 
 cleanup() {
-    rm -f /tmp/mzn_component_diff.json
-    rm -f /tmp/mzn_changelog.json
-    rm -f /tmp/mzn_props_diff.json
-    rm -f /tmp/mzn_ng_specific.json
-    rm -f "$NG_COMPONENT_MAP_FILE"
+    # Everything lives under $WORK_DIR, so one removal covers this run and
+    # cannot touch a concurrent run's state.
+    [ -n "$WORK_DIR" ] && rm -rf "$WORK_DIR"
 }
 
 # ─── Main ─────────────────────────────────────────────────────────────────────

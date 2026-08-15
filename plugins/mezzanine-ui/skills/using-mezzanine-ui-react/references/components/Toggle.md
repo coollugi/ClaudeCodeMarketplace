@@ -10,6 +10,9 @@
 
 A toggle switch component for turning a single option on or off. Supports controlled and uncontrolled modes with optional label and supporting text.
 
+> **Aliases** — Switch (MUI・Ant Design・Bootstrap `form-switch`) · Slide Toggle · 開關 · 切換開關 · Figma `Toggle / *`
+> **Not for** — 多選清單（用 [`Checkbox`](Checkbox.md) / `CheckboxGroup`）；互斥的多選一（用 [`RadioGroup type="segment"`](Radio.md)）。`Switch` 已不在公開 API，一律改用 `Toggle`。
+
 ## Import
 
 ```tsx

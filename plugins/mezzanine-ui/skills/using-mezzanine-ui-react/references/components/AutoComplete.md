@@ -4,7 +4,13 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-autocomplete--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.4.2 (2026-08-14)
+>
+> ⚠️ **1.4.2 行為變更**：選項比對的預設從**大小寫敏感改為不敏感**。先前的比對 RegExp 漏了 `i` flag，
+> 輸入 `vir` 找不到 `Virginia`；1.4.2 修正後預設不分大小寫，並新增 `caseSensitive` prop 供退回舊行為。
+> 若你的專案倚賴舊的大小寫敏感行為，升級後需明確傳 `caseSensitive`。
+> 同時 `addable` 模式的重複檢查也改為尊重這個 flag（`isSameOptionName()`），
+> 避免對清單上已存在、只差大小寫的選項再次提供「建立」動作。
 
 Autocomplete component combining input with dropdown menu. Supports search filtering and dynamic option creation. Internally uses `Dropdown` and `SelectTrigger` composition.
 
@@ -37,6 +43,7 @@ type AutoCompleteProps = AutoCompleteSingleProps | AutoCompleteMultipleProps;
 | ---------------------------- | ------------------------------------------------------ | ---------------------- | ---------------------------------------- |
 | `addable`                    | `boolean`                                              | `false`                | Whether options can be dynamically added |
 | `asyncData`                  | `boolean`                                              | `false`                | Whether data is async                    |
+| `caseSensitive`              | `boolean`                                              | `false`                | **New in 1.4.2.** Whether option matching respects letter casing. When `false` (default), typing `colorado` matches an option named `Colorado`. Applies to both option filtering and the `addable` duplicate check. |
 | `clearSearchText`            | `boolean`                                              | `true`                 | Whether to clear search text on blur. When false, typed text persists after blur. In single mode, a clearable icon appears if user typed without selecting. |
 | `createSeparators`           | `string[]`                                             | `[',', '+', '\n']`     | Separator characters for creating options |
 | `createActionText`           | `(text: string) => string`                             | -                      | Custom create button text function       |

@@ -66,7 +66,7 @@ import type { BreadcrumbItemData } from '@mezzanine-ui/ng/breadcrumb';
 | ------------------------------ | ------------------------------------------------------------------------- |
 | `MznBreadcrumb`                | 主要麵包屑容器，負責 slot 計算與 overflow 邏輯                             |
 | `MznBreadcrumbItem`            | 單一項目（連結或純文字），通常由 `MznBreadcrumb` 內部渲染                   |
-| `MznBreadcrumbOverflowMenu`    | `@internal` — Overflow 按鈕 + 下拉選單，由 `MznBreadcrumb[condensed]` 自動管理，不建議直接使用 |
+| `MznBreadcrumbOverflowMenu`    | `@internal` — Overflow 按鈕 + 下拉選單，由 `MznBreadcrumb[condensed]` 自動管理，不建議直接使用。其 `collapsed`（`readonly (BreadcrumbItemData & { id: string })[]`，required）由父層注入，**不對外提供**，因此本文件不列 Inputs 表 |
 | `MznBreadcrumbOverflowMenuItem`| `@internal` — Overflow 選單中的單一項目，由 `MznBreadcrumbOverflowMenu` 內部渲染，不建議直接使用 |
 
 > **Note**: `MznBreadcrumbOverflowMenu` and `MznBreadcrumbOverflowMenuItem` are marked `@internal` in the source JSDoc. They are publicly exported but managed automatically by `MznBreadcrumb` — avoid using them directly.

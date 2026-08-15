@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""Regression suite for guard-component-style-override.sh.
+
+Every case is a real payload: the first six are what failing clean-session
+replays actually shipped or what an independent audit used to evade the guard;
+the SILENT block is what a developer legitimately writes. Run from this
+directory: python3 test_guard.py
+"""
+
+import json
+import subprocess
+import sys
+
+CASES = [
+    ("BLOCK", "mzn class selector", "a.module.scss",
+     ".statusPending :global(.mzn-tag__label) { color: var(--mzn-color-text-warning); }"),
+    ("BLOCK", "attribute selector (audit evasion)", "a.module.scss",
+     '.foo :global([class*="mzn-tag__label"]) { color: var(--mzn-color-text-warning); }'),
+    ("BLOCK", "token re-point in a component rule", "a.scss",
+     ".statusApproved { --mzn-color-background-brand-faint: var(--mzn-color-background-success-faint); }"),
+    ("BLOCK", "inline style on Badge", "S.tsx",
+     "<Badge variant={v} style={{ backgroundColor: x }} />"),
+    ("BLOCK", "arrow handler before style (audit evasion)", "S.tsx",
+     '<Badge onClick={() => setOpen(true)} style={{ backgroundColor: "#16a34a" }} />'),
+    ("BLOCK", "css-in-js in .ts", "s.ts",
+     "const S = css`.mzn-tag { background-color: red; }`;"),
+    ("SILENT", ":root token theming is sanctioned", "theme.scss",
+     ":root { --mzn-color-brand-primary: #0055ff; }"),
+    ("SILENT", "[data-theme] token theming", "theme.scss",
+     '[data-theme="dark"] { --mzn-color-surface: #111; }'),
+    ("SILENT", "a .mzn- mention in a comment", "a.scss",
+     "/* do not touch .mzn-tag */\n.wrapper { color: red; }"),
+    ("SILENT", "ordinary layout css", "p.module.scss",
+     ".body { display: grid; padding-inline: var(--mzn-spacing-x); }"),
+    ("SILENT", "layout-only rule on a component selector", "a.scss",
+     ".mzn-table { margin-top: 24px; width: 100%; }"),
+    ("SILENT", "the correct status-column answer", "S.tsx",
+     '<Badge variant="dot-success" text="啟用" />'),
+    ("SILENT", "the correct segmented-control answer", "S.tsx",
+     '<RadioGroup type="segment"><Radio type="segment" value="a">最新</Radio></RadioGroup>'),
+    ("WARN", "className on a component", "S.tsx",
+     "<Tag type=\"static\" label={l} className={STATUS_CLASS[status]} />"),
+    ("WARN", "arrow handler before className", "S.tsx",
+     "<Tag onClick={() => x()} className={styles.chip} />"),
+    ("BLOCK", "style object one indirection away", "S.tsx",
+     "const chipStyle = { backgroundColor: x };\n<Badge style={chipStyle} />"),
+    ("BLOCK", "space after = in attribute selector", "a.scss",
+     '.foo :global([class*= "mzn-tag"]) { background: red; }'),
+    ("WARN", "layout-only style object stays a warning", "S.tsx",
+     "const box = { marginTop: 8 };\n<Badge style={box} />"),
+    # --- found by independent audit, round 2 ---
+    ("SILENT", "playwright locator constant in .ts", "selectors.ts",
+     "export const TAG_SELECTOR = '.mzn-tag';\nexport const CHART = { color: '#fff' };"),
+    ("SILENT", "e2e locator then a palette object", "e2e.ts",
+     "await page.locator('.mzn-table-row').click();\nconst palette = { color: 'red' };"),
+    ("BLOCK", "styled-components template literal", "s.ts",
+     "const S = styled.div`.mzn-tag { background-color: #16a34a; }`;"),
+    ("BLOCK", "scss nesting: outer paints, child nested", "a.scss",
+     ".mzn-button { background-color: red; &:hover { background-color: blue; } }"),
+    ("BLOCK", "scss nesting: child first, outer paints", "a.scss",
+     ".mzn-tag { &:hover { color: red; } background-color: #16a34a; }"),
+    ("BLOCK", "scss nesting: &__element", "a.scss",
+     ".mzn-tag { &__label { color: red; } }"),
+    ("SILENT", "scss nesting, layout only", "a.scss",
+     ".mzn-table { margin-top: 8px; &:hover { margin-top: 4px; } }"),
+    ("BLOCK", "theme root appended to disarm the check", "a.scss",
+     ".mzn-tag, :root { --mzn-color-background-brand-faint: red; }"),
+    ("BLOCK", "component-scoped .theme-* class", "a.scss",
+     ".theme-chip { --mzn-color-background-brand-faint: red; }"),
+    ("BLOCK", "component-scoped .dark class", "a.scss",
+     ".dark { --mzn-color-background-brand-faint: red; }"),
+    ("BLOCK", "unquoted attribute value", "a.scss",
+     ".foo [class*=mzn-tag__label] { color: red; }"),
+    ("BLOCK", "whitespace inside the brackets", "a.scss",
+     '.foo [ class *= "mzn-tag__label" ] { color: red; }'),
+    ("SILENT", ":root.dark compound theming", "theme.scss",
+     ":root.dark { --mzn-color-surface: #111; }"),
+    ("SILENT", "html[data-theme] theming", "theme.scss",
+     'html[data-theme="dark"] { --mzn-color-surface: #111; }'),
+    # --- found by independent audit, round 3 ---
+    ("BLOCK", "<style> in .vue (regression guard)", "C.vue",
+     "<template><div/></template>\n<style>.mzn-tag { background-color: red; }</style>"),
+    ("BLOCK", "<style> in .html (regression guard)", "p.html",
+     "<style>.mzn-tag { background-color: #16a34a; }</style>"),
+    ("BLOCK", "<style> in .svelte (regression guard)", "C.svelte",
+     "<style>.mzn-tag { background-color: red; }</style>"),
+    ("BLOCK", "styled-components with ${} interpolation", "s.ts",
+     "const S = styled.div`.mzn-tag { background-color: ${brand}; }`;"),
+    ("BLOCK", "interpolated arrow value", "s.ts",
+     "const S = styled.div`.mzn-tag { color: ${(p) => p.theme.brand}; }`;"),
+    ("WARN", "@media print override is environmental", "a.scss",
+     "@media print { .mzn-badge { background: none; color: #000; } }"),
+    ("WARN", "forced-colors a11y override", "a.scss",
+     "@media (forced-colors: active) { .mzn-button { border-color: CanvasText; } }"),
+    ("WARN", "prefers-contrast a11y override", "a.scss",
+     "@media (prefers-contrast: more) { .mzn-tag { border-color: #000; } }"),
+    ("BLOCK", "ordinary breakpoint media query still blocks", "a.scss",
+     "@media (min-width: 768px) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "interpolation with nested braces", "s.ts",
+     "const S = styled.div`.mzn-badge { color: ${({ theme }) => theme.brand}; }`;"),
+    # --- found by independent audit, round 4: the environment exemption was a bypass ---
+    ("BLOCK", "print wrapper around a design override", "a.scss",
+     "@media print { .mzn-badge { background: hotpink; color: #ff00ff; } }"),
+    ("BLOCK", "forced-colors wrapper with arbitrary hex", "a.scss",
+     "@media (forced-colors: active) { .mzn-tag { background: #ff00ff; } }"),
+    ("BLOCK", "breakpoint smuggled inside a print block", "a.scss",
+     "@media print { @media (min-width: 768px) { .mzn-badge { background: red; } } }"),
+    # The case above is confounded: its colour fails the value gate whatever the
+    # nesting rule does. These pin the nesting rule itself, with an ink payload.
+    ("WARN", "ink rule nested: print outer, breakpoint inner", "a.scss",
+     "@media print { @media (min-width: 768px) { .mzn-tag { background: none; color: #000; } } }"),
+    ("WARN", "ink rule nested: breakpoint outer, print inner", "a.scss",
+     "@media (min-width: 768px) { @media print { .mzn-tag { color: #000; } } }"),
+    ("WARN", "ink rule flattened with `and` (same condition)", "a.scss",
+     "@media print and (min-width: 768px) { .mzn-tag { color: #000; } }"),
+    ("BLOCK", "ink payload but no environmental ancestor", "a.scss",
+     "@media (min-width: 768px) { .mzn-tag { color: #000; } }"),
+    ("BLOCK", "comma-widened branch, nested, ink payload", "a.scss",
+     "@media screen, print { @media (min-width: 768px) { .mzn-tag { color: #000; } } }"),
+    ("BLOCK", "token forgery nested inside print", "a.scss",
+     "@media print { @media (min-width: 768px) { .statusApproved { --mzn-color-background-brand-faint: red; } } }"),
+    ("BLOCK", "token forgery inside a print block", "a.scss",
+     "@media print { .statusApproved { --mzn-color-background-brand-faint: red; } }"),
+    ("BLOCK", "brand colour in a print block", "a.scss",
+     "@media print { .mzn-tag { background: #16a34a; } }"),
+    ("WARN", "print with a grey value", "a.scss",
+     "@media print { .mzn-tag { color: #333333; } }"),
+    ("WARN", "forced-colors system colour with !important", "a.scss",
+     "@media (forced-colors: active) { .mzn-button { color: ButtonText !important; } }"),
+    ("BLOCK", "colour hidden in a shorthand's third token", "a.scss",
+     "@media print { .mzn-tag { border: 1px solid red; } }"),
+    ("BLOCK", "brand colour in a background shorthand", "a.scss",
+     "@media print { .mzn-tag { background: no-repeat center #16a34a; } }"),
+    ("WARN", "achromatic shorthand is still fine", "a.scss",
+     "@media print { .mzn-tag { border: 1px solid #000; } }"),
+    ("BLOCK", "function-valued colour in print", "a.scss",
+     "@media print { .mzn-tag { background: color-mix(in srgb, red, blue); } }"),
+    ("BLOCK", "var() in print", "a.scss",
+     "@media print { .mzn-tag { background: var(--brand); } }"),
+    ("BLOCK", "system colour misused outside forced-colors", "a.scss",
+     "@media print { .mzn-tag { color: Highlight; } }"),
+    # --- round 5: the INVERTED and WIDENED spellings of each exemption.
+    # Two rounds of holes came from testing only the intended spelling of a new
+    # rule, so every exemption now carries its negation, its default-state value
+    # and its comma-list widening.
+    ("BLOCK", "media list widened with screen", "a.scss",
+     "@media screen, print { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "media list widened with a breakpoint", "a.scss",
+     "@media print, (max-width: 600px) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "negated print selects everything else", "a.scss",
+     "@media not print { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "forced-colors: none is the default state", "a.scss",
+     "@media (forced-colors: none) { .mzn-tag { background-color: red; } }"),
+    ("BLOCK", "prefers-contrast: no-preference is the default", "a.scss",
+     "@media (prefers-contrast: no-preference) { .mzn-tag { background-color: red; } }"),
+    ("WARN", "bare (forced-colors) feature query", "a.scss",
+     "@media (forced-colors) { .mzn-button { border-color: CanvasText; } }"),
+    ("WARN", "rgb(128 128 128) space-separated grey", "a.scss",
+     "@media print { .mzn-tag { color: rgb(128 128 128); } }"),
+    ("WARN", "hsl grey (zero saturation)", "a.scss",
+     "@media print { .mzn-tag { color: hsl(0, 0%, 50%); } }"),
+    ("BLOCK", "hsl with saturation is not achromatic", "a.scss",
+     "@media print { .mzn-tag { color: hsl(140, 60%, 45%); } }"),
+    ("WARN", "`only print` is legacy noise, still print-only", "a.scss",
+     "@media only print { .mzn-tag { color: #000; } }"),
+    ("WARN", "`and` narrows, so the branch stays print-only", "a.scss",
+     "@media print and (min-width: 600px) { .mzn-tag { color: #000; } }"),
+    ("BLOCK", "`and` narrowing does not excuse a brand colour", "a.scss",
+     "@media print and (min-width: 600px) { .mzn-tag { background: red; } }"),
+    ("BLOCK", "default state ANDed with a breakpoint", "a.scss",
+     "@media (forced-colors: none) and (min-width: 600px) { .mzn-tag { color: #000; } }"),
+    ("BLOCK", "@supports is not an environment", "a.scss",
+     "@supports (display: grid) { .mzn-tag { background: red; } }"),
+    ("BLOCK", "environmental outer, ordinary inner", "a.scss",
+     "@media print { @media (min-width: 600px) { .mzn-tag { background: red; } } }"),
+    ("WARN", "ButtonGroup faking a segmented control", "S.tsx",
+     '<ButtonGroup>\n<Button variant={s==="a"?"base-primary":"base-secondary"}>A</Button>\n'
+     '<Button variant={s==="b"?"base-primary":"base-secondary"}>B</Button>\n</ButtonGroup>'),
+]
+
+
+def run(path: str, content: str) -> str:
+    payload = json.dumps({"tool_input": {"file_path": f"/tmp/{path}", "content": content}})
+    result = subprocess.run(
+        ["./guard-component-style-override.sh"], input=payload, capture_output=True, text=True
+    )
+    if result.returncode == 2:
+        return "BLOCK"
+    return "WARN" if result.stdout.strip() else "SILENT"
+
+
+def main() -> int:
+    failures = 0
+    for expected, name, path, content in CASES:
+        got = run(path, content)
+        if got != expected:
+            failures += 1
+        print(f"{'ok  ' if got == expected else 'FAIL'} {name:44s} expected={expected:6s} got={got}")
+    print(f"\n{len(CASES) - failures}/{len(CASES)} passed")
+    return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

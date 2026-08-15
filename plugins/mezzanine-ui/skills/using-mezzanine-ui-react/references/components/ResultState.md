@@ -8,6 +8,9 @@
 
 Result state component for displaying operation results or status pages.
 
+> **Aliases** — Result (Ant Design) · Status Page · Success / Error Page · 結果頁 · 404 / 500 頁
+> **Not for** — 列表沒有資料時的佔位（用 [`Empty`](Empty.md)）
+
 ## Import
 
 ```tsx

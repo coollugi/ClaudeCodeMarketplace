@@ -344,7 +344,7 @@ function SearchForm() {
 ### Basic Data Table
 
 ```tsx
-import { Table, Tag, Button, Modal } from '@mezzanine-ui/react';
+import { Table, Badge, Button, Modal } from '@mezzanine-ui/react';
 import { useState } from 'react';
 
 function DataTable() {
@@ -365,8 +365,14 @@ function DataTable() {
     {
       title: 'Status',
       dataIndex: 'status',
-      render: (status: string) => (
-        <Tag type="static" label={status === 'active' ? 'Active' : 'Inactive'} />
+      // 狀態欄用 Badge 的 dot-* + text，不是 Tag —— Tag 沒有語意色，
+      // 且表格狀態欄用圓點才不會與同列的 text-link 操作按鈕混淆。
+      // 見 references/components/Badge.md → 表格狀態欄用 dot-*
+      render: (record: DataItem) => (
+        <Badge
+          variant={record.status === 'active' ? 'dot-success' : 'dot-inactive'}
+          text={record.status === 'active' ? 'Active' : 'Inactive'}
+        />
       ),
     },
     {

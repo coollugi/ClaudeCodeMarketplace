@@ -6,6 +6,9 @@
 
 結果狀態元件，用於操作結果或狀態頁面的顯示。根據 `type` 自動選擇對應的語意圖示（information、success、help、warning、error、failure），搭配 `title` 及 `description` 傳遞訊息。操作按鈕透過 `<ng-content select="[actions]">` 投射。
 
+> **Aliases** — Result (Ant Design) · Status Page · Success / Error Page · 結果頁 · 404 / 500 頁
+> **Not for** — 列表沒有資料時的佔位（用 [`MznEmpty`](Empty.md)）
+
 ## Import
 
 ```ts

@@ -8,6 +8,9 @@
 
 Alert banner component for displaying important system-level notifications. Supports both component-based and imperative APIs. Internally based on `createNotifier`, with sorting rules: non-info first, newest first. Renders using Portal `alert` level.
 
+> **Aliases** — Alert · Banner · System Banner · 系統警示 · 頁面級橫幅 · Figma `Alert Banner`
+> **Not for** — 區塊內的說明／警語（用 [`InlineMessage`](InlineMessage.md)）。`AlertBanner` 走 Portal 的 `alert` 層（`position: sticky; top: 0`），**不會待在你放它的位置**，而是浮到頁面頂端蓋住 `PageHeader`。
+
 ## Import
 
 ```tsx

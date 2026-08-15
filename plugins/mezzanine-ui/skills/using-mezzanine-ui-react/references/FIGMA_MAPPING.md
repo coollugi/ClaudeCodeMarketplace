@@ -229,6 +229,16 @@ v2 uses a new variant naming system:
 | `Radio / Checked`              | `<Radio checked>`                        |
 | `RadioGroup`                   | `<RadioGroup>`                           |
 
+### Segmented Control *(Figma 名稱與元件名不同 — 重要)*
+
+Figma 裡叫 **`Segmented Control`**，程式碼裡是 **`Radio` 的 `segment` 模式**。設計師與工程師講的是同一個東西、兩個名字。分段切換 / 檢視切換 / 排序切換一律對應到這裡，**不要用多顆 `Button` 的 variant 差異模擬**。
+
+| Figma Variant                                     | React Props                                       |
+| ------------------------------------------------- | ------------------------------------------------- |
+| `Segmented Control / Page / Text/Dense/Enabled`   | `<Radio type="segment">`（未選中）                |
+| `Segmented Control / Page / Text/Dense/Selected`  | `<Radio type="segment">`（選中，由 group 控制）   |
+| `Segmented Control Set / Text/Sub/2/Text Only`    | `<RadioGroup type="segment" size="sub">` 兩個選項 |
+
 ### Switch *(已移除 v1.4.1)*
 
 ⚠️ Switch component has been removed in v1.4.1 (deprecated since v1.1.0). Use Toggle instead.

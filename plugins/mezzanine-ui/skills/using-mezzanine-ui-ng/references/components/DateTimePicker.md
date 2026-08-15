@@ -78,6 +78,7 @@ import { MznCalendarConfigProvider } from '@mezzanine-ui/ng/calendar';
 | `inputRightProps`        | `MznDateTimePickerInputProps`            | —          | Bundle: right input escape-hatch props                          |
 | `popperProps`            | `MznDateTimePickerPopperProps`           | —          | Bundle: calendar popper options                                 |
 | `popperPropsTime`        | `MznDateTimePickerPopperProps`           | —          | Bundle: time panel popper options                               |
+| `referenceDate` | `DateType \| undefined` | `undefined` | 面板初次開啟時的參考日期（未選值時決定顯示哪個月份） |
 
 > Inputs declared with signal API (`input()`) accept both static and reactive values.
 
