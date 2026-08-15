@@ -96,6 +96,7 @@ def normalize_type(text: Optional[str]) -> Optional[str]:
     out = re.sub(r"\s+>", ">", out)
     out = re.sub(r"<\s*\|\s*", "<", out)
     out = re.sub(r",\s*\|\s*", ", ", out)
+    out = re.sub(r"\(\s*\|\s*", "(", out)
     out = re.sub(r"<any>", "", out)
     out = _expand_template_union(out)
     # Parameter NAMES are prose, not type identity: `(date: DateType) => boolean`
