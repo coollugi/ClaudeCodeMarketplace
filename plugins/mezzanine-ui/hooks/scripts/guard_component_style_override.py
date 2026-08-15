@@ -91,20 +91,29 @@ def is_environment_at_rule(rule: str) -> bool:
     for branch in branches:
         if re.search(r"\bnot\b", branch, re.I):
             return False
-        if re.fullmatch(r"print", branch.strip(), re.I):
-            continue
-        feature = re.fullmatch(r"\(\s*([\w-]+)\s*(?::\s*([^)]+?)\s*)?\)", branch, re.I)
-        if not feature:
-            return False
-        name = feature.group(1).lower()
-        value = (feature.group(2) or "").strip().lower()
-        if name not in ("forced-colors", "prefers-contrast"):
-            return False
-        # A bare feature query is true whenever the feature is not in its
-        # default state, so it counts; the explicit default does not.
-        if value in ("none", "no-preference"):
+        # `and` NARROWS a branch, so one environmental conjunct is enough:
+        # `print and (min-width: 600px)` still only applies on paper. `only` is
+        # legacy noise. A comma (handled above) is what widens.
+        conjuncts = [c.strip() for c in re.split(r"\band\b", branch, flags=re.I) if c.strip()]
+        conjuncts = [re.sub(r"^only\s+", "", c, flags=re.I).strip() for c in conjuncts]
+        if not any(_is_environmental_conjunct(c) for c in conjuncts):
             return False
     return True
+
+
+def _is_environmental_conjunct(conjunct: str) -> bool:
+    if re.fullmatch(r"print", conjunct, re.I):
+        return True
+    feature = re.fullmatch(r"\(\s*([\w-]+)\s*(?::\s*([^)]+?)\s*)?\)", conjunct, re.I)
+    if not feature:
+        return False
+    name = feature.group(1).lower()
+    value = (feature.group(2) or "").strip().lower()
+    if name not in ("forced-colors", "prefers-contrast"):
+        return False
+    # A bare feature query is true whenever the feature is not in its default
+    # state, so it counts; the explicit default does not.
+    return value not in ("none", "no-preference")
 
 # Values that genuinely belong to an ink-saving print rule: achromatic, or an
 # instruction to drop the paint entirely.
