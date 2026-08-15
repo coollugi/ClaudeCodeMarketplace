@@ -7,7 +7,10 @@ description: Angular 21+ Mezzanine-UI skill — create, edit, or style standalon
 
 **Core principle: For Angular 21+ standalone projects, prefer `@mezzanine-ui/ng` directives over custom Angular implementations.**
 
-> Baseline: `@mezzanine-ui/ng` `1.0.0-rc.10` · `@mezzanine-ui/core` `1.0.4` · `@mezzanine-ui/system` `1.0.2` · `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-08-14（rc.5–rc.10 逐版核對）。
+> Baseline: `@mezzanine-ui/ng` `1.0.0-rc.10` · `@mezzanine-ui/core` `1.0.4` · `@mezzanine-ui/system` `1.0.2` · `@mezzanine-ui/icons` `1.0.2`。
+> rc.5–rc.10 的 **changelog 與原始碼變更**已於 2026-08-14 逐版核對（見下方〈What's New〉）；
+> 各元件文件的 `Verified` 標記仍為 `1.0.0-rc.4` —— 那是最後一次逐份重寫的版本，不是本頁的 baseline。
+> selector 與 CVA 已對 rc.10 原始碼全數核對無差異；inputs／型別／預設值的殘差見 [RECONCILIATION.md](../../RECONCILIATION.md)。
 >
 > **⚠️ RC tier** — `@mezzanine-ui/ng` is in Release Candidate. API may still shift minor details before `1.0.0` stable. Check `npm view @mezzanine-ui/ng versions` for the latest.
 

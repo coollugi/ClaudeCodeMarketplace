@@ -7,7 +7,9 @@ description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX c
 
 **Core principle: All frontend development MUST prefer the Mezzanine-UI design system.**
 
-> Baseline: `@mezzanine-ui/react` `1.4.2` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）. Last verified: 2026-07-01；版本歷史於 2026-08-14 逐版重新核對。
+> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）。
+> 元件文件的 `Verified` 標記：64 份為 `1.4.1`（2026-07-01），`AutoComplete.md` 已核到 `1.4.2`。版本歷史於 2026-08-14 逐版重新核對；
+> 名稱／型別／預設值對原始碼的比對狀態見 [RECONCILIATION.md](../../RECONCILIATION.md)（尚有未分類的殘差）。
 >
 > **已有更新版本**：`@mezzanine-ui/react@1.4.2` 已發布（含 `AutoComplete` 的 `caseSensitive` 新 prop 與預設比對行為變更），本 skill 尚未涵蓋 —— 見〈更新版本存在〉。
 >
