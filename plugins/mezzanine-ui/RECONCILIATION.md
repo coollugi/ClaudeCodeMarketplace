@@ -254,31 +254,54 @@ component by copying an existing project's code — that proved the project had
 self-corrected, not that the skill worked. A control run against the previous
 skill version reproduced both original bugs in a clean environment.
 
-### Replay result, 2026-08-15 — both prompts still fail
+### Replay results, 2026-08-15 — 10 clean sessions, and what finally moved
 
-Two fresh agents (Sonnet, no project code to copy from, no prior context) were
-given the two prompts below. **Both consulted `using-mezzanine-ui-react` and both
-still reproduced the exact documented mis-use.**
+Fresh agents (Sonnet, no project code to copy from, no prior context), given the
+two prompts below. 9 of 10 said they consulted the skill.
 
-| Prompt | Expected | Got |
-| ------ | -------- | --- |
-| status column, five states, filled pill | `Badge variant="dot-*" text`, zero overrides, escalate the pill to design | `Badge variant="text-*"` + a `.statusPill` class adding `background-color` / `border-radius` / `padding`, plus an inline `style` |
-| sort toggle, two joined buttons | `RadioGroup type="segment"` | `ButtonGroup` + two `Button`s, variant swapped to fake the selected state |
+| Prompt | A: skill as it was | B: after adding a top-of-SKILL reverse-index block and a copy-paste snippet to Badge.md |
+| ------ | ------------------ | ------ |
+| status column, filled pill | 0 / 2 correct | **1 / 3** |
+| sort toggle, joined buttons | 0 / 2 correct | **0 / 3** |
 
-Neither failure is a content gap. The reverse index in `SKILL.md` names both
-answers, names both wrong answers verbatim (`❌ Tag + className 覆寫底色`,
-`❌ 多顆 Button 用 variant 差異模擬選中`), tells table status columns to prefer
-`dot-*` over `text-*`, and the tripwire explicitly pre-empts the rationalisation
-the first agent used — it argued the override was compliant *because* it only
-used design tokens, which is the case the tripwire spells out as still wrong.
-`RadioGroup type="segment"` is real (`packages/react/src/Radio/Radio.tsx`), and
-`SegmentedControl` does not exist in `packages/react/src` at all.
+The single pass named the new `Badge.md` section as its source, so the snippet
+does work — for a session that opens `Badge.md`. Everything else failed, and the
+transcripts say why:
 
-So the guidance is present, correct, and reachable by grep — and did not bind.
-Placement and wording are not the remaining problem; something about *when* the
-reverse index is consulted is. Do not "fix" this by adding more prose to the same
-three mechanisms without a replay proving the change moved the result: that is
-the failure mode this file exists to prevent. A human should decide the next move.
+- **The redirects were already in the files the failing sessions opened.**
+  `Tag.md:12` reads 狀態呈現…狀態請用 `Badge variant="dot-*"`; three sessions read
+  `Tag.md` and shipped `Tag` plus a background override. `Button.md:12` reads
+  不要用多顆 Button 模擬分段控制項…用 `RadioGroup type="segment"`; five sessions read
+  `Button.md` and shipped exactly that.
+- One session re-derived the whole rule from the core SCSS, concluded correctly
+  that Badge's `text-*` has no background — and then chose `Tag` + overrides.
+- Two sessions justified the override as compliant *because* the values were
+  design tokens, which is the case the tripwire spells out as still wrong.
+
+**This is not a discovery problem, a placement problem, or a wording problem.**
+The guidance is in the reader's path, names the answer inline, and names the
+wrong answer verbatim. It loses to "the design spec says filled pill". Adding
+more prose to the same three mechanisms is not a fix, and the B arm is the
+evidence: a whole new top-of-file block moved the segment prompt 0/2 → 0/3.
+
+### What binds instead: `hooks/guard-component-style-override.sh`
+
+A `PreToolUse` hook on `Write|Edit`, because a tool result is not advisory:
+
+| Tier | Fires on | Verified against |
+| ---- | -------- | ---------------- |
+| BLOCK | a CSS rule selecting `.mzn-*`, a rule redefining a `--mzn-*` property, or an inline `style` painting a Mezzanine element | the exact SCSS and JSX two failing replays produced |
+| WARN | `className` / `style` on a Mezzanine component; `::ng-deep` setting appearance | the third failing replay's `Tag className={...}` |
+| WARN | `<ButtonGroup>` with two `<Button>`s whose `variant` is a state ternary | the shape all five segment failures shipped |
+
+Silent on legitimate layout CSS, on a plain `ButtonGroup`, and on both correct
+answers. Note the honest limit: the segment mis-use leaves no CSS smell, so it
+is caught by shape-matching one specific pattern — a different spelling of the
+same mistake will pass. The BLOCK tier is the durable half.
+
+The replays could not test the hook: they were told not to write files, and the
+hook fires on writes. What it is verified against is the recorded output of the
+sessions that failed — which is where the two real bugs shipped from.
 
 The check that counts, in a clean session with no project to copy from:
 

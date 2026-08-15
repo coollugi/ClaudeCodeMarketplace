@@ -15,6 +15,27 @@ description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX c
 >
 > Check latest version: `npm view @mezzanine-ui/react versions` or see [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases).
 
+## 動手前 30 秒（選錯元件的成本比選慢高得多）
+
+**寫下第一行 JSX 之前**，先用「UI 概念」反查元件名 → [§元件選用](#元件選用必讀--先用ui-概念反查元件名)。
+Mezzanine 的元件名反映實作結構，照別的設計系統去猜會系統性選錯，而且**錯法看起來很合理**。
+
+兩個最常錯、且已在真實專案出包的：
+
+| 設計稿長這樣 | 正解 | 錯法（實際發生過） |
+| ------------ | ---- | ------------------ |
+| 表格裡的狀態欄，多種顏色 | `<Badge variant="dot-success" text="啟用" />` | `Tag` / `Badge variant="text-*"` 再補 `className` 上底色 |
+| 兩顆連在一起、選中的較深 | `<RadioGroup type="segment">` + `<Radio type="segment">` | 兩顆 `Button` 換 `variant` 假裝選中（`ButtonGroup` 也一樣錯） |
+
+**設計稿要求的效果，元件零覆寫做不到時 —— 停下來回報，不要自己補樣式。**
+把「用 design token 寫覆寫」當成合規的變通是**錯的**：token 只能用在你自己的版面元素上，
+不能拿來改元件外觀（完整規則見〈三條鐵則〉第 3 條）。這種情況的正確產出是：
+**先給零覆寫可交付的版本，再用一句話說明差在哪、需要設計確認**，例如
+
+> 目前用 `Badge variant="dot-*" text` 實作，狀態色與文字都到位；設計稿上那層**填色膠囊底**
+> 在 Mezzanine 的 Badge 上零覆寫做不出來（`dot-*` / `text-*` 沒有背景色，`count-*` 只吃數字），
+> 需要設計確認要改用圓點樣式，還是另外立一個新元件需求。
+
 ## Resource Overview
 
 | Type               | Resource                                                         | Purpose                |

@@ -48,6 +48,37 @@ import type { BadgeProps } from '@mezzanine-ui/react';
 
 ---
 
+## 表格狀態欄：直接複製這段
+
+五種狀態、五種顏色、零覆寫。`variant` 就是語意色的選擇器，不需要也不應該再加 `className`：
+
+```tsx
+import { Badge } from '@mezzanine-ui/react';
+import type { BadgeDotVariant } from '@mezzanine-ui/core/badge';
+
+const STATUS: Record<string, { label: string; variant: BadgeDotVariant }> = {
+  pending:    { label: '待審核', variant: 'dot-warning' },
+  approved:   { label: '已核准', variant: 'dot-success' },
+  rejected:   { label: '已拒絕', variant: 'dot-error' },
+  disabled:   { label: '已停用', variant: 'dot-inactive' },
+  processing: { label: '處理中', variant: 'dot-info' },
+};
+
+// Table column render
+render: (row) => <Badge variant={STATUS[row.status].variant} text={STATUS[row.status].label} />
+```
+
+**設計稿畫成填色膠囊時**，這段仍然是要交付的版本 —— 膠囊底色零覆寫做不出來（見上方〈沒有膠囊底色〉），
+所以連同這句話一起回報，讓設計決定：
+
+> 狀態欄已用 `Badge variant="dot-*" text` 實作，語意色與文字到位；設計稿的**填色膠囊底**
+> 在 Mezzanine 做不到零覆寫（`dot-*` / `text-*` 沒有背景色，`count-*` 只接受數字），
+> 需要設計確認改用圓點樣式或另開元件需求。
+
+自己補 `background` / `border-radius`（即使值是 design token）**不是**變通方案，那是違反樣式規範。
+
+---
+
 ## 表格狀態欄用 `dot-*`，不要用 `text-*`
 
 實測（放大對照）：表格狀態欄用 `text-success` 時，「啟用」與同一列操作欄的 `base-text-link`「編輯」**幾乎無法分辨** —— 同色系、同字重、同字級，狀態看起來像可點的連結。
