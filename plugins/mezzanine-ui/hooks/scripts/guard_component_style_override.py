@@ -57,15 +57,21 @@ COMPONENTS = (
 # different property and is deliberately not matched here.
 # Whitespace and quoting are both optional in an attribute selector, and both
 # spellings were used to walk past the first two versions of this check.
-COMPONENT_SELECTOR = re.compile(
-    r"\.mzn-[\w-]|&[\w-]*|\[\s*class\s*[*^~|$]?=\s*[\"']?\s*mzn-", re.I
-)
 COMPONENT_LITERAL = re.compile(r"\.mzn-[\w-]|\[\s*class\s*[*^~|$]?=\s*[\"']?\s*mzn-", re.I)
 
 # Text that is code, not a selector. `css_rules` used to hand everything before
 # a `{` to the matcher, so a Playwright locator constant followed by any object
 # literal produced a hard block with an unreadable "selector".
 NOT_A_SELECTOR = re.compile(r"[;=]|\breturn\b|\b(const|let|var|function|await|import|export)\b")
+
+# A component rule inside one of these is responding to the environment, not
+# restyling the design system: print stylesheets drop ink, and forced-colors /
+# prefers-contrast exist to satisfy accessibility requirements the component's
+# own props cannot express. Warn, never block.
+ENVIRONMENT_AT_RULE = re.compile(
+    r"@media[^{]*\b(print|forced-colors|prefers-contrast|prefers-reduced-motion|prefers-reduced-transparency)\b",
+    re.I,
+)
 
 
 def strip_css_comments(text: str) -> str:
@@ -123,7 +129,7 @@ def css_rules(text: str):
     and `&__label` must resolve to `.mzn-tag__label`. This walks brace depth and
     keeps a selector stack instead.
     """
-    stack: List[str] = []
+    stack: List[tuple] = []
     buffer = ""
     i, n = 0, len(text)
     while i < n:
@@ -145,22 +151,25 @@ def css_rules(text: str):
             # silent.
             head, _, tail = buffer.rpartition(";")
             if head.strip() and stack:
-                yield stack[-1], head
+                yield stack[-1][0], head, stack[-1][1]
             selector = " ".join((tail if head or _ else buffer).split())
-            parent = stack[-1] if stack else ""
-            if selector.startswith("&"):
+            parent, at_rules = stack[-1] if stack else ("", ())
+            if selector.startswith("@"):
+                # An at-rule wraps its children; it is context, not a selector.
+                effective, at_rules = parent, at_rules + (selector,)
+            elif selector.startswith("&"):
                 effective = parent + selector[1:] if parent else selector
             elif parent:
                 effective = f"{parent} {selector}"
             else:
                 effective = selector
-            stack.append(effective)
+            stack.append((effective, at_rules))
             buffer = ""
             i += 1
             continue
         if ch == "}":
             if stack:
-                yield stack[-1], buffer
+                yield stack[-1][0], buffer, stack[-1][1]
                 stack.pop()
             buffer = ""
             i += 1
@@ -172,20 +181,35 @@ def css_rules(text: str):
         buffer += ch
         i += 1
     if stack:
-        yield stack[-1], buffer
+        yield stack[-1][0], buffer, stack[-1][1]
 
 
 def css_regions(path: str, text: str) -> List[str]:
     """The parts of a file that can contain CSS.
 
-    In a `.ts`/`.tsx` file only template literals qualify. Scanning the whole
-    file meant a selector constant (`const SEL = '.mzn-tag';`) followed by any
-    object literal was parsed as a rule and hard-blocked — Playwright and Cypress
-    selector maps are exactly that shape.
+    Three different shapes, and getting this wrong is how a guard goes quiet:
+
+    * `.css`/`.scss`/... — the whole file.
+    * `.html`/`.vue`/`.svelte` — the bodies of `<style>` elements. Restricting
+      every non-stylesheet file to template literals disarmed these three
+      formats entirely, since `<style>` contains no backticks.
+    * `.ts`/`.tsx`/`.jsx` — template literals only. Scanning the whole file
+      meant a selector constant (`const SEL = '.mzn-tag';`) followed by any
+      object literal was parsed as a rule and hard-blocked; Playwright and
+      Cypress selector maps are exactly that shape.
+
+    `${…}` interpolation is replaced with a placeholder rather than left in
+    place: its `{` opened a phantom nested block, so `background-color: ${brand}`
+    was swallowed into a selector and never attributed to the rule — which is
+    the spelling styled-components users actually write.
     """
     if path.endswith((".css", ".scss", ".sass", ".less")):
         return [text]
-    return re.findall(r"`([^`]*)`", text, re.S)
+    regions: List[str] = []
+    if path.endswith((".html", ".vue", ".svelte")):
+        regions += re.findall(r"<style[^>]*>(.*?)</style>", text, re.S | re.I)
+    regions += re.findall(r"`([^`]*)`", text, re.S)
+    return [re.sub(r"\$\{[^{}]*\}", "INTERPOLATED", region) for region in regions]
 
 
 def classify(path: str, added: str) -> Optional[str]:
@@ -198,24 +222,32 @@ def classify(path: str, added: str) -> Optional[str]:
         return None
 
     blocking: List[str] = []
+    softened: List[str] = []
 
     for region in css_regions(path, added):
         source = strip_css_comments(region)
-        for selector, body in css_rules(source):
+        for selector, body, at_rules in css_rules(source):
             # `=` is code punctuation everywhere EXCEPT inside an attribute
             # selector, so test the selector with `[...]` spans removed.
             if not selector or NOT_A_SELECTOR.search(re.sub(r"\[[^\]]*\]", "", selector)):
                 continue
             targets_component = bool(COMPONENT_LITERAL.search(selector))
             paints = re.search(rf"(^|[;{{\s]){APPEARANCE}\s*:", body)
+            environment = any(ENVIRONMENT_AT_RULE.search(rule) for rule in at_rules)
             if targets_component and paints:
                 flat = " ".join(selector.split())
-                blocking.append(f"selector `{flat}` sets component appearance")
+                if environment:
+                    softened.append(f"`{flat}` restyles a component inside {at_rules[-1]}")
+                else:
+                    blocking.append(f"selector `{flat}` sets component appearance")
             for token in re.finditer(r"(--mzn-[\w-]+)\s*:", body):
                 # Declaring tokens on a theme root is the sanctioned way to
                 # re-theme; re-pointing one inside a component-scoped rule is
                 # forging the component's semantics while looking compliant.
                 if is_theme_root(" ".join(selector.split())):
+                    continue
+                if environment:
+                    softened.append(f"`{selector.split()[0]}` re-points {token.group(1)} inside {at_rules[-1]}")
                     continue
                 flat = " ".join(selector.split())
                 blocking.append(f"`{selector.split()[0]}` redefines `{token.group(1)}`")
@@ -226,6 +258,15 @@ def classify(path: str, added: str) -> Optional[str]:
             if item not in unique:
                 unique.append(item)
         return "BLOCK\n" + "\n".join(f"  - {item}" for item in unique[:5])
+
+    if softened:
+        return (
+            "WARN\n  - "
+            + softened[0]
+            + " — print and forced-colors / prefers-contrast overrides are a"
+            " legitimate response to the environment, so this is not blocked."
+            " Confirm it is environment-driven and not a design override."
+        )
 
     if is_markup:
         # `const chipStyle = { backgroundColor: x }` then `style={chipStyle}` is

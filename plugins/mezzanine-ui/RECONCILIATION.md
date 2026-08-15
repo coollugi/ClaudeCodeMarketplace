@@ -254,7 +254,7 @@ the failure mode this file exists to prevent, and it nearly happened here.
 | Curated docs vs exhaustive source (`+prop` 361 / 28) | every large component | doc right | Docs table the props a consumer sets; source merges every sub-component and inherited base. `Breadcrumb` extracts 45 props it shares with the collapsed-menu Dropdown. Closing it means tabling internal API — forbidden by this file |
 | DOM-inherited props (`children`, `className`, `style`, `ref`) | ~30 react components | scanner-limited | The base is `NativeElementPropsWithoutKeyAndRef` → React's own typings, outside the monorepo |
 | Sub-component props sharing a name | `Checkbox.label`, `Cropper.*`, `Input.strength*` | doc right | One doc covers the family; `Checkbox.md:118` already explains that the JSDoc says `'Select all'` while the runtime fallback is `''` — more precise than the comparer |
-| Cross-package type aliases the map misses | react 6, ng 3 *(the compared-and-differing subset of the row above)* | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
+| Cross-package type aliases the map misses | react 6, ng 3 *(the subset that was compared and differed; the “types skipped” row below counts the ones never compared at all)* | ambiguous | `--alias-out` resolves one-line `export type A = B;` (19 found). Generic aliases (`RadioSize<M>`) and re-export chains still need a real TS resolver |
 | Deliberately unexported config shapes | `Navigation.items` (ng) | doc right | `Navigation.md:23` states the config types are internal and unexported, and gives the shape inline — exactly the "do not document internal API to chase zero" rule |
 | Required-ness not stated in prose | 34 react, 3 ng | doc incomplete | Source is authoritative (`?` absent) but the blast radius is a compile error, not silent wrong behaviour. Mechanical to fix, deliberately not batch-applied without per-row review |
 | Types skipped, not verified | 177 react, 4 ng | scanner-limited | Cross-package aliases, doc abbreviations, generic parameters. Closing it needs a real TypeScript resolver, not more regex |
@@ -320,8 +320,17 @@ independent audit used to break the first version:
 - Element scanning is brace-aware, so `<Badge onClick={() => x} style={{…}} />`
   no longer slips through on the `>` inside the arrow.
 - A `.mzn-` mention inside a CSS comment no longer arms the following rule.
-- `.ts` is scanned for CSS smells (styled-components) inside template literals
-  only — scanning the whole file hard-blocked Playwright/Cypress selector maps.
+- CSS is read per file type: whole file for stylesheets, `<style>` bodies for
+  `.html`/`.vue`/`.svelte`, template literals for `.ts`/`.tsx`. Restricting every
+  non-stylesheet to template literals hard-blocked Playwright selector maps but
+  also silently disarmed the three markup formats — a regression an audit caught
+  because the suite had no case for them. `${…}` interpolation is neutralised
+  first, since its brace opened a phantom block and hid the spelling
+  styled-components users actually write.
+- A component rule inside `@media print`, `forced-colors`, `prefers-contrast` or
+  `prefers-reduced-motion` **warns instead of blocking**: those respond to the
+  environment, and two of them exist to meet accessibility requirements a
+  component's own props cannot express. An ordinary breakpoint query still blocks.
 - Rules are parsed with a brace-depth walker that resolves SCSS nesting, so
   `.mzn-tag { &__label { color: … } }` and declarations sitting beside a nested
   block are both attributed to the component. The flat regex missed the
@@ -330,6 +339,11 @@ independent audit used to break the first version:
   `:root` / `html` / `body` / `:host` / `[data-*]` (optionally compounded) count.
   Appending `, :root` used to disarm the check, and `.theme-*` / `.dark` matched
   ordinary component-scoped class names.
+
+Known residuals, kept rather than papered over: a hand-written CSS escape in an
+attribute selector (`[class*=mzn\2d tag]`) is not matched, and a bare `.dark {}`
+token block is treated as component-scoped — class-based dark mode must anchor
+to the root (`html.dark`), which the block message now says.
 
 Two honest limits remain. The segment mis-use has no CSS smell and is
 shape-matched, so a different spelling passes. And a status chip written as an

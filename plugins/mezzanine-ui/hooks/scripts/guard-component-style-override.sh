@@ -62,7 +62,9 @@ EOM
 Needing to override background / color / border means the wrong component was
 chosen - including re-pointing a --mzn-* custom property inside a component
 rule, which looks like "only design tokens" but forges the component semantics.
-Declaring tokens on :root / [data-theme] / :host is theming, and is allowed.
+Declaring tokens on :root / [data-theme] / :host is theming, and is allowed —
+anchor a class-based dark mode to the root (`html.dark`, `:root.dark`) rather
+than a bare `.dark`, which cannot be told apart from a component wrapper.
 Component semantic colour comes from the component own prop (variant / severity
 / type); a component with no such prop is not the component for the job.
 
