@@ -77,6 +77,7 @@ import type { SwitchProps, SwitchSize } from '@mezzanine-ui/react';
 ### Basic Usage
 
 ```tsx
+// ❌ Historical only — this import stopped resolving at 1.0.0. Use `Toggle`.
 import { Switch } from '@mezzanine-ui/react';
 
 // Uncontrolled
@@ -174,6 +175,7 @@ function SettingsForm() {
 ### With FormField
 
 ```tsx
+// ❌ Historical only — `Switch` stopped resolving at 1.0.0. Use `Toggle` in its place.
 import { FormField, Switch } from '@mezzanine-ui/react';
 
 <FormField

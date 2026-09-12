@@ -1309,7 +1309,7 @@ import {
 Time panel component, the underlying component for time pickers.
 
 ```tsx
-import { TimePanel, TimePanelColumn, TimePanelAction } from '@mezzanine-ui/react';
+import { TimePanel, TimePanelColumn } from '@mezzanine-ui/react';
 
 <TimePanel value={time} onChange={setTime} />
 ```
