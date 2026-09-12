@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Display/Tooltip`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Tooltip) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Tooltip) · Verified 1.5.1 (2026-09-12)
 
 Tooltip component for displaying additional information on mouse hover. Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 
@@ -30,7 +30,7 @@ Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 | ----------------- | -------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------ |
 | `anchor`          | `Element \| RefObject`                                                                                         | -      | Anchor element (alternative to children) |
 | `arrow`           | `boolean`                                                                                                      | `true` | Whether to show arrow          |
-| `children`        | `(opt: { onMouseEnter: MouseEventHandler; onMouseLeave: MouseEventHandler; ref: RefCallback<HTMLElement> }) => ReactElement` | - | Trigger element render function |
+| `children`        | `(opt: { 'aria-describedby': string \| undefined; onBlur: FocusEventHandler; onFocus: FocusEventHandler; onMouseEnter: MouseEventHandler; onMouseLeave: MouseEventHandler; ref: RefCallback<HTMLElement> }) => ReactElement` | - | Trigger element render function. **Since 1.5.0** the payload also carries `onFocus`/`onBlur` and `'aria-describedby'` — see Accessibility section below |
 | `className`       | `string`                                                                                                       | -      | Custom style class             |
 | `container`       | `Element \| RefObject<Element \| null> \| null`                                                                | -      | Portal container element (from `PortalProps`) |
 | `controllerRef`   | `Ref<PopperController>`                                                                                        | -      | Ref to access the underlying `useFloating` result |
@@ -45,7 +45,20 @@ Extends `PopperProps` (excluding `arrow`, `children`, `disablePortal`, `title`).
 | `ref`             | `RefObject<HTMLElement>`                                                                                       | -      | Tooltip root element ref       |
 | `title`           | `ReactNode`                                                                                                    | -      | Tooltip content                |
 
-> `children` must be a render function that receives `{ ref, onMouseEnter, onMouseLeave }` parameters. Tooltip visibility depends on the `open` prop or (internal `visible` state and `title` exists).
+> `children` must be a render function that receives `{ ref, onMouseEnter, onMouseLeave, onFocus, onBlur, 'aria-describedby' }` parameters — **spread the whole object onto the trigger element** rather than picking a subset, otherwise keyboard/assistive-tech users silently lose tooltip access. Tooltip visibility depends on the `open` prop or (internal `visible`/`focused` state and `title` exists).
+
+---
+
+## Accessibility (重要 — 1.5.0 起鍵盤與螢幕閱讀器可用)
+
+Tooltip 在 1.5.0 做了一輪無障礙補強，讓內容不再只有滑鼠使用者拿得到：
+
+- **render-prop payload 新增 `onFocus` / `onBlur`**：`focus` 開啟提示、`blur` 關閉提示，讓純鍵盤操作（Tab 到觸發元素）也能看到提示文字。
+- **提示內容節點帶 `role="tooltip"`**，並以 `useId()` 產生穩定 `id`（可用 `id` prop 覆寫），透過 `aria-describedby` 掛回觸發元素——僅在提示顯示時才有值，關閉時為 `undefined`。
+- **鍵盤 focus 觸發僅限 `:focus-visible`**：瀏覽器點擊 `<button>` 也會 focus 它，但那不是鍵盤導覽——若不收斂，滑鼠點一下就會跳出提示且黏著不放（要等失焦才收）。Tooltip 內部用 `element.matches(':focus-visible')` 判斷，只有這個判準為真時 `onFocus` 才真的開啟提示；不支援該 pseudo-class 的環境會退回「一律視為可見」，寧可多顯示也不讓鍵盤使用者拿不到。仍符合 WCAG 2.1 SC 1.4.13（該條款只要求 focus 觸發的內容可 dismiss / hover / persist，不要求滑鼠 focus 也要觸發）。
+- **開啟中按 `Escape` 可關閉**（`useDocumentEscapeKeyDown`）：只影響 hover/focus 驅動的提示，不影響 `open` 受控模式（受控時仍完全由呼叫端決定）。目標元素重新進入（hover 或 focus）時會重置這個「已被 Escape 關閉」的狀態，讓提示可以再次出現。
+
+這代表：一個只做 icon-only 按鈕的 `Button`，其 tooltip 文字現在同時對鍵盤與螢幕閱讀器存在，不再只服務滑鼠 hover。
 
 ---
 
@@ -77,13 +90,12 @@ Set position via `options.placement`:
 ```tsx
 import { Tooltip, Button } from '@mezzanine-ui/react';
 
+// Spread the whole payload — this also wires onFocus/onBlur and
+// aria-describedby, so the tooltip is reachable by keyboard/assistive tech,
+// not just mouse hover.
 <Tooltip title="This is tooltip text">
-  {({ ref, onMouseEnter, onMouseLeave }) => (
-    <Button
-      ref={ref}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+  {(tooltipProps) => (
+    <Button {...tooltipProps}>
       Hover me
     </Button>
   )}
@@ -207,12 +219,8 @@ function AnchorTooltip() {
 
 ```tsx
 <Tooltip title="Tooltip with custom offset" offsetMainAxis={16}>
-  {({ ref, onMouseEnter, onMouseLeave }) => (
-    <Button
-      ref={ref}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
+  {(tooltipProps) => (
+    <Button {...tooltipProps}>
       Hover with 16px offset
     </Button>
   )}
@@ -238,7 +246,7 @@ function AnchorTooltip() {
 
 1. **Keep content concise**: Tooltip content should be brief and clear
 2. **Use render function**: children must be a render function
-3. **Pass events**: Ensure `ref`, `onMouseEnter`, `onMouseLeave` are passed to the child element
+3. **Spread the full payload**: Pass the entire render-prop object (`ref`, `onMouseEnter`, `onMouseLeave`, `onFocus`, `onBlur`, `aria-describedby`) to the child element — picking only a subset silently breaks keyboard/screen-reader access
 4. **Appropriate delay**: Adjust `mouseLeaveDelay` based on UX requirements
 5. **Avoid overuse**: Important information should not only be placed in Tooltips
 6. **forwardRef support**: Component uses `forwardRef<HTMLDivElement>`, the root element can be accessed via ref

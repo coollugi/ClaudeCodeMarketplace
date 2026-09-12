@@ -1,13 +1,18 @@
 # Switch Component
 
-> ⚠️ **REMOVED in 1.4.1** (deprecated in 1.1.0) — This component is no longer exported from `@mezzanine-ui/react`.
+> ⚠️ **`Switch` is gone, and it left in two stages — neither of them 1.4.1.**
+>
+> 1. **`1.0.0-canary.3`** — the source directory `src/Switch/` was deleted and `src/Toggle/` took its place (verified: `src/Switch/Switch.tsx` returns 200 at `1.0.0-canary.2` and 404 at `1.0.0-canary.3`, while `src/Toggle/Toggle.tsx` does the reverse). From here on `Switch` survived only as a compatibility alias in `src/index.ts`: `export { default as Switch } from './Toggle'`, with `SwitchProps = ToggleProps` and `SwitchSize = ToggleSize`.
+> 2. **`1.0.0`** — that alias was dropped too (still present in `1.0.0-canary.4`'s `src/index.ts`, absent in `1.0.0`).
+>
+> It was never marked `@deprecated` at any point. Use [`Toggle`](Toggle.md). Note that the unrelated hook `useSwitchControlValue` still ships and is still exported from the main entry in 1.5.1 — its name is not evidence that the component exists.
 > **Use [Toggle](Toggle.md) instead.** The component was replaced by Toggle; import and use Toggle directly.
 
 > **Category**: Data Entry (removed)
 >
 > **Storybook**: `Data Entry/Toggle` (successor component)
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · **Removed** in 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · **Alias dropped** in 1.0.0 (verified against the published `src/index.ts` of `1.0.0-canary.4` and `1.0.0`)
 
 Toggle switch component for switching between two states (on/off). **The `Switch` component was renamed to `Toggle` in 1.0.0.** This document is retained for migration reference only — all new code should import and use `Toggle` directly. See [Toggle.md](Toggle.md) for the canonical 1.0.0 API.
 

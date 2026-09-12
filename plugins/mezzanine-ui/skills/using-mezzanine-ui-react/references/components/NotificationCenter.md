@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Feedback/Notification Center`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/NotificationCenter) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/NotificationCenter) · Verified 1.5.1 (2026-09-12)
 
 Notification center component for displaying global notifications. Supports both popup notification and drawer list modes.
 
@@ -49,9 +49,9 @@ Extends `NotifierData` (`children`, `onClose`, `duration`) and `NotificationConf
 | ---------------------------- | --------------------------------------- | ----------------- | ------------------------------------------- |
 | `children`                   | `ReactNode`                             | -                 | Notification content (inherited from NotifierData) |
 | `appendTips`                 | `string`                                | -                 | Append tips (drawer mode)                   |
-| `cancelButtonProps`          | `ButtonProps`                           | -                 | Cancel button props                         |
+| `cancelButtonProps`          | `ButtonProps`                           | `{}`              | Cancel button props                         |
 | `cancelButtonText`           | `string`                                | `'Cancel'`        | Cancel button text                          |
-| `confirmButtonProps`         | `ButtonProps`                           | -                 | Confirm button props                        |
+| `confirmButtonProps`         | `ButtonProps`                           | `{}`              | Confirm button props                        |
 | `confirmButtonText`          | `string`                                | `'Confirm'`       | Confirm button text                         |
 | `description`                | `string`                                | -                 | Notification description                    |
 | `duration`                   | `number \| false`                       | `false`           | Auto-close time (ms); `false` means no auto-close |

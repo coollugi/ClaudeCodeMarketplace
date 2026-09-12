@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Utility/Notifier`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Notifier)  · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Notifier)  · Verified 1.5.1 (2026-09-12)
 
 Notifier factory function for creating custom notification systems. It is the underlying implementation of Message, NotificationCenter, and other components.
 
@@ -30,15 +30,19 @@ import type {
 
 ## createNotifier Parameters
 
-| Parameter         | Type                                                      | Description                |
-| ----------------- | --------------------------------------------------------- | -------------------------- |
-| `config`          | `C extends NotifierConfig`                                | Custom notifier config     |
-| `duration`        | `number \| false`                                         | Default display time (ms)  |
-| `maxCount`        | `number`                                                  | Max visible count          |
-| `render`          | `(notifier: N & { key: Key }) => ReactNode`               | Notification render fn     |
-| `renderContainer` | `(children: ReactNode) => ReactNode`                      | Container render fn        |
-| `setRoot`         | `(root: HTMLDivElement) => void`                          | Set root element attributes|
-| `sortBeforeUpdate`| `(notifiers: (N & { key: Key })[]) => (N & { key: Key })[]` | Sort function           |
+`createNotifier<N, C>(props: CreateNotifierProps<N, C>)` — `CreateNotifierProps<N, C>` extends `NotifierConfig` (`duration`, `maxCount`).
+
+| Parameter         | Type                                                        | Required | Description                 |
+| ------------------ | ----------------------------------------------------------- | -------- | --------------------------- |
+| `config`           | `C extends NotifierConfig`                                   | -        | Custom notifier config      |
+| `duration`         | `number \| false`                                            | -        | Default display time (ms)   |
+| `maxCount`         | `number`                                                     | -        | Max visible count           |
+| `render`           | `(notifier: N & { key: Key }) => ReactNode`                  | **Yes**  | Notification render fn      |
+| `renderContainer`  | `(children: ReactNode) => ReactNode`                         | -        | Container render fn         |
+| `setRoot`          | `(root: HTMLDivElement) => void`                             | -        | Set root element attributes |
+| `sortBeforeUpdate` | `(notifiers: (N & { key: Key })[]) => (N & { key: Key })[]`  | -        | Sort function                |
+
+> `createNotifier` renders its notifiers through an internal (unexported) `NotifierManager` component. Its `controllerRef` and `defaultNotifiers` props are implementation details wired up automatically by `createNotifier` itself — they are not part of `CreateNotifierProps` and are never passed by a caller of `createNotifier`.
 
 ---
 
@@ -250,6 +254,13 @@ MessageWithSugar.success('Operation successful!');
 ```
 
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-notifier--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
+
+---
+
+## Behavior Notes
+
+- **`maxCount` overflow queues rather than drops**: once the number of displayed notifiers reaches `maxCount`, a new `add()` call does not render immediately — it is placed in an internal queue and displayed automatically as soon as an existing notifier is removed and a slot frees up. If `sortBeforeUpdate` is provided, it re-sorts the combined displayed+incoming set on every `add()` that would otherwise exceed `maxCount`, so a high-priority notifier can still bump a lower-priority one into the queue instead of being queued itself.
+- **`add()` with a repeated `key` updates in place**: calling `add()` again with a `key` that matches an already-displayed notifier replaces that notifier's data rather than appending a duplicate.
 
 ---
 

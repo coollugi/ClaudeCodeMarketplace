@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Display/Empty`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Empty) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Empty) · Verified 1.5.1 (2026-09-12)
 
 An empty state component for displaying placeholder screens when there is no data or in specific states.
 
@@ -130,15 +130,15 @@ import { Empty } from '@mezzanine-ui/react';
 // Single button (pass ButtonProps directly)
 <Empty
   title="No data available"
-  actions={{ content: 'Add Data', onClick: handleAdd }}
+  actions={{ children: 'Add Data', onClick: handleAdd }}
 />
 
 // Two buttons (object form: secondaryButton required, primaryButton optional)
 <Empty
   title="No data available"
   actions={{
-    secondaryButton: { content: 'Learn More', onClick: handleLearnMore },
-    primaryButton: { content: 'Add Data', onClick: handleAdd },
+    secondaryButton: { children: 'Learn More', onClick: handleLearnMore },
+    primaryButton: { children: 'Add Data', onClick: handleAdd },
   }}
 />
 ```
@@ -191,7 +191,7 @@ function SearchResults({ results, keyword }) {
         type="result"
         title={`No results found for "${keyword}"`}
         description="Please try different keywords"
-        actions={{ content: 'Clear Search', onClick: handleClear }}
+        actions={{ children: 'Clear Search', onClick: handleClear }}
       />
     );
   }
@@ -212,7 +212,7 @@ function DataList({ data, loading }) {
         type="initial-data"
         title="No data yet"
         description="Click the button below to add your first entry"
-        actions={{ content: 'Add Data', onClick: handleAdd }}
+        actions={{ children: 'Add Data', onClick: handleAdd }}
       />
     );
   }
@@ -301,7 +301,7 @@ function DataList({ data, loading }) {
      size="minor"
      title="Empty"
      description="This won't display"
-     actions={{ content: 'Add' }}
+     actions={{ children: 'Add' }}
    />
 
    // ✅ 正確：minor 只支援 title
@@ -317,8 +317,8 @@ function DataList({ data, loading }) {
    <Empty
      title="No data"
      actions={{
-       primaryButton: { content: 'Add' },
-       secondaryButton: { content: 'Import' },
+       primaryButton: { children: 'Add' },
+       secondaryButton: { children: 'Import' },
        // ... more buttons
      }}
    />
@@ -327,8 +327,8 @@ function DataList({ data, loading }) {
    <Empty
      title="No data"
      actions={{
-       primaryButton: { content: 'Add New' },
-       secondaryButton: { content: 'Import from File' },
+       primaryButton: { children: 'Add New' },
+       secondaryButton: { children: 'Import from File' },
      }}
    />
    ```
@@ -338,7 +338,7 @@ function DataList({ data, loading }) {
    // ❌ 錯誤：同時設定 actions 和 children
    <Empty
      title="Empty"
-     actions={{ content: 'Add' }}
+     actions={{ children: 'Add' }}
    >
      <Button>This will be ignored</Button>
    </Empty>
@@ -347,8 +347,8 @@ function DataList({ data, loading }) {
    <Empty
      title="Empty"
      actions={{
-       primaryButton: { content: 'Add' },
-       secondaryButton: { content: 'Learn More' },
+       primaryButton: { children: 'Add' },
+       secondaryButton: { children: 'Learn More' },
      }}
    />
    ```

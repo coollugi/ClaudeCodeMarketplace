@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/story/data-entry-cascader--playground) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Cascader) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Cascader) · Verified 1.5.1 (2026-09-12)
 
 A hierarchical dropdown selector that lets users drill through multi-level option trees. The selected path (from root to leaf) is represented as an array of `CascaderOption` objects. Selection is only committed when a leaf node is clicked or confirmed via keyboard. Overflow handling uses automatic path truncation and tooltip display.
 

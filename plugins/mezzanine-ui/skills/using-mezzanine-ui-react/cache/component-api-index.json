@@ -1,114 +1,104 @@
 {
+  "_meta": {
+    "version": "1.5.1",
+    "generatedAt": "2026-09-12",
+    "description": "TypeScript props API index for Mezzanine UI v2"
+  },
   "Accordion": {
     "props": {
+      "actions": {
+        "type": "unknown",
+        "required": false
+      },
       "children": {
-        "type": "React.ReactNode",
-        "required": true
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
       },
       "defaultExpanded": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "disabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "expanded": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "void",
+        "type": "unknown",
         "required": false
       },
       "size": {
-        "type": "'main' | 'sub'",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
       },
       "title": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
-      "actions": {
-        "type": "AccordionTitleProps['actions']",
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Accordion/Accordion.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'onChange'>"
-    ]
+    "extends": []
   },
   "AlertBanner": {
     "props": {
       "actions": {
-        "type": "AlertBannerAction[]",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "closable": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "true"
       },
       "disablePortal": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "false"
       },
       "icon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "message": {
-        "type": "string",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "onClose": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "severity": {
-        "type": "AlertBannerSeverity",
-        "required": true
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/AlertBanner/AlertBanner.tsx",
-    "extends": [
-      "Omit<\n    NativeElementPropsWithoutKeyAndRef<'div'>,\n    'children' | 'title'\n  >"
-    ]
+    "extends": []
   },
   "Anchor": {
-    "props": {
-      "anchors": {
-        "type": "AnchorItemData[]",
-        "required": true
-      },
-      "children": {
-        "type": "never",
-        "required": false
-      },
-      "autoScrollTo": {
-        "type": "boolean",
-        "required": false
-      },
-      "disabled": {
-        "type": "boolean",
-        "required": false
-      },
-      "href": {
-        "type": "string",
-        "required": false
-      },
-      "onClick": {
-        "type": "VoidFunction",
-        "required": false
-      },
-      "title": {
-        "type": "string",
-        "required": false
-      }
-    },
+    "props": {},
     "sourceFile": "packages/react/src/Anchor/Anchor.tsx",
     "extends": []
   },
@@ -119,146 +109,399 @@
   },
   "Backdrop": {
     "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "container": {
+        "type": "unknown",
+        "required": false
+      },
       "disableCloseOnBackdropClick": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "disablePortal": {
+        "type": "unknown",
+        "required": false
+      },
       "disableScrollLock": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "onBackdropClick": {
-        "type": "MouseEventHandler",
+        "type": "unknown",
         "required": false
       },
       "onClose": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "open": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "variant": {
-        "type": "BackdropVariant",
+        "type": "unknown",
         "required": false,
-        "default": "dark"
+        "default": "'dark'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Backdrop/Backdrop.tsx",
-    "extends": [
-      "Pick<PortalProps, 'children' | 'container' | 'disablePortal'>,\n    NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
+    "extends": []
   },
   "Badge": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "count": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "overflowCount": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "text": {
+        "type": "unknown",
+        "required": false
+      },
+      "variant": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Badge/Badge.tsx",
     "extends": []
   },
   "Breadcrumb": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "condensed": {
+        "type": "unknown",
+        "required": false
+      },
+      "items": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Breadcrumb/Breadcrumb.tsx",
     "extends": []
   },
   "Button": {
-    "props": {},
+    "props": {
+      "aria": {
+        "type": "unknown",
+        "required": false
+      },
+      "describedby": {
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "component": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disabledTooltip": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "icon": {
+        "type": "unknown",
+        "required": false
+      },
+      "iconType": {
+        "type": "unknown",
+        "required": false
+      },
+      "loading": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "onBlur": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "onFocus": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "tooltipPosition": {
+        "type": "unknown",
+        "required": false,
+        "default": "'bottom'"
+      },
+      "variant": {
+        "type": "unknown",
+        "required": false,
+        "default": "'base-primary'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Button/Button.tsx",
     "extends": []
   },
   "Calendar": {
     "props": {
+      "renderAnnotations": {
+        "type": "unknown",
+        "required": false
+      },
       "calendarDaysProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "calendarMonthsProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "calendarWeeksProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "calendarYearsProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "calendarQuartersProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "calendarHalfYearsProps": {
-        "type": "Omit<",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "disabledFooterControl": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "disabledMonthSwitch": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoubleNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
       },
       "disabledYearSwitch": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
         "required": false,
-        "default": "false"
+        "default": "locale"
+      },
+      "displayWeekDayLocale": {
+        "type": "unknown",
+        "required": false,
+        "default": "locale"
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isDateInRange": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthInRange": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekInRange": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearInRange": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterInRange": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearInRange": {
+        "type": "unknown",
+        "required": false
       },
       "mode": {
-        "type": "CalendarMode",
+        "type": "unknown",
         "required": false,
-        "default": "day"
+        "default": "'day'"
       },
       "onChange": {
-        "type": "(target: DateType) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "onDateHover": {
+        "type": "unknown",
         "required": false
       },
       "onMonthControlClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
+        "required": false
+      },
+      "onMonthHover": {
+        "type": "unknown",
         "required": false
       },
       "onNext": {
-        "type": "(currentMode: CalendarMode) => void",
+        "type": "unknown",
         "required": false
       },
       "onDoubleNext": {
-        "type": "(currentMode: CalendarMode) => void",
+        "type": "unknown",
         "required": false
       },
       "onPrev": {
-        "type": "(currentMode: CalendarMode) => void",
+        "type": "unknown",
         "required": false
       },
       "onDoublePrev": {
-        "type": "(currentMode: CalendarMode) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "onWeekHover": {
+        "type": "unknown",
         "required": false
       },
       "onYearControlClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
+        "required": false
+      },
+      "onYearHover": {
+        "type": "unknown",
+        "required": false
+      },
+      "onQuarterHover": {
+        "type": "unknown",
+        "required": false
+      },
+      "onHalfYearHover": {
+        "type": "unknown",
+        "required": false
+      },
+      "quickSelect": {
+        "type": "unknown",
         "required": false
       },
       "referenceDate": {
-        "type": "DateType",
-        "required": true
-      },
-      "quickSelect": {
-        "type": "Pick<CalendarQuickSelectProps, 'activeId' | 'options'>",
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "DateType | DateType[]",
+        "type": "unknown",
+        "required": false
+      },
+      "restCalendarProps": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Calendar/Calendar.tsx",
-    "extends": [
-      "Omit<\n      NativeElementPropsWithoutKeyAndRef<'div'>,\n      'onChange' | 'children'\n    >,\n    Pick<\n      CalendarDaysProps,\n      | 'renderAnnotations'\n      | 'isDateDisabled'\n      | 'isDateInRange'\n      | 'onDateHover'\n      | 'displayWeekDayLocale'\n    >,\n    Pick<\n      CalendarMonthsProps,\n      | 'isMonthDisabled'\n      | 'isMonthInRange'\n      | 'onMonthHover'\n      | 'displayMonthLocale'\n    >,\n    Pick<\n      CalendarWeeksProps,\n      'isWeekDisabled' | 'isWeekInRange' | 'onWeekHover'\n    >,\n    Pick<\n      CalendarYearsProps,\n      'isYearDisabled' | 'isYearInRange' | 'onYearHover'\n    >,\n    Pick<\n      CalendarQuartersProps,\n      'isQuarterDisabled' | 'isQuarterInRange' | 'onQuarterHover'\n    >,\n    Pick<\n      CalendarHalfYearsProps,\n      'isHalfYearDisabled' | 'isHalfYearInRange' | 'onHalfYearHover'\n    >,\n    Pick<\n      CalendarControlsProps,\n      | 'disableOnNext'\n      | 'disableOnPrev'\n      | 'disableOnDoubleNext'\n      | 'disableOnDoublePrev'\n    >"
-    ]
+    "extends": []
   },
   "Card": {
     "props": {},
@@ -266,290 +509,1088 @@
     "extends": []
   },
   "Cascader": {
-    "props": {},
+    "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "defaultValue": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "disabledFromFormControl || false"
+      },
+      "dropdownZIndex": {
+        "type": "unknown",
+        "required": false
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "severity === 'error' || false"
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "fullWidthFromFormControl || false"
+      },
+      "globalPortal": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "menuMaxHeight": {
+        "type": "unknown",
+        "required": false
+      },
+      "onBlur": {
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "onFocus": {
+        "type": "unknown",
+        "required": false
+      },
+      "options": {
+        "type": "unknown",
+        "required": false
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false,
+        "default": "''"
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "requiredFromFormControl || false"
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Cascader/Cascader.tsx",
     "extends": []
   },
   "Checkbox": {
     "props": {
-      "withEditInput": {
-        "type": "boolean",
+      "checked": {
+        "type": "unknown",
         "required": false
       },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "defaultChecked": {
+        "type": "unknown",
+        "required": false
+      },
+      "description": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "disabledFromGroup"
+      },
       "editableInput": {
-        "type": "Omit<BaseInputProps, 'variant'>",
+        "type": "unknown",
         "required": false
       },
       "id": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
+      "indeterminate": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
       "inputProps": {
-        "type": "CheckboxInputElementProps",
+        "type": "unknown",
         "required": false
       },
       "inputRef": {
-        "type": "Ref<HTMLInputElement>",
+        "type": "unknown",
         "required": false
+      },
+      "label": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'default'"
       },
       "name": {
-        "type": "string",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "nameFromGroup"
       },
       "onChange": {
-        "type": "ChangeEventHandler<HTMLInputElement>",
+        "type": "unknown",
         "required": false
       },
-      "value": {
-        "type": "string",
-        "required": false
+      "severity": {
+        "type": "unknown",
+        "required": false,
+        "default": "'info'"
       },
       "size": {
-        "type": "CheckboxSize<NonNullable<CheckboxPropsBase['mode']>>",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "withEditInput": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Checkbox/Checkbox.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'label'>, 'onChange'>,\n  CheckboxPropsBase"
-    ]
+    "extends": []
   },
   "ClearActions": {
-    "props": {},
+    "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'standard'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/ClearActions/ClearActions.tsx",
-    "propsType": "| ClearActionsEmbeddedProps\n  | ClearActionsStandardProps\n  | ClearActionsClearableProps",
-    "deprecated": true,
-    "deprecationReason": "Component no longer exported from @mezzanine-ui/react index.ts as of v1.1.0"
+    "extends": []
   },
   "ContentHeader": {
     "props": {
       "actions": {
-        "type": "ButtonProps[]",
+        "type": "unknown",
         "required": false
       },
+      "backButtonLabel": {
+        "type": "unknown",
+        "required": false,
+        "default": "'Back'"
+      },
       "children": {
-        "type": "ContentHeaderChild[] | ContentHeaderChild",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "description": {
-        "type": "string",
-        "required": false
-      },
-      "title": {
-        "type": "string",
-        "required": true
-      },
-      "titleComponent": {
-        "type": "'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p'",
-        "required": false
-      },
-      "onBackClick": {
-        "type": "() => void",
-        "required": false
-      },
-      "size": {
-        "type": "'sub'",
+        "type": "unknown",
         "required": false
       },
       "filter": {
-        "type": "object",
+        "type": "unknown",
         "required": false
       },
+      "onBackClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "title": {
+        "type": "unknown",
+        "required": false
+      },
+      "titleComponent": {
+        "type": "unknown",
+        "required": false,
+        "default": "size === 'main' ? 'h1' : 'h2'"
+      },
       "utilities": {
-        "type": "(",
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/ContentHeader/ContentHeader.tsx",
-    "subComponents": {
-      "ContentHeaderResponsiveProps": {
-        "props": {
-          "breakpoint": {
-            "type": "ResponsiveBreakpoint",
-            "required": true
-          },
-          "children": {
-            "type": "ReactNode",
-            "required": false
-          }
-        },
-        "sourceFile": "packages/react/src/ContentHeader/ContentHeaderResponsive.tsx"
-      }
-    },
-    "deprecated": true,
-    "deprecationReason": "Component no longer exported from @mezzanine-ui/react index.ts as of v1.1.0"
+    "extends": []
   },
   "Cropper": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "component": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Cropper/Cropper.tsx",
     "extends": []
   },
   "DatePicker": {
     "props": {
+      "calendarProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
       "defaultValue": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "disabledMonthSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
         "required": false
       },
       "disableOnDoubleNext": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "disableOnDoublePrev": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "format": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledYearSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
+        "required": false
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "errorMessages": {
+        "type": "unknown",
+        "required": false
+      },
+      "fadeProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "format": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'day'"
+      },
       "onCalendarToggle": {
-        "type": "(open: boolean) => void",
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "(target?: DateType) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
         "required": false
       },
       "referenceDate": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "restTriggerProps": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/DatePicker/DatePicker.tsx",
-    "extends": [
-      "Omit<\n      DatePickerCalendarProps,\n      | 'anchor'\n      | 'calendarRef'\n      | 'disableOnDoubleNext'\n      | 'disableOnDoublePrev'\n      | 'onChange'\n      | 'open'\n      | 'referenceDate'\n      | 'updateReferenceDate'\n    >,\n    Omit<\n      PickerTriggerProps,\n      | 'defaultValue'\n      | 'format'\n      | 'inputRef'\n      | 'onChange'\n      | 'onClear'\n      | 'onClick'\n      | 'onIconClick'\n      | 'onKeyDown'\n      | 'value'\n    >"
-    ]
+    "extends": []
   },
   "DateRangePicker": {
     "props": {
       "actions": {
-        "type": "CalendarFooterActionsProps['actions']",
+        "type": "unknown",
         "required": false
       },
-      "confirmMode": {
-        "type": "'immediate' | 'manual'",
+      "calendarProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
         "required": false,
-        "default": "immediate"
+        "default": "true"
+      },
+      "confirmMode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'immediate'"
       },
       "defaultValue": {
-        "type": "[DateType, DateType]",
+        "type": "unknown",
+        "required": false
+      },
+      "disabledMonthSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disableOnDoubleNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disabledYearSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
+        "required": false
+      },
+      "displayWeekDayLocale": {
+        "type": "unknown",
+        "required": false
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "errorMessagesFrom": {
+        "type": "unknown",
+        "required": false
+      },
+      "errorMessagesTo": {
+        "type": "unknown",
+        "required": false
+      },
+      "fadeProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "firstCalendarRef": {
+        "type": "unknown",
         "required": false
       },
       "format": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "inputFromPlaceholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputFromProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputToPlaceholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputToProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'day'"
+      },
       "onCalendarToggle": {
-        "type": "(open: boolean) => void",
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "(target?: RangePickerValue) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "quickSelect": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
         "required": false
       },
       "referenceDate": {
-        "type": "DateRangePickerCalendarProps['referenceDate']",
+        "type": "unknown",
+        "required": false
+      },
+      "renderAnnotations": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "secondCalendarRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "validateFrom": {
+        "type": "unknown",
+        "required": false
+      },
+      "validateTo": {
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "RangePickerValue",
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/DateRangePicker/DateRangePicker.tsx",
-    "extends": [
-      "Pick<\n      DateRangePickerCalendarProps,\n      | 'calendarProps'\n      | 'disabledMonthSwitch'\n      | 'disableOnNext'\n      | 'disableOnPrev'\n      | 'disableOnDoubleNext'\n      | 'disableOnDoublePrev'\n      | 'disabledYearSwitch'\n      | 'displayMonthLocale'\n      | 'displayWeekDayLocale'\n      | 'fadeProps'\n      | 'firstCalendarRef'\n      | 'isDateDisabled'\n      | 'isWeekDisabled'\n      | 'isMonthDisabled'\n      | 'isYearDisabled'\n      | 'isQuarterDisabled'\n      | 'isHalfYearDisabled'\n      | 'mode'\n      | 'popperProps'\n      | 'quickSelect'\n      | 'renderAnnotations'\n      | 'secondCalendarRef'\n    >,\n    Pick<\n      RangePickerTriggerProps,\n      | 'className'\n      | 'clearable'\n      | 'disabled'\n      | 'error'\n      | 'errorMessagesFrom'\n      | 'errorMessagesTo'\n      | 'fullWidth'\n      | 'inputFromPlaceholder'\n      | 'inputFromProps'\n      | 'inputToPlaceholder'\n      | 'inputToProps'\n      | 'prefix'\n      | 'readOnly'\n      | 'required'\n      | 'size'\n      | 'validateFrom'\n      | 'validateTo'\n    >"
-    ]
+    "extends": []
   },
   "DateTimePicker": {
     "props": {
+      "Calendar": {
+        "type": "unknown",
+        "required": false
+      },
+      "props": {
+        "type": "unknown",
+        "required": false
+      },
+      "calendarProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "calendarRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledMonthSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disableOnDoubleNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledYearSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
+        "required": false
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'day'"
+      },
+      "Time": {
+        "type": "unknown",
+        "required": false
+      },
+      "panel": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideHour": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideMinute": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideSecond": {
+        "type": "unknown",
+        "required": false
+      },
+      "hourStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "minuteStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "secondStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "DateTimePicker": {
+        "type": "unknown",
+        "required": false
+      },
+      "specific": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
       "defaultValue": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "fadeProps": {
+        "type": "unknown",
         "required": false
       },
       "formatDate": {
-        "type": "string",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "defaultDateFormat"
       },
       "formatTime": {
-        "type": "string",
+        "type": "unknown",
+        "required": false,
+        "default": "hideSecond ? 'HH:mm' : defaultTimeFormat"
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "onClear": {
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "(target?: DateType) => void",
+        "type": "unknown",
         "required": false
       },
       "onPanelToggle": {
-        "type": "(open: boolean, focusedInput: FocusedInput) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "placeholderLeft": {
+        "type": "unknown",
+        "required": false,
+        "default": "formatDate"
+      },
+      "placeholderRight": {
+        "type": "unknown",
+        "required": false,
+        "default": "formatTime"
+      },
+      "popperProps": {
+        "type": "unknown",
         "required": false
       },
       "popperPropsTime": {
-        "type": "TimePickerPanelProps['popperProps']",
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
         "required": false
       },
       "referenceDate": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "size": {
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "restTriggerProps": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/DateTimePicker/DateTimePicker.tsx",
-    "extends": [
-      "Omit<\n      DatePickerCalendarProps,\n      'anchor' | 'onChange' | 'open' | 'referenceDate' | 'value'\n    >,\n    Omit<\n      TimePickerPanelProps,\n      'anchor' | 'onChange' | 'open' | 'popperProps' | 'value'\n    >,\n    Omit<\n      PickerTriggerWithSeparatorProps,\n      | 'formatLeft'\n      | 'formatRight'\n      | 'inputLeftRef'\n      | 'inputRightRef'\n      | 'onBlurLeft'\n      | 'onBlurRight'\n      | 'onChangeLeft'\n      | 'onChangeRight'\n      | 'onFocusLeft'\n      | 'onFocusRight'\n      | 'onLeftComplete'\n      | 'onPasteIsoValueLeft'\n      | 'onPasteIsoValueRight'\n      | 'onRightComplete'\n      | 'suffix'\n      | 'valueLeft'\n      | 'valueRight'\n    >"
-    ]
+    "extends": []
   },
   "DateTimeRangePicker": {
     "props": {
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "direction": {
-        "type": "'row' | 'column'",
+        "type": "unknown",
         "required": false,
-        "default": "row"
+        "default": "'row'"
       },
       "onChange": {
-        "type": "(value: DateTimeRangePickerValue) => void",
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "DateTimeRangePickerValue",
+        "type": "unknown",
+        "required": false
+      },
+      "Shared": {
+        "type": "unknown",
+        "required": false
+      },
+      "DateTimePicker": {
+        "type": "unknown",
+        "required": false
+      },
+      "props": {
+        "type": "unknown",
+        "required": false
+      },
+      "calendarProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "calendarRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledMonthSwitch": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledYearSwitch": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoubleNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
+        "required": false
+      },
+      "error": {
+        "type": "unknown",
+        "required": false
+      },
+      "fadeProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "formatDate": {
+        "type": "unknown",
+        "required": false
+      },
+      "formatTime": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideHour": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideMinute": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideSecond": {
+        "type": "unknown",
+        "required": false
+      },
+      "hourStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isHalfYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMonthDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isQuarterDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isWeekDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "isYearDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "minuteStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClear": {
+        "type": "unknown",
+        "required": false
+      },
+      "onPanelToggle": {
+        "type": "unknown",
+        "required": false
+      },
+      "placeholderLeft": {
+        "type": "unknown",
+        "required": false
+      },
+      "placeholderRight": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperPropsTime": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false
+      },
+      "referenceDate": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false
+      },
+      "secondStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/DateTimeRangePicker/DateTimeRangePicker.tsx",
-    "extends": [
-      "Omit<\n    DateTimePickerProps,\n    'defaultValue' | 'onChange' | 'value' | 'ref' | 'prefix'\n  >"
-    ]
+    "extends": []
   },
   "Description": {
     "props": {
       "children": {
         "type": "unknown",
-        "required": true
+        "required": false
       },
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "orientation": {
-        "type": "DescriptionOrientation",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "'horizontal'"
       },
       "size": {
-        "type": "DescriptionSize",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
       },
       "title": {
-        "type": "string",
-        "required": true
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Description/Description.tsx",
@@ -557,503 +1598,596 @@
   },
   "Drawer": {
     "props": {
-      "contentKey": {
-        "type": "string | number",
-        "required": false
-      },
       "bottomGhostActionDisabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionIcon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionIconType": {
-        "type": "ButtonIconType",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionLoading": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionSize": {
-        "type": "ButtonSize",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionText": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "bottomGhostActionVariant": {
-        "type": "ButtonVariant",
+        "type": "unknown",
         "required": false,
-        "default": "base-ghost"
+        "default": "'base-ghost'"
       },
       "bottomOnGhostActionClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "bottomOnPrimaryActionClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "bottomOnSecondaryActionClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionDisabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionIcon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionIconType": {
-        "type": "ButtonIconType",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionLoading": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionSize": {
-        "type": "ButtonSize",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionText": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "bottomPrimaryActionVariant": {
-        "type": "ButtonVariant",
+        "type": "unknown",
         "required": false,
-        "default": "base-primary"
+        "default": "'base-primary'"
       },
       "bottomSecondaryActionDisabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionIcon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionIconType": {
-        "type": "ButtonIconType",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionLoading": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionSize": {
-        "type": "ButtonSize",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionText": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "bottomSecondaryActionVariant": {
-        "type": "ButtonVariant",
+        "type": "unknown",
         "required": false,
-        "default": "base-secondary"
+        "default": "'base-secondary'"
+      },
+      "filterAreaOnSelect": {
+        "type": "unknown",
+        "required": false
+      },
+      "filterAreaOptions": {
+        "type": "unknown",
+        "required": false,
+        "default": "[]"
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "container": {
+        "type": "unknown",
+        "required": false
+      },
+      "contentKey": {
+        "type": "unknown",
+        "required": false
       },
       "filterAreaAllRadioLabel": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "filterAreaCustomButtonLabel": {
-        "type": "string",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "'全部已讀'"
       },
       "filterAreaDefaultValue": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "filterAreaIsEmpty": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "false"
       },
       "filterAreaOnCustomButtonClick": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "filterAreaOnRadioChange": {
-        "type": "ChangeEventHandler<HTMLInputElement>",
+        "type": "unknown",
         "required": false
       },
       "filterAreaReadRadioLabel": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "filterAreaShow": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "filterAreaShowUnreadButton": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "filterAreaUnreadRadioLabel": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "filterAreaValue": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
-      "filterAreaOptions": {
-        "type": "DropdownOption[]",
-        "required": false
-      },
-      "filterAreaOnSelect": {
-        "type": "(option: DropdownOption) => void",
-        "required": false
-      },
-      "disableCloseOnEscapeKeyDown": {
-        "type": "boolean",
+      "disableCloseOnBackdropClick": {
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "disableCloseOnEscapeKeyDown": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disablePortal": {
+        "type": "unknown",
+        "required": false
+      },
       "headerTitle": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "isBottomDisplay": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "isHeaderDisplay": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
-      "size": {
-        "type": "DrawerSize",
-        "required": false,
-        "default": "medium"
-      }
-    },
-    "sourceFile": "packages/react/src/Drawer/Drawer.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'div'>,\n  Pick<\n    BackdropProps,\n    | 'container'\n    | 'disableCloseOnBackdropClick'\n    | 'disablePortal'\n    | 'onBackdropClick'\n    | 'onClose'\n    | 'open'\n  >"
-    ]
-  },
-  "Dropdown": {
-    "props": {
-      "actionCancelText": {
-        "type": "string",
-        "required": false
-      },
-      "actionClearText": {
-        "type": "string",
-        "required": false
-      },
-      "actionConfirmText": {
-        "type": "string",
-        "required": false
-      },
-      "actionCustomButtonProps": {
-        "type": "ButtonProps",
-        "required": false
-      },
-      "actionText": {
-        "type": "string",
-        "required": false
-      },
-      "activeIndex": {
-        "type": "number | null",
-        "required": false
-      },
-      "keyboardActiveIndex": {
-        "type": "number | null",
-        "required": false
-      },
-      "children": {
-        "type": "ReactElement<ButtonProps> | ReactElement<InputProps>",
-        "required": true
-      },
-      "disabled": {
-        "type": "boolean",
-        "required": false
-      },
-      "id": {
-        "type": "string",
-        "required": false
-      },
-      "inputPosition": {
-        "type": "DropdownInputPosition",
-        "required": false,
-        "default": "outside"
-      },
-      "isMatchInputValue": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "followText": {
-        "type": "string",
-        "required": false
-      },
-      "flip": {
-        "type": "boolean",
-        "required": false,
-        "default": "false",
-        "description": "Whether to enable floating-ui flip middleware. When true, the dropdown automatically flips to the opposite side along the main axis if it would overflow the viewport"
-      },
-      "listboxId": {
-        "type": "string",
-        "required": false
-      },
-      "listboxLabel": {
-        "type": "string",
-        "required": false
-      },
-      "maxHeight": {
-        "type": "number | string",
-        "required": false
-      },
-      "minWidth": {
-        "type": "number | string",
-        "required": false,
-        "default": "spacing token `size-container-tiny"
-      },
-      "open": {
-        "type": "boolean",
-        "required": false
-      },
-      "onActionCancel": {
-        "type": "() => void",
-        "required": false
-      },
-      "onActionClear": {
-        "type": "() => void",
-        "required": false
-      },
-      "onActionConfirm": {
-        "type": "() => void",
-        "required": false
-      },
-      "onActionCustom": {
-        "type": "() => void",
+      "onBackdropClick": {
+        "type": "unknown",
         "required": false
       },
       "onClose": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
-      "onItemHover": {
-        "type": "(index: number) => void",
+      "open": {
+        "type": "unknown",
         "required": false
       },
-      "onOpen": {
-        "type": "() => void",
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'medium'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
+    "sourceFile": "packages/react/src/Drawer/Drawer.tsx",
+    "extends": []
+  },
+  "Dropdown": {
+    "props": {
+      "activeIndex": {
+        "type": "unknown",
         "required": false
       },
-      "onVisibilityChange": {
-        "type": "(open: boolean) => void",
+      "keyboardActiveIndex": {
+        "type": "unknown",
         "required": false
       },
-      "onSelect": {
-        "type": "(option: DropdownOption) => void",
+      "id": {
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
         "required": false
       },
       "options": {
-        "type": "DropdownOption[]",
-        "required": true
-      },
-      "placement": {
-        "type": "PopperPlacement",
-        "required": false
-      },
-      "customWidth": {
-        "type": "number | string",
-        "required": false
-      },
-      "sameWidth": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
-        "default": "false"
+        "default": "[]"
       },
-      "showActionShowTopBar": {
-        "type": "boolean",
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'default'"
+      },
+      "toggleCheckedOnClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "maxHeight": {
+        "type": "unknown",
+        "required": false
+      },
+      "minWidth": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "showDropdownActions": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "actionCancelText": {
+        "type": "unknown",
         "required": false
       },
-      "type": {
-        "type": "DropdownType",
+      "actionConfirmText": {
+        "type": "unknown",
         "required": false
       },
-      "toggleCheckedOnClick": {
-        "type": "boolean",
+      "actionText": {
+        "type": "unknown",
+        "required": false
+      },
+      "actionClearText": {
+        "type": "unknown",
+        "required": false
+      },
+      "actionCustomButtonProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "showActionShowTopBar": {
+        "type": "unknown",
+        "required": false
+      },
+      "isMatchInputValue": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "inputPosition": {
+        "type": "unknown",
+        "required": false,
+        "default": "'outside'"
+      },
+      "placement": {
+        "type": "unknown",
+        "required": false,
+        "default": "'bottom-start'"
+      },
+      "customWidth": {
+        "type": "unknown",
+        "required": false
+      },
+      "sameWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "flip": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "shift": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "listboxId": {
+        "type": "unknown",
+        "required": false
+      },
+      "listboxLabel": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClose": {
+        "type": "unknown",
+        "required": false
+      },
+      "onOpen": {
+        "type": "unknown",
+        "required": false
+      },
+      "open": {
+        "type": "unknown",
+        "required": false
+      },
+      "onVisibilityChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "onSelect": {
+        "type": "unknown",
+        "required": false
+      },
+      "onActionConfirm": {
+        "type": "unknown",
+        "required": false
+      },
+      "onActionCancel": {
+        "type": "unknown",
+        "required": false
+      },
+      "onActionCustom": {
+        "type": "unknown",
+        "required": false
+      },
+      "onActionClear": {
+        "type": "unknown",
+        "required": false
+      },
+      "onItemHover": {
+        "type": "unknown",
         "required": false
       },
       "zIndex": {
-        "type": "number | string",
+        "type": "unknown",
         "required": false
       },
       "status": {
-        "type": "DropdownStatusType",
+        "type": "unknown",
         "required": false
       },
       "loadingText": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "emptyText": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "emptyIcon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "loadingPosition": {
-        "type": "DropdownLoadingPosition",
+        "type": "unknown",
         "required": false,
-        "default": "full"
+        "default": "'full'"
+      },
+      "followText": {
+        "type": "unknown",
+        "required": false
       },
       "globalPortal": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "true"
       },
       "onReachBottom": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "onLeaveBottom": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "onScroll": {
-        "type": "(",
+        "type": "unknown",
         "required": false
       },
-      "computed": {
-        "type": "{ scrollTop: number; maxScrollTop: number },",
-        "required": true
+      "mode": {
+        "type": "unknown",
+        "required": false
       },
-      "target": {
-        "type": "HTMLDivElement,",
-        "required": true
+      "value": {
+        "type": "unknown",
+        "required": false
       },
       "scrollbarDefer": {
-        "type": "boolean | object",
-        "required": false,
-        "default": "true"
+        "type": "unknown",
+        "required": false
       },
       "scrollbarDisabled": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
+        "type": "unknown",
+        "required": false
       },
       "scrollbarMaxWidth": {
-        "type": "number | string",
+        "type": "unknown",
         "required": false
       },
       "scrollbarOptions": {
-        "type": "import('overlayscrollbars').PartialOptions",
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Dropdown/Dropdown.tsx",
-    "extends": [
-      "DropdownItemSharedProps"
-    ]
+    "extends": []
   },
   "Empty": {
-    "props": {},
+    "props": {
+      "actions": {
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "description": {
+        "type": "unknown",
+        "required": false
+      },
+      "pictogram": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "title": {
+        "type": "unknown",
+        "required": false
+      },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'initial-data'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Empty/Empty.tsx",
     "extends": []
   },
   "FilterArea": {
     "props": {
       "actionsAlign": {
-        "type": "FilterAreaActionsAlign",
+        "type": "unknown",
         "required": false,
-        "default": "end"
+        "default": "'end'"
       },
       "children": {
-        "type": "ReactElement<FilterLineProps> | ReactElement<FilterLineProps>[]",
-        "required": true
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
       },
       "isDirty": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "true"
       },
       "onReset": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "onSubmit": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "resetText": {
-        "type": "string",
+        "type": "unknown",
         "required": false,
-        "default": "Reset"
-      },
-      "size": {
-        "type": "FilterAreaSize",
-        "required": false,
-        "default": "main"
-      },
-      "submitText": {
-        "type": "string",
-        "required": false,
-        "default": "Search"
-      },
-      "resetButtonType": {
-        "type": "ComponentPropsWithoutRef<'button'>['type']",
-        "required": false,
-        "default": "button"
+        "default": "'Reset'"
       },
       "rowAlign": {
-        "type": "FilterAreaRowAlign",
+        "type": "unknown",
         "required": false,
-        "default": "center"
+        "default": "'center'"
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "submitText": {
+        "type": "unknown",
+        "required": false,
+        "default": "'Search'"
+      },
+      "resetButtonType": {
+        "type": "unknown",
+        "required": false,
+        "default": "'button'"
       },
       "submitButtonType": {
-        "type": "ComponentPropsWithoutRef<'button'>['type']",
+        "type": "unknown",
         "required": false,
-        "default": "button"
+        "default": "'button'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/FilterArea/FilterArea.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children' | 'onSubmit' | 'onReset'>"
-    ]
+    "extends": []
   },
   "FloatingButton": {
     "props": {
       "autoHideWhenOpen": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "open": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/FloatingButton/FloatingButton.tsx",
-    "extends": [
-      "Omit<\n    ButtonProps,\n    'variant' | 'size' | 'className' | 'tooltipPosition'\n  >"
-    ]
+    "extends": []
   },
   "Form": {
     "props": {},
@@ -1062,192 +2196,613 @@
   },
   "Icon": {
     "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
       "color": {
-        "type": "IconColor",
+        "type": "unknown",
         "required": false
       },
       "icon": {
-        "type": "IconDefinition",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "size": {
-        "type": "number",
+        "type": "unknown",
         "required": false
       },
       "spin": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
       "title": {
-        "type": "string",
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Icon/Icon.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'i'>"
-    ]
+    "extends": []
   },
   "InlineMessage": {
     "props": {
       "content": {
-        "type": "string",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "icon": {
-        "type": "IconDefinition",
+        "type": "unknown",
         "required": false
       },
       "onClose": {
-        "type": "() => void",
+        "type": "unknown",
         "required": false
       },
       "severity": {
-        "type": "InlineMessageSeverity",
-        "required": true
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/InlineMessage/InlineMessage.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
+    "extends": []
   },
   "Input": {
-    "props": {},
+    "props": {
+      "active": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "defaultValue": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "formatter": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "id": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputType": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "name": {
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "parser": {
+        "type": "unknown",
+        "required": false
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "readonly": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "typing": {
+        "type": "unknown",
+        "required": false
+      },
+      "variant": {
+        "type": "unknown",
+        "required": false,
+        "default": "'base'"
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Input/Input.tsx",
     "extends": []
   },
   "Layout": {
     "props": {
       "children": {
-        "type": "React.ReactNode",
+        "type": "unknown",
         "required": false
       },
       "contentWrapperClassName": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "navigationClassName": {
-        "type": "string",
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Layout/Layout.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
+    "extends": []
   },
   "Message": {
-    "props": {},
+    "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "duration": {
+        "type": "unknown",
+        "required": false
+      },
+      "icon": {
+        "type": "unknown",
+        "required": false
+      },
+      "reference": {
+        "type": "unknown",
+        "required": false
+      },
+      "severity": {
+        "type": "unknown",
+        "required": false
+      },
+      "onExited": {
+        "type": "unknown",
+        "required": false
+      },
+      "restTransitionProps": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Message/Message.tsx",
     "extends": []
   },
   "Modal": {
-    "props": {},
+    "props": {
+      "actionsButtonLayout": {
+        "type": "unknown",
+        "required": false
+      },
+      "annotation": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentButtonProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentButtonText": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentChecked": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentLabel": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentOnChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentOnClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "auxiliaryContentType": {
+        "type": "unknown",
+        "required": false
+      },
+      "backdropClassName": {
+        "type": "unknown",
+        "required": false
+      },
+      "cancelButtonProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "cancelText": {
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "confirmButtonProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "confirmText": {
+        "type": "unknown",
+        "required": false
+      },
+      "container": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableCloseOnBackdropClick": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disableCloseOnEscapeKeyDown": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disablePortal": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "extendedSplitLeftSideContent": {
+        "type": "unknown",
+        "required": false
+      },
+      "extendedSplitRightSideContent": {
+        "type": "unknown",
+        "required": false
+      },
+      "extendedSplitSidebarPosition": {
+        "type": "unknown",
+        "required": false,
+        "default": "'right'"
+      },
+      "fullScreen": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "loading": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "modalStatusType": {
+        "type": "unknown",
+        "required": false,
+        "default": "'info'"
+      },
+      "modalType": {
+        "type": "unknown",
+        "required": false,
+        "default": "'standard'"
+      },
+      "onBackdropClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "onCancel": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClose": {
+        "type": "unknown",
+        "required": false
+      },
+      "onConfirm": {
+        "type": "unknown",
+        "required": false
+      },
+      "open": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordButtonProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordButtonText": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordChecked": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordCheckedLabel": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordCheckedOnChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "passwordOnClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "showCancelButton": {
+        "type": "unknown",
+        "required": false
+      },
+      "showDismissButton": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "showModalFooter": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "showModalHeader": {
+        "type": "unknown",
+        "required": false
+      },
+      "showStatusTypeIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'regular'"
+      },
+      "statusTypeIconLayout": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingText": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingTextAlign": {
+        "type": "unknown",
+        "required": false
+      },
+      "title": {
+        "type": "unknown",
+        "required": false
+      },
+      "titleAlign": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Modal/Modal.tsx",
     "extends": []
   },
   "MultipleDatePicker": {
     "props": {
       "actions": {
-        "type": "Partial<CalendarFooterActionsProps['actions']>",
+        "type": "unknown",
         "required": false
       },
       "calendarProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
-      "format": {
-        "type": "string",
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
         "required": false,
-        "default": "YYYY-MM-DD"
+        "default": "true"
       },
-      "maxSelections": {
-        "type": "number",
-        "required": false
-      },
-      "onCalendarToggle": {
-        "type": "(open: boolean) => void",
-        "required": false
-      },
-      "onChange": {
-        "type": "(value: MultipleDatePickerValue) => void",
-        "required": false
-      },
-      "placeholder": {
-        "type": "string",
-        "required": false
-      },
-      "popperProps": {
-        "type": "Omit<",
-        "required": false
-      },
-      "referenceDate": {
-        "type": "DateType",
-        "required": false
-      },
-      "required": {
-        "type": "boolean",
+      "disabledMonthSwitch": {
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "disableOnDoubleNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnDoublePrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnNext": {
+        "type": "unknown",
+        "required": false
+      },
+      "disableOnPrev": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabledYearSwitch": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "displayMonthLocale": {
+        "type": "unknown",
+        "required": false,
+        "default": "locale"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "format": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "isDateDisabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "maxSelections": {
+        "type": "unknown",
+        "required": false
+      },
+      "onCalendarToggle": {
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "overflowStrategy": {
+        "type": "unknown",
+        "required": false,
+        "default": "'counter'"
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "referenceDate": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
       "value": {
-        "type": "MultipleDatePickerValue",
+        "type": "unknown",
         "required": false,
         "default": "[]"
       }
     },
     "sourceFile": "packages/react/src/MultipleDatePicker/MultipleDatePicker.tsx",
-    "extends": [
-      "Pick<\n    MultipleDatePickerTriggerProps,\n    | 'className'\n    | 'clearable'\n    | 'disabled'\n    | 'error'\n    | 'fullWidth'\n    | 'overflowStrategy'\n    | 'prefix'\n    | 'readOnly'\n    | 'size'\n  >,\n  Pick<\n    CalendarProps,\n    | 'disabledMonthSwitch'\n    | 'disableOnNext'\n    | 'disableOnPrev'\n    | 'disableOnDoubleNext'\n    | 'disableOnDoublePrev'\n    | 'disabledYearSwitch'\n    | 'displayMonthLocale'\n    | 'isDateDisabled'\n  >"
-    ]
+    "extends": []
   },
   "Navigation": {
     "props": {
       "activatedPath": {
-        "type": "string[]",
+        "type": "unknown",
         "required": false
       },
       "children": {
-        "type": "NavigationChildren",
+        "type": "unknown",
+        "required": false,
+        "default": "[]"
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "collapsed": {
-        "type": "boolean",
-        "required": false,
-        "default": "false (expanded)"
+        "type": "unknown",
+        "required": false
       },
       "exactActivatedMatch": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "filter": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "onCollapseChange": {
-        "type": "(collapsed: boolean) => void",
+        "type": "unknown",
         "required": false
       },
       "onOptionClick": {
-        "type": "(activePath?: string[]) => void",
+        "type": "unknown",
         "required": false
       },
       "optionsAnchorComponent": {
-        "type": "React.ElementType",
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Navigation/Navigation.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'ul'>, 'onClick'>"
-    ]
+    "extends": []
   },
   "NotificationCenter": {
     "props": {},
@@ -1262,35 +2817,36 @@
   "OverflowTooltip": {
     "props": {
       "anchor": {
-        "type": "PopperProps['anchor']",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "onTagDismiss": {
-        "type": "(tagIndex: number) => void",
-        "required": true
-      },
-      "open": {
-        "type": "boolean",
-        "required": true
-      },
-      "placement": {
-        "type": "Placement",
+        "type": "unknown",
         "required": false
       },
+      "open": {
+        "type": "unknown",
+        "required": false
+      },
+      "placement": {
+        "type": "unknown",
+        "required": false,
+        "default": "'top-start'"
+      },
       "readOnly": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "tags": {
-        "type": "string[]",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "tagSize": {
-        "type": "TagProps['size']",
+        "type": "unknown",
         "required": false
       }
     },
@@ -1298,14 +2854,77 @@
     "extends": []
   },
   "PageFooter": {
-    "props": {},
+    "props": {
+      "actions": {
+        "type": "unknown",
+        "required": false
+      },
+      "annotationClassName": {
+        "type": "unknown",
+        "required": false
+      },
+      "annotation": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "dropdownProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingActionIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingActionName": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingActionOnClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingActionType": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingActionVariant": {
+        "type": "unknown",
+        "required": false,
+        "default": "'base-ghost'"
+      },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'standard'"
+      },
+      "warningMessage": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/PageFooter/PageFooter.tsx",
     "extends": []
   },
   "PageHeader": {
     "props": {
       "children": {
-        "type": "PageHeaderChild | PageHeaderChild[]",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
@@ -1313,92 +2932,9 @@
     "extends": []
   },
   "Pagination": {
-    "props": {
-      "boundaryCount": {
-        "type": "number",
-        "required": false,
-        "default": "1"
-      },
-      "buttonText": {
-        "type": "string",
-        "required": false
-      },
-      "current": {
-        "type": "number",
-        "required": false,
-        "default": "1"
-      },
-      "disabled": {
-        "type": "true",
-        "required": false
-      },
-      "hintText": {
-        "type": "string",
-        "required": false
-      },
-      "inputPlaceholder": {
-        "type": "string",
-        "required": false
-      },
-      "itemRender": {
-        "type": "(item: PaginationItemProps) => ReactNode",
-        "required": false,
-        "default": "(item) => <PaginationItem {...item} />"
-      },
-      "onChange": {
-        "type": "(page: number) => void",
-        "required": false
-      },
-      "onChangePageSize": {
-        "type": "PaginationPageSizeProps['onChange']",
-        "required": false
-      },
-      "pageSize": {
-        "type": "PaginationPageSizeProps['value']",
-        "required": false,
-        "default": "10"
-      },
-      "pageSizeLabel": {
-        "type": "PaginationPageSizeProps['label']",
-        "required": false
-      },
-      "pageSizeOptions": {
-        "type": "PaginationPageSizeProps['options']",
-        "required": false
-      },
-      "renderResultSummary": {
-        "type": "(from: number, to: number, total: number) => string",
-        "required": false
-      },
-      "renderPageSizeOptionName": {
-        "type": "PaginationPageSizeProps['renderOptionName']",
-        "required": false
-      },
-      "showJumper": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "showPageSizeOptions": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "siblingCount": {
-        "type": "number",
-        "required": false,
-        "default": "1"
-      },
-      "total": {
-        "type": "number",
-        "required": false,
-        "default": "0"
-      }
-    },
+    "props": {},
     "sourceFile": "packages/react/src/Pagination/Pagination.tsx",
-    "extends": [
-      "Omit<\n    DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,\n    'onChange'\n  >"
-    ]
+    "extends": []
   },
   "Picker": {
     "props": {},
@@ -1408,198 +2944,277 @@
   "Popper": {
     "props": {
       "anchor": {
-        "type": "ElementGetter",
+        "type": "unknown",
         "required": false
       },
       "arrow": {
-        "type": "{",
+        "type": "unknown",
         "required": false
       },
-      "className": {
-        "type": "string",
-        "required": true
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "container": {
+        "type": "unknown",
+        "required": false
       },
       "controllerRef": {
-        "type": "Ref<PopperController>",
+        "type": "unknown",
+        "required": false
+      },
+      "disablePortal": {
+        "type": "unknown",
+        "required": false
+      },
+      "onPlacementChange": {
+        "type": "unknown",
         "required": false
       },
       "open": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "options": {
-        "type": "UseFloatingOptions",
+        "type": "unknown",
         "required": false
       },
-      "onPlacementChange": {
-        "type": "(placement: PopperPlacement) => void",
-        "required": false,
-        "description": "Callback fired whenever the resolved placement changes, including when floating-ui middleware (e.g. flip) flips the popper to the opposite side"
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Popper/Popper.tsx",
-    "extends": [
-      "Pick<PortalProps, 'container' | 'disablePortal'>,\n    NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
+    "extends": []
   },
   "Portal": {
-    "props": {
-      "children": {
-        "type": "ReactNode",
-        "required": false
-      },
-      "container": {
-        "type": "HTMLElement | RefObject<HTMLElement | null> | RefObject<HTMLElement> | null",
-        "required": false,
-        "default": "null",
-        "description": "Custom portal destination container (new in v1.1.0)"
-      },
-      "disablePortal": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "layer": {
-        "type": "PortalLayer",
-        "required": false,
-        "default": "default"
-      }
-    },
+    "props": {},
     "sourceFile": "packages/react/src/Portal/Portal.tsx",
     "extends": []
   },
   "Progress": {
     "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
       "icons": {
-        "type": "{",
+        "type": "unknown",
         "required": false
       },
       "percent": {
-        "type": "number",
+        "type": "unknown",
         "required": false,
         "default": "0"
       },
       "percentProps": {
-        "type": "Omit<TypographyProps, 'className' | 'children'>",
+        "type": "unknown",
         "required": false
       },
       "status": {
-        "type": "ProgressStatus",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "percent < 100\n        ? ProgressStatuses.enabled\n        : ProgressStatuses.success"
       },
       "tick": {
-        "type": "number",
-        "required": false,
-        "default": "0"
+        "type": "unknown",
+        "required": false
       },
       "type": {
-        "type": "ProgressType",
+        "type": "unknown",
         "required": false,
-        "default": "progress"
+        "default": "'progress'"
       }
     },
     "sourceFile": "packages/react/src/Progress/Progress.tsx",
-    "extends": [
-      "Omit<\n    NativeElementPropsWithoutKeyAndRef<'div'>,\n    'title' | 'children'\n  >"
-    ]
+    "extends": []
   },
   "Radio": {
-    "props": {},
+    "props": {
+      "checked": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "defaultChecked": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "disabledFromGroup || false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "icon": {
+        "type": "unknown",
+        "required": false
+      },
+      "hint": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "typeFromGroup || 'radio'"
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "withInputConfig": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Radio/Radio.tsx",
     "extends": []
   },
   "ResultState": {
     "props": {
       "actions": {
-        "type": "ResultStateActions",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "children": {
-        "type": "ReactElement<ButtonProps> | [ReactElement<ButtonProps>] | [ReactElement<ButtonProps>, ReactElement<ButtonProps>]",
-        "required": false,
-        "description": "Button children (new in v1.1.0)"
+        "type": "unknown",
+        "required": false
       },
       "description": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "size": {
-        "type": "ResultStateSize",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
       },
       "title": {
-        "type": "string",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "type": {
-        "type": "ResultStateType",
+        "type": "unknown",
         "required": false,
-        "default": "information"
+        "default": "'information'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/ResultState/ResultState.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
+    "extends": []
   },
   "Scrollbar": {
     "props": {
       "children": {
-        "type": "ReactNode",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "defer": {
-        "type": "boolean | object",
+        "type": "unknown",
         "required": false,
         "default": "true"
       },
       "disabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
+      "events": {
+        "type": "unknown",
+        "required": false
+      },
       "maxHeight": {
-        "type": "CSSProperties['maxHeight']",
+        "type": "unknown",
         "required": false
       },
       "maxWidth": {
-        "type": "CSSProperties['maxWidth']",
+        "type": "unknown",
+        "required": false
+      },
+      "onViewportReady": {
+        "type": "unknown",
         "required": false
       },
       "options": {
-        "type": "PartialOptions",
+        "type": "unknown",
         "required": false
       },
-      "events": {
-        "type": "OverlayScrollbarsComponentProps['events']",
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
-    "sourceFile": "packages/react/src/Scrollbar/typings.ts",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children'>"
-    ],
-    "deprecated": true,
-    "deprecationReason": "Component no longer exported from @mezzanine-ui/react index.ts as of v1.1.0"
+    "sourceFile": "packages/react/src/Scrollbar/Scrollbar.tsx",
+    "extends": []
   },
   "Section": {
     "props": {
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
       "className": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "contentHeader": {
-        "type": "ReactElement<ContentHeaderProps>",
+        "type": "unknown",
         "required": false
       },
       "filterArea": {
-        "type": "ReactElement<FilterAreaProps>",
+        "type": "unknown",
         "required": false
       },
       "tab": {
-        "type": "ReactElement<TabProps>",
+        "type": "unknown",
         "required": false
       }
     },
@@ -1607,94 +3222,251 @@
     "extends": []
   },
   "Select": {
-    "props": {},
+    "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "defaultValue": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "disabledFromFormControl || false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "severity === 'error' || false"
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "fullWidthFromFormControl || false"
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "loading": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "loadingPosition": {
+        "type": "unknown",
+        "required": false,
+        "default": "'bottom'"
+      },
+      "loadingText": {
+        "type": "unknown",
+        "required": false
+      },
+      "menuMaxHeight": {
+        "type": "unknown",
+        "required": false
+      },
+      "mode": {
+        "type": "unknown",
+        "required": false,
+        "default": "'single'"
+      },
+      "onBlur": {
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClear": {
+        "type": "unknown",
+        "required": false
+      },
+      "onFocus": {
+        "type": "unknown",
+        "required": false
+      },
+      "onLeaveBottom": {
+        "type": "unknown",
+        "required": false
+      },
+      "onReachBottom": {
+        "type": "unknown",
+        "required": false
+      },
+      "onScroll": {
+        "type": "unknown",
+        "required": false
+      },
+      "options": {
+        "type": "unknown",
+        "required": false
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false,
+        "default": "''"
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "renderValue": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "requiredFromFormControl || false"
+      },
+      "overflowStrategy": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "suffixActionIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'default'"
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "dropdownZIndex": {
+        "type": "unknown",
+        "required": false
+      },
+      "flip": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "globalPortal": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      }
+    },
     "sourceFile": "packages/react/src/Select/Select.tsx",
     "extends": []
   },
   "SelectionCard": {
     "props": {
       "checked": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "defaultChecked": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
-      "selector": {
-        "type": "SelectionCardType",
-        "required": true,
-        "default": "radio"
-      },
       "disabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "direction": {
-        "type": "SelectionCardDirection",
+        "type": "unknown",
         "required": false,
-        "default": "horizontal"
+        "default": "'horizontal'"
+      },
+      "id": {
+        "type": "unknown",
+        "required": false
       },
       "image": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "imageObjectFit": {
-        "type": "SelectionCardImageObjectFit",
+        "type": "unknown",
         "required": false,
-        "default": "cover"
+        "default": "'cover'"
       },
-      "customIcon": {
-        "type": "IconDefinition",
+      "inputRef": {
+        "type": "unknown",
         "required": false
       },
       "name": {
-        "type": "string",
-        "required": false
-      },
-      "id": {
-        "type": "string",
-        "required": false
-      },
-      "text": {
-        "type": "string",
-        "required": true
-      },
-      "textMaxWidth": {
-        "type": "CSSProperties['maxWidth']",
-        "required": false
-      },
-      "supportingText": {
-        "type": "string",
-        "required": false
-      },
-      "supportingTextMaxWidth": {
-        "type": "CSSProperties['maxWidth']",
-        "required": false
-      },
-      "readonly": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "value": {
-        "type": "string",
-        "required": false
-      },
-      "inputRef": {
-        "type": "Ref<HTMLInputElement>",
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "ChangeEventHandler<HTMLInputElement>",
+        "type": "unknown",
+        "required": false
+      },
+      "readonly": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "selector": {
+        "type": "unknown",
+        "required": false,
+        "default": "'radio'"
+      },
+      "supportingText": {
+        "type": "unknown",
+        "required": false
+      },
+      "supportingTextMaxWidth": {
+        "type": "unknown",
+        "required": false
+      },
+      "text": {
+        "type": "unknown",
+        "required": false
+      },
+      "textMaxWidth": {
+        "type": "unknown",
+        "required": false
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "customIcon": {
+        "type": "unknown",
         "required": false
       },
       "onClick": {
-        "type": "(event: MouseEvent<HTMLLabelElement>) => void",
-        "required": false,
-        "description": "Click handler (new in v1.1.0)"
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/SelectionCard/SelectionCard.tsx",
@@ -1702,166 +3474,519 @@
   },
   "Separator": {
     "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
       "orientation": {
-        "type": "SeparatorOrientation",
+        "type": "unknown",
         "required": false,
-        "default": "horizontal"
+        "default": "'horizontal'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Separator/Separator.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'hr'>"
-    ]
-  },
-  "Switch": {
-    "props": {},
-    "sourceFile": "packages/react/src/Switch/Switch.tsx",
-    "extends": [],
-    "deprecated": true,
-    "deprecationReason": "Component no longer exported from @mezzanine-ui/react index.ts as of v1.1.0"
+    "extends": []
   },
   "Skeleton": {
     "props": {
       "circle": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "height": {
-        "type": "number | string",
-        "required": false,
-        "default": "100%"
+        "type": "unknown",
+        "required": false
+      },
+      "style": {
+        "type": "unknown",
+        "required": false
       },
       "variant": {
-        "type": "TypographySemanticType",
+        "type": "unknown",
         "required": false
       },
       "width": {
-        "type": "number | string",
-        "required": false,
-        "default": "100%"
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Skeleton/Skeleton.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children'>"
-    ]
+    "extends": []
   },
   "Slider": {
-    "props": {},
+    "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "innerRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "max": {
+        "type": "unknown",
+        "required": false,
+        "default": "100"
+      },
+      "min": {
+        "type": "unknown",
+        "required": false,
+        "default": "0"
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "onPrefixIconClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "onSuffixIconClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefixIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "step": {
+        "type": "unknown",
+        "required": false,
+        "default": "1"
+      },
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
+      "suffixIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "value": {
+        "type": "unknown",
+        "required": false
+      },
+      "withInput": {
+        "type": "unknown",
+        "required": false
+      },
+      "withTick": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Slider/Slider.tsx",
     "extends": []
   },
   "Spin": {
+    "props": {},
+    "sourceFile": "packages/react/src/Spin/Spin.tsx",
+    "extends": []
+  },
+  "Stepper": {
     "props": {
-      "color": {
-        "type": "string",
-        "required": false,
-        "default": "palette icon brand color"
-      },
-      "description": {
-        "type": "string",
+      "children": {
+        "type": "unknown",
         "required": false
       },
-      "descriptionClassName": {
-        "type": "string",
+      "className": {
+        "type": "unknown",
         "required": false
       },
-      "size": {
-        "type": "GeneralSize",
+      "currentStep": {
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "0"
       },
-      "stretch": {
-        "type": "boolean",
+      "onStepChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "orientation": {
+        "type": "unknown",
         "required": false,
-        "default": "false"
+        "default": "'horizontal'"
       },
-      "loading": {
-        "type": "boolean",
+      "type": {
+        "type": "unknown",
         "required": false,
-        "default": "false"
+        "default": "'number'"
       },
-      "trackColor": {
-        "type": "string",
-        "required": false,
-        "default": "transparent"
-      },
-      "backdropProps": {
-        "type": "Omit<BackdropProps, 'container' | 'open'>",
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
-    "sourceFile": "packages/react/src/Spin/Spin.tsx",
-    "extends": [
-      "NativeElementPropsWithoutKeyAndRef<'div'>"
-    ]
-  },
-  "Stepper": {
-    "props": {},
     "sourceFile": "packages/react/src/Stepper/Stepper.tsx",
     "extends": []
   },
   "Tab": {
     "props": {
       "activeKey": {
-        "type": "Key",
+        "type": "unknown",
         "required": false
       },
       "children": {
-        "type": "TabsChild | TabsChild[]",
-        "required": true
-      },
-      "defaultActiveKey": {
-        "type": "Key",
+        "type": "unknown",
         "required": false
       },
-      "direction": {
-        "type": "'horizontal' | 'vertical'",
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "defaultActiveKey": {
+        "type": "unknown",
         "required": false,
-        "default": "horizontal"
+        "default": "0"
+      },
+      "direction": {
+        "type": "unknown",
+        "required": false,
+        "default": "'horizontal'"
       },
       "onChange": {
-        "type": "(activeKey: Key, index: number) => void",
+        "type": "unknown",
         "required": false
       },
       "size": {
-        "type": "'main' | 'sub'",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Tab/Tab.tsx",
-    "extends": [
-      "Omit<\n    NativeElementPropsWithoutKeyAndRef<'div'>,\n    'onChange' | 'children'\n  >"
-    ]
+    "extends": []
   },
   "Table": {
-    "props": {},
+    "props": {
+      "actions": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "columns": {
+        "type": "unknown",
+        "required": false
+      },
+      "dataSource": {
+        "type": "unknown",
+        "required": false
+      },
+      "draggable": {
+        "type": "unknown",
+        "required": false
+      },
+      "emptyProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "expandable": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "highlight": {
+        "type": "unknown",
+        "required": false,
+        "default": "'row'"
+      },
+      "loading": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "loadingRowsCount": {
+        "type": "unknown",
+        "required": false,
+        "default": "10"
+      },
+      "minHeight": {
+        "type": "unknown",
+        "required": false
+      },
+      "nested": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "pagination": {
+        "type": "unknown",
+        "required": false
+      },
+      "pinnable": {
+        "type": "unknown",
+        "required": false
+      },
+      "resizable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "rowState": {
+        "type": "unknown",
+        "required": false
+      },
+      "rowHeightPreset": {
+        "type": "unknown",
+        "required": false,
+        "default": "'base'"
+      },
+      "rowSelection": {
+        "type": "unknown",
+        "required": false
+      },
+      "scroll": {
+        "type": "unknown",
+        "required": false
+      },
+      "showHeader": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "sticky": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
+      "toggleable": {
+        "type": "unknown",
+        "required": false
+      },
+      "collectable": {
+        "type": "unknown",
+        "required": false
+      },
+      "transitionState": {
+        "type": "unknown",
+        "required": false
+      },
+      "zebraStriping": {
+        "type": "unknown",
+        "required": false
+      },
+      "separatorAtRowIndexes": {
+        "type": "unknown",
+        "required": false
+      },
+      "restProps": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Table/Table.tsx",
     "extends": []
   },
   "Tag": {
-    "props": {},
+    "props": {
+      "active": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClose": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "type": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/Tag/Tag.tsx",
     "extends": []
   },
   "TextField": {
-    "props": {},
+    "props": {
+      "active": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "forceShowClearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "hideSuffixWhenClearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "onClear": {
+        "type": "unknown",
+        "required": false
+      },
+      "onClick": {
+        "type": "unknown",
+        "required": false
+      },
+      "onKeyDown": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readonly": {
+        "type": "unknown",
+        "required": false
+      },
+      "role": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false,
+        "default": "'main'"
+      },
+      "suffix": {
+        "type": "unknown",
+        "required": false
+      },
+      "typing": {
+        "type": "unknown",
+        "required": false
+      },
+      "warning": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
+      }
+    },
     "sourceFile": "packages/react/src/TextField/TextField.tsx",
     "extends": []
   },
   "Textarea": {
     "props": {
+      "className": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false
+      },
       "textareaClassName": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "textareaRef": {
-        "type": "Ref<HTMLTextAreaElement>",
+        "type": "unknown",
         "required": false
       },
+      "type": {
+        "type": "unknown",
+        "required": false,
+        "default": "'default'"
+      },
       "resize": {
-        "type": "'none' | 'both' | 'horizontal' | 'vertical'",
+        "type": "unknown",
+        "required": false,
+        "default": "'none'"
+      },
+      "textareaProps": {
+        "type": "unknown",
         "required": false
       }
     },
@@ -1870,250 +3995,410 @@
   },
   "TimePanel": {
     "props": {
-      "hideHour": {
-        "type": "boolean",
+      "className": {
+        "type": "unknown",
         "required": false
+      },
+      "hideHour": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
       },
       "hideMinute": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "false"
       },
       "hideSecond": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "false"
       },
       "hourStep": {
-        "type": "number",
+        "type": "unknown",
         "required": false,
         "default": "1"
       },
       "minuteStep": {
-        "type": "number",
+        "type": "unknown",
         "required": false,
         "default": "1"
       },
       "onChange": {
-        "type": "(target: DateType) => void",
+        "type": "unknown",
         "required": false
       },
       "onCancel": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "onConfirm": {
-        "type": "VoidFunction",
+        "type": "unknown",
         "required": false
       },
       "secondStep": {
-        "type": "number",
+        "type": "unknown",
         "required": false,
         "default": "1"
       },
       "value": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "restHostProps": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/TimePanel/TimePanel.tsx",
-    "extends": [
-      "Omit<\n    NativeElementPropsWithoutKeyAndRef<'div'>,\n    'value' | 'onChange' | 'children'\n  >"
-    ]
+    "extends": []
   },
   "TimePicker": {
     "props": {
-      "defaultValue": {
-        "type": "DateType",
+      "className": {
+        "type": "unknown",
         "required": false
       },
-      "format": {
-        "type": "string",
+      "clearable": {
+        "type": "unknown",
         "required": false,
-        "default": "HH:mm:ss' or 'HH:mm' based on hideSecond"
+        "default": "true"
+      },
+      "defaultValue": {
+        "type": "unknown",
+        "required": false
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "fadeProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "hideHour": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideMinute": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideSecond": {
+        "type": "unknown",
+        "required": false
+      },
+      "hourStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "minuteStep": {
+        "type": "unknown",
+        "required": false
       },
       "onChange": {
-        "type": "(target?: DateType) => void",
+        "type": "unknown",
         "required": false
       },
       "onPanelToggle": {
-        "type": "(open: boolean) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "placeholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "secondStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "DateType",
+        "type": "unknown",
+        "required": false
+      },
+      "restTriggerProps": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/TimePicker/TimePicker.tsx",
-    "extends": [
-      "Omit<\n      TimePickerPanelProps,\n      'anchor' | 'onChange' | 'onCancel' | 'onConfirm' | 'open' | 'value'\n    >,\n    Omit<\n      PickerTriggerProps,\n      'format' | 'inputRef' | 'onChange' | 'onClear' | 'suffix' | 'value'\n    >"
-    ]
+    "extends": []
   },
   "TimeRangePicker": {
     "props": {
-      "format": {
-        "type": "string",
-        "required": false,
-        "default": "HH:mm:ss' or 'HH:mm' based on hideSecond"
+      "className": {
+        "type": "unknown",
+        "required": false
       },
-      "onPanelToggle": {
-        "type": "(open: boolean) => void",
+      "clearable": {
+        "type": "unknown",
+        "required": false,
+        "default": "true"
+      },
+      "disabled": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "error": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "errorMessagesFrom": {
+        "type": "unknown",
+        "required": false
+      },
+      "errorMessagesTo": {
+        "type": "unknown",
+        "required": false
+      },
+      "fadeProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "format": {
+        "type": "unknown",
+        "required": false
+      },
+      "fullWidth": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "hideHour": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideMinute": {
+        "type": "unknown",
+        "required": false
+      },
+      "hideSecond": {
+        "type": "unknown",
+        "required": false
+      },
+      "hourStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputFromPlaceholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputFromProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputToPlaceholder": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputToProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "minuteStep": {
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "(target?: TimeRangePickerValue) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "onPanelToggle": {
+        "type": "unknown",
+        "required": false
+      },
+      "popperProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "prefix": {
+        "type": "unknown",
+        "required": false
+      },
+      "readOnly": {
+        "type": "unknown",
+        "required": false
+      },
+      "required": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "secondStep": {
+        "type": "unknown",
+        "required": false
+      },
+      "size": {
+        "type": "unknown",
+        "required": false
+      },
+      "validateFrom": {
+        "type": "unknown",
+        "required": false
+      },
+      "validateTo": {
+        "type": "unknown",
         "required": false
       },
       "value": {
-        "type": "TimeRangePickerValue",
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/TimeRangePicker/TimeRangePicker.tsx",
-    "extends": [
-      "Pick<\n      TimePickerPanelProps,\n      | 'fadeProps'\n      | 'hideHour'\n      | 'hideMinute'\n      | 'hideSecond'\n      | 'hourStep'\n      | 'minuteStep'\n      | 'popperProps'\n      | 'secondStep'\n    >,\n    Pick<\n      RangePickerTriggerProps,\n      | 'className'\n      | 'clearable'\n      | 'disabled'\n      | 'error'\n      | 'errorMessagesFrom'\n      | 'errorMessagesTo'\n      | 'fullWidth'\n      | 'inputFromPlaceholder'\n      | 'inputFromProps'\n      | 'inputToPlaceholder'\n      | 'inputToProps'\n      | 'prefix'\n      | 'readOnly'\n      | 'required'\n      | 'size'\n      | 'validateFrom'\n      | 'validateTo'\n    >"
-    ]
+    "extends": []
   },
   "Toggle": {
     "props": {
       "checked": {
-        "type": "boolean",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "defaultChecked": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false
       },
       "disabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
-        "default": "false"
+        "default": "disabledFromFormControl"
       },
       "inputProps": {
-        "type": "Omit<",
+        "type": "unknown",
         "required": false
       },
       "label": {
-        "type": "string",
+        "type": "unknown",
         "required": false
       },
       "onChange": {
-        "type": "ChangeEventHandler<HTMLInputElement>",
+        "type": "unknown",
         "required": false
       },
       "size": {
-        "type": "ToggleSize",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
       },
       "supportingText": {
-        "type": "string",
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Toggle/Toggle.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'onChange'>"
-    ]
+    "extends": []
   },
   "Tooltip": {
-    "props": {
-      "arrow": {
-        "type": "boolean",
-        "required": false,
-        "default": "true"
-      },
-      "ref": {
-        "type": "React.RefCallback<HTMLElement>",
-        "required": true
-      },
-      "disablePortal": {
-        "type": "boolean",
-        "required": false,
-        "default": "true"
-      },
-      "mouseLeaveDelay": {
-        "type": "number",
-        "required": false,
-        "default": "0.1"
-      },
-      "offsetMainAxis": {
-        "type": "number",
-        "required": false,
-        "default": "value of spacing token `gap-base"
-      },
-      "title": {
-        "type": "ReactNode",
-        "required": false
-      },
-      "children": {
-        "type": "object",
-        "required": true
-      }
-    },
+    "props": {},
     "sourceFile": "packages/react/src/Tooltip/Tooltip.tsx",
-    "extends": [
-      "Omit<PopperProps, 'arrow' | 'children' | 'disablePortal' | 'title'>"
-    ]
+    "extends": []
   },
   "Transition": {
     "props": {
       "addEndListener": {
-        "type": "(node: HTMLElement, next: VoidFunction) => void",
+        "type": "unknown",
         "required": false
       },
       "appear": {
-        "type": "boolean",
-        "required": false
+        "type": "unknown",
+        "required": false,
+        "default": "true"
       },
       "children": {
-        "type": "TransitionChildren",
+        "type": "unknown",
         "required": false
       },
       "duration": {
-        "type": "TransitionDuration",
+        "type": "unknown",
         "required": false
       },
       "in": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
+        "type": "unknown",
+        "required": false
       },
       "keepMount": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "lazyMount": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "true"
       },
       "nodeRef": {
-        "type": "RefObject<HTMLElement | null>",
-        "required": true
+        "type": "unknown",
+        "required": false
       },
       "onEnter": {
-        "type": "TransitionEnterHandler",
+        "type": "unknown",
         "required": false
       },
       "onEntering": {
-        "type": "TransitionEnterHandler",
+        "type": "unknown",
         "required": false
       },
       "onEntered": {
-        "type": "TransitionEnterHandler",
+        "type": "unknown",
         "required": false
       },
       "onExit": {
-        "type": "TransitionExitHandler",
+        "type": "unknown",
         "required": false
       },
       "onExiting": {
-        "type": "TransitionExitHandler",
+        "type": "unknown",
         "required": false
       },
       "onExited": {
-        "type": "TransitionExitHandler",
+        "type": "unknown",
         "required": false
       }
     },
@@ -2123,37 +4408,51 @@
   "Typography": {
     "props": {
       "align": {
-        "type": "TypographyAlign",
-        "required": false,
-        "description": "Text alignment (new in v1.1.0)"
+        "type": "unknown",
+        "required": false
+      },
+      "children": {
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
+        "required": false
       },
       "color": {
-        "type": "TypographyColor",
-        "required": false,
-        "description": "Semantic color from palette (new in v1.1.0)"
+        "type": "unknown",
+        "required": false
+      },
+      "component": {
+        "type": "unknown",
+        "required": false
       },
       "display": {
-        "type": "string",
-        "required": false,
-        "description": "CSS display property (new in v1.1.0)"
+        "type": "unknown",
+        "required": false
       },
       "ellipsis": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
-        "default": "false",
-        "description": "Single-line truncation (new in v1.1.0)"
+        "default": "false"
       },
       "noWrap": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
-        "default": "false",
-        "description": "Prevents wrapping (new in v1.1.0)"
+        "default": "false"
       },
       "variant": {
-        "type": "TypographySemanticType",
+        "type": "unknown",
         "required": false,
-        "default": "body",
-        "description": "Typography semantic type (new in v1.1.0)"
+        "default": "'body'"
+      },
+      "style": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
+        "required": false
       }
     },
     "sourceFile": "packages/react/src/Typography/Typography.tsx",
@@ -2162,135 +4461,124 @@
   "Upload": {
     "props": {
       "accept": {
-        "type": "string",
+        "type": "unknown",
+        "required": false
+      },
+      "className": {
+        "type": "unknown",
         "required": false
       },
       "disabled": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "false"
       },
       "dropzoneHints": {
-        "type": "UploaderProps['hints']",
+        "type": "unknown",
         "required": false
-      },
-      "files": {
-        "type": "File[],",
-        "required": true
-      },
-      "hints": {
-        "type": "UploaderProps['hints']",
-        "required": false
-      },
-      "uploaderIcon": {
-        "type": "UploaderProps['icon']",
-        "required": false
-      },
-      "id": {
-        "type": "string",
-        "required": false
-      },
-      "inputProps": {
-        "type": "UploaderProps['inputProps']",
-        "required": false
-      },
-      "inputRef": {
-        "type": "UploaderProps['inputRef']",
-        "required": false
-      },
-      "maxFiles": {
-        "type": "number,",
-        "required": true
       },
       "mode": {
-        "type": "UploadMode",
+        "type": "unknown",
         "required": false,
-        "default": "list"
-      },
-      "multiple": {
-        "type": "boolean",
-        "required": false,
-        "default": "false"
-      },
-      "name": {
-        "type": "string",
-        "required": false
+        "default": "'list'"
       },
       "size": {
-        "type": "UploadSize",
+        "type": "unknown",
         "required": false,
-        "default": "main"
+        "default": "'main'"
       },
       "showFileSize": {
-        "type": "boolean",
+        "type": "unknown",
         "required": false,
         "default": "true"
       },
-      "uploaderLabel": {
-        "type": "UploaderProps['label']",
-        "required": false
-      },
-      "errorMessage": {
-        "type": "string",
-        "required": false
-      },
-      "errorIcon": {
-        "type": "ReactNode",
-        "required": false
-      },
-      "ariaLabels": {
-        "type": "UploadPictureCardAriaLabels",
-        "required": false
-      },
-      "onChange": {
-        "type": "(files: UploadFile[]) => void",
-        "required": false
-      },
-      "onDelete": {
-        "type": "(fileId: string, file: File) => void",
-        "required": false
-      },
-      "onDownload": {
-        "type": "(fileId: string, file: File) => void",
-        "required": false
-      },
-      "onMaxFilesExceeded": {
-        "type": "(",
-        "required": false
-      },
-      "selectedCount": {
-        "type": "number,",
-        "required": true
-      },
-      "currentCount": {
-        "type": "number,",
-        "required": true
-      },
-      "onReload": {
-        "type": "(fileId: string, file: File) => void",
+      "files": {
+        "type": "unknown",
         "required": false
       },
       "onUpload": {
-        "type": "(",
+        "type": "unknown",
         "required": false
       },
-      "setProgress": {
-        "type": "(fileIndex: number, progress: number) => void,",
+      "onDelete": {
+        "type": "unknown",
+        "required": false
+      },
+      "onReload": {
+        "type": "unknown",
+        "required": false
+      },
+      "onDownload": {
+        "type": "unknown",
         "required": false
       },
       "onZoomIn": {
-        "type": "(fileId: string, file: File) => void",
+        "type": "unknown",
+        "required": false
+      },
+      "onChange": {
+        "type": "unknown",
+        "required": false
+      },
+      "id": {
+        "type": "unknown",
+        "required": false
+      },
+      "name": {
+        "type": "unknown",
+        "required": false
+      },
+      "multiple": {
+        "type": "unknown",
+        "required": false,
+        "default": "false"
+      },
+      "maxFiles": {
+        "type": "unknown",
+        "required": false
+      },
+      "hints": {
+        "type": "unknown",
+        "required": false
+      },
+      "uploaderLabel": {
+        "type": "unknown",
+        "required": false
+      },
+      "uploaderIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputRef": {
+        "type": "unknown",
+        "required": false
+      },
+      "inputProps": {
+        "type": "unknown",
+        "required": false
+      },
+      "onMaxFilesExceeded": {
+        "type": "unknown",
+        "required": false
+      },
+      "errorMessage": {
+        "type": "unknown",
+        "required": false
+      },
+      "errorIcon": {
+        "type": "unknown",
+        "required": false
+      },
+      "ariaLabels": {
+        "type": "unknown",
+        "required": false
+      },
+      "rest": {
+        "type": "unknown",
         "required": false
       }
     },
     "sourceFile": "packages/react/src/Upload/Upload.tsx",
-    "extends": [
-      "Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'onChange'>"
-    ]
-  },
-  "_meta": {
-    "version": "1.4.2",
-    "generatedAt": "2026-08-14",
-    "description": "TypeScript props API index for Mezzanine UI v2"
+    "extends": []
   }
 }

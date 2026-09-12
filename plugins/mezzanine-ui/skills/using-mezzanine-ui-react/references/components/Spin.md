@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Feedback/Spin`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Spin) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Spin) · Verified 1.5.1 (2026-09-12)
 
 Spinning loading component for indicating content is loading.
 

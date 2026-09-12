@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Navigation/PageHeader`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/PageHeader) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/PageHeader) · Verified 1.5.1 (2026-09-12)
 
 Page header component for displaying page-level navigation and titles. Contains breadcrumb and content header.
 
@@ -94,7 +94,7 @@ PageHeader 在 runtime 透過 `flattenChildren` + `isValidElement` + `child.type
 
 > **Note**: `ContentHeader` is not exported from the `@mezzanine-ui/react` main entry; it must be imported from the sub-path `@mezzanine-ui/react/ContentHeader`.
 >
-> **ContentHeader status**: Marked deprecated in 1.0.0 because it is no longer exported from the main entry. It **remains required** by PageHeader — a PageHeader must contain exactly one ContentHeader child, enforced by the type `PageHeaderChild = ReactElement<BreadcrumbProps> | ReactElement<ContentHeaderProps>`. Import via sub-path and use as shown in the examples below. See [ContentHeader.md](ContentHeader.md) for the full API.
+> **ContentHeader status**: Never exported from the `@mezzanine-ui/react` main entry — verified against the published `src/index.ts` of every release from 1.0.0 through 1.5.1 — and never marked `@deprecated` in source. It **remains required** by PageHeader — a PageHeader must contain exactly one ContentHeader child, enforced by the type `PageHeaderChild = ReactElement<BreadcrumbProps> | ReactElement<ContentHeaderProps>`. Import via sub-path and use as shown in the examples below. See [ContentHeader.md](ContentHeader.md) for the full API.
 
 ---
 

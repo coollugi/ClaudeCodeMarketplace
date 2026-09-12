@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/Radio`
 >
-> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Radio) · Verified 1.4.1 (2026-07-01)
+> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Radio) · Verified 1.5.1 (2026-09-12)
 
 Radio button component supporting normal mode and segment mode.
 
@@ -55,7 +55,7 @@ Extends `InputCheckProps` (excluding `control`, `htmlFor`).
 | `defaultChecked` | `boolean`                                                        | `false`   | Default checked state    |
 | `disabled`       | `boolean`                                                        | `false`   | Whether disabled         |
 | `error`          | `boolean`                                                        | `false`   | Whether in error state   |
-| `inputProps`     | `Omit<NativeElementPropsWithoutKeyAndRef<'input'>, ...excluded>` | -         | Props passed to input    |
+| `inputProps`     | `Omit<NativeElementPropsWithoutKeyAndRef<'input'>, ...excluded>` | -         | Props passed to input. `inputProps.name` defaults to the parent `RadioGroup`'s `name` when not explicitly provided. |
 | `onChange`       | `ChangeEventHandler<HTMLInputElement>`                           | -         | Change event             |
 | `size`           | `RadioSize` (`'main' \| 'sub'`)                                  | `'main'`  | Size                     |
 | `value`          | `string`                                                         | -         | Value                    |

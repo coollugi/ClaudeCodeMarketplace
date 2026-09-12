@@ -1,13 +1,12 @@
 # ClearActions Component
 
-> ⚠️ **REMOVED from the public API in 1.4.1** (deprecated in 1.1.0) — This component is no longer exported from the `@mezzanine-ui/react` package entrypoint.
-> It **still exists in the source tree** (`packages/react/src/ClearActions`) and is used internally by Modal, Drawer, Tag, TextField, and InlineMessage — only the public export was dropped. It was never part of the intended public API, so do not import it directly in application code.
+> **Note**: Not exported from the `@mezzanine-ui/react` main entrypoint — import it via sub-path (`@mezzanine-ui/react/ClearActions`). It ships as a real, functional component and is used internally by Modal, Drawer, Tag, TextField, and InlineMessage; it simply isn't re-exported from the package barrel, so application code must use the sub-path import shown below.
 
-> **Category**: Internal (removed)
+> **Category**: Internal (sub-path only)
 >
-> **Storybook**: `Internal/ClearActions` (removed in 1.4.1)
+> **Storybook**: `Internal/ClearActions`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/ClearActions) · **Removed** in 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/ClearActions) · Verified 1.5.1 (2026-09-12)
 
 Clear/close button component providing a unified close button style. Used for close functionality in Modal, Drawer, Tag, and other components.
 
@@ -28,7 +27,8 @@ import type { ClearActionsProps } from '@mezzanine-ui/react/ClearActions';
 
 | Property  | Type                                      | Default      | Description       |
 | --------- | ----------------------------------------- | ------------ | ----------------- |
-| `onClick` | `MouseEventHandler`                       | -            | Click callback    |
+| `className` | `string`                                 | -            | Custom CSS class name |
+| `onClick` | `MouseEventHandler<HTMLButtonElement>`    | -            | Click callback    |
 | `type`    | `'standard' \| 'embedded' \| 'clearable'` | `'standard'` | Usage context type |
 | `variant` | `ClearActionsVariant`                     | -            | Visual variant (discriminated union, see below) |
 

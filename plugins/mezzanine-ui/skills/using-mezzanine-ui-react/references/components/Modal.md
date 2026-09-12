@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Feedback/Modal`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Modal) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Modal) · Verified 1.5.1 (2026-09-12)
 
 A dialog component for scenarios requiring user attention or action.
 
@@ -67,7 +67,7 @@ Extends `ModalContainerProps` (excluding `children`) with partial `ModalHeaderPr
 
 | Property    | Type                                                                | Default      | Description |
 | ----------- | ------------------------------------------------------------------- | ------------ | ----------- |
-| `modalType` | `'standard' \| 'extended' \| 'mediaPreview' \| 'verification'`     | `'standard'` | Dialog type |
+| `modalType` | `'standard' \| 'extended' \| 'mediaPreview' \| 'verification'`     | **Required** (type-level; the implementation also applies a `'standard'` runtime fallback if omitted) | Dialog type |
 | `size`      | `ModalSize`                                                         | `'regular'`  | Dialog size |
 
 ### Split Modal Props (modalType = extendedSplit)

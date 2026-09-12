@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/Checkbox`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Checkbox) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Checkbox) · Verified 1.5.1 (2026-09-12)
 
 A checkbox component supporting standalone or group usage, with multiple modes.
 
@@ -40,6 +40,7 @@ import type {
 | Property         | Type                                                                                                                                                                                        | Default     | Description                                                           |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------- |
 | `checked`        | `boolean`                                                                                                                                                                                   | -           | Controlled checked state                                              |
+| `className`      | `string`                                                                                                                                                                                    | -           | Custom CSS class name                                                 |
 | `defaultChecked` | `boolean`                                                                                                                                                                                   | `false`     | Default checked state                                                 |
 | `description`    | `string`                                                                                                                                                                                    | -           | Description text                                                      |
 | `disabled`       | `boolean`                                                                                                                                                                                   | `false`     | Whether disabled                                                      |
@@ -50,7 +51,7 @@ import type {
 | `inputRef`       | `Ref<HTMLInputElement>`                                                                                                                                                                     | -           | Reference to underlying input element                                 |
 | `label`          | `string`                                                                                                                                                                                    | -           | Label text                                                            |
 | `mode`           | `CheckboxMode`                                                                                                                                                                              | `'default'` | Display mode                                                          |
-| `name`           | `string`                                                                                                                                                                                    | -           | Input name attribute                                                  |
+| `name`           | `string`                                                                                                                                                                                    | `nameFromGroup` | Input name attribute. Defaults to the parent `CheckboxGroup`'s `name` when used inside a group; otherwise `-`. |
 | `onChange`       | `ChangeEventHandler<HTMLInputElement>`                                                                                                                                                      | -           | Change event handler                                                  |
 | `severity`       | `'info' \| 'error'`                                                                                                                                                                         | `'info'`    | Severity state for validation feedback                                |
 | `size`           | `'main' \| 'sub' \| 'minor'`                                                                                                                                                               | `'main'`    | Checkbox size (`'minor'` only available in chip mode)                 |

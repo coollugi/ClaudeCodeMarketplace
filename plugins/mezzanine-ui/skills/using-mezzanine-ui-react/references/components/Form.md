@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/Form`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Form) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Form) · Verified 1.5.1 (2026-09-12)
 
 Form-related components including field containers, labels, hint text, and more.
 
@@ -437,20 +437,124 @@ type FormElementFocusHandlers = {
 
 ## Form Hooks
 
-Hooks for controlling form input state.
+Hooks for controlling form input state. All are re-exported from the `@mezzanine-ui/react` main entry (`export * from './Form/use*'`).
 
-| Hook                              | Purpose                      |
-| --------------------------------- | ---------------------------- |
-| `useInputControlValue`            | Input controlled value       |
-| `useInputWithClearControlValue`   | Input with clear             |
-| `useInputWithTagsModeValue`       | Input tags-mode value management |
-| `useSelectValueControl`           | Select value management      |
-| `useCheckboxControlValue`         | Checkbox value management    |
-| `useRadioControlValue`            | Radio value management       |
-| `useSwitchControlValue`           | Switch value management      |
-| `useAutoCompleteValueControl`     | AutoComplete value management|
-| `useCustomControlValue`           | Custom control value         |
-| `useControlValueState`            | Generic controlled/uncontrolled value state |
+### `useControlValueState<V>(props)`
+
+The underlying controlled/uncontrolled state primitive every other hook in this section builds on.
+
+| Property       | Type                        | Default            | Description |
+| -------------- | --------------------------- | ------------------- | ----------- |
+| `defaultValue` | `V`                         | **required**        | Uncontrolled initial value |
+| `value`        | `V`                         | -                   | Controlled value |
+| `equalityFn`   | `(a: V, b: V) => boolean`   | `(a, b) => a === b` | Used to detect external `value` changes and to skip redundant updates |
+
+Returns `[value, setValue, equalityFn] as const`.
+
+### `useInputControlValue<E extends HTMLInputElement | HTMLTextAreaElement>(props)`
+
+| Property       | Type                    | Default | Description |
+| -------------- | ------------------------ | ------- | ----------- |
+| `value`        | `string`                 | -       | Controlled value |
+| `defaultValue` | `string`                 | `''`    | Uncontrolled initial value |
+| `onChange`     | `ChangeEventHandler<E>`  | -       | Change callback |
+
+Returns `[value, onChange] as const`.
+
+### `useInputWithClearControlValue<E extends HTMLInputElement | HTMLTextAreaElement>(props)`
+
+Extends `useInputControlValue`'s props, adding:
+
+| Property | Type                   | Default      | Description |
+| -------- | ---------------------- | ------------ | ----------- |
+| `ref`    | `RefObject<E \| null>` | **required** | Ref to the underlying input/textarea, used to synthesize a change event when clearing |
+
+Returns `[value, onChange, onClear] as const`.
+
+### `useCheckboxControlValue(props)`
+
+| Property        | Type                                                  | Default | Description |
+| --------------- | ------------------------------------------------------ | ------- | ----------- |
+| `checked`       | `boolean`                                              | -       | Controlled checked state |
+| `defaultChecked`| `boolean`                                              | `false` | Uncontrolled initial checked state |
+| `onChange`      | `ChangeEventHandler<HTMLInputElement>`                 | -       | Change callback |
+| `checkboxGroup` | `{ value?: string[]; onChange?: ChangeEventHandler<HTMLInputElement> }` | -       | When provided (i.e. used inside a `CheckboxGroup`), checked state is derived from whether `checkboxGroup.value` includes this checkbox's own `value`, and `checkboxGroup.onChange` is called alongside `onChange` |
+| `value`         | `string`                                               | -       | This checkbox's own value, used to test membership in `checkboxGroup.value` |
+
+Returns `[checked, setChecked] as const` (`setChecked` is a `ChangeEventHandler<HTMLInputElement>`).
+
+### `useRadioControlValue(props)`
+
+Same shape as `useCheckboxControlValue`, but for single-select semantics:
+
+| Property     | Type                                                   | Default | Description |
+| ------------ | ------------------------------------------------------- | ------- | ----------- |
+| `checked`    | `boolean`                                               | -       | Controlled checked state |
+| `defaultChecked` | `boolean`                                            | `false` | Uncontrolled initial checked state |
+| `onChange`   | `ChangeEventHandler<HTMLInputElement>`                  | -       | Change callback |
+| `radioGroup` | `{ value?: string; onChange?: ChangeEventHandler<HTMLInputElement> }` | -       | When provided (i.e. used inside a `RadioGroup`), checked is `radioGroup.value === value`, and `radioGroup.onChange` is called alongside `onChange` |
+| `value`      | `string`                                                | -       | This radio's own value, compared against `radioGroup.value` |
+
+Returns `[checked, setChecked] as const`.
+
+### `useSwitchControlValue(props)`
+
+| Property        | Type                                    | Default | Description |
+| --------------- | ----------------------------------------- | ------- | ----------- |
+| `checked`       | `boolean`                                 | -       | Controlled checked state |
+| `defaultChecked`| `boolean`                                 | `false` | Uncontrolled initial checked state |
+| `onChange`      | `ChangeEventHandler<HTMLInputElement>`    | -       | Change callback |
+
+Returns `[checked, onChange] as const`.
+
+### `useCustomControlValue<V>(props)`
+
+Generic, type-parameterized version of `useControlValueState` for controls whose value isn't a native form event (e.g. a custom picker).
+
+| Property       | Type                        | Default            | Description |
+| -------------- | ---------------------------- | ------------------- | ----------- |
+| `defaultValue` | `V`                          | **required**        | Uncontrolled initial value |
+| `value`        | `V`                          | -                   | Controlled value |
+| `equalityFn`   | `(a: V, b: V) => boolean`    | `(a, b) => a === b` | Change/skip detection |
+| `onChange`     | `(value: V) => void`         | -                   | Change callback |
+
+Returns `[value, onChange, equalityFn] as const`.
+
+### `useSelectValueControl(props)`
+
+Discriminated by `mode`, mirroring `Select`'s own single/multiple split.
+
+| Property       | Type                                                          | Default | Description |
+| -------------- | ---------------------------------------------------------------- | ------- | ----------- |
+| `mode`         | `'single' \| 'multiple'`                                        | **required** | Selection mode |
+| `value`        | `SelectValue \| null` (single) / `SelectValue[]` (multiple)      | -       | Controlled value |
+| `defaultValue` | `SelectValue` (single) / `SelectValue[]` (multiple)              | -       | Uncontrolled initial value (multiple defaults internally to `[]`, single to `null`) |
+| `onChange`     | `(v: SelectValue \| null) => void` (single) / `(v: SelectValue[]) => void` (multiple) | -       | Change callback |
+| `onClear`      | `(e: MouseEvent<Element>) => void`                              | -       | Clear callback |
+| `onClose`      | `() => void`                                                    | -       | Called before commit in single mode (closes the dropdown on selection) |
+
+Returns `{ value, onChange, onClear }` — `onChange` and `onClear` here are the resolved handlers that update internal state and invoke the callbacks above; they are not the same function references you passed in.
+
+### `useAutoCompleteValueControl(props)`
+
+The value-control hook backing `AutoComplete`. Discriminated by `mode` like `useSelectValueControl`, plus:
+
+| Property                | Type                                        | Default      | Description |
+| ------------------------ | -------------------------------------------- | ------------ | ----------- |
+| `mode`                   | `'single' \| 'multiple'`                     | **required** | Selection mode |
+| `options`                | `SelectValue[]`                              | **required** | The full options list (used to compute `selectedOptions`/`unselectedOptions`) |
+| `disabledOptionsFilter`  | `boolean`                                     | **required** | Whether built-in text filtering is disabled |
+| `caseSensitive`          | `boolean`                                     | `false`      | Whether filtering matches respect letter casing |
+| `getOptionsFilterQuery`  | `(searchText: string) => string \| undefined` | -            | Override what text is matched against options |
+| `value` / `defaultValue` | Same shape as `useSelectValueControl`         | -            | Controlled/uncontrolled value |
+| `onChange`               | Same shape as `useSelectValueControl`         | -            | Change callback |
+| `onClear`                | `(e: MouseEvent<Element>) => void`            | -            | Clear callback |
+| `onClose`                | `() => void`                                  | -            | Close callback |
+| `onSearch`                | `(input: string) => any`                     | -            | Search callback |
+
+Returns `{ focused, onClear, onFocus, options, searchText, selectedOptions, setSearchText, unselectedOptions, onChange, value }`.
+
+> **Not exported**: `useInputWithTagsModeValue` (in `Form/useInputWithTagsModeValue.ts`, with an `initialTagsValue` / `maxTagsLength` / `onTagsChange` / `skip` / `tagValueMaxLength` prop shape) exists in the source tree but is **not** re-exported from `@mezzanine-ui/react`'s main entry or the `@mezzanine-ui/react/Form` sub-path, and nothing else in the package imports it — treat it as dead/internal code, not part of the public API. Do not document it as importable.
 
 ---
 

@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Feedback/Inline Messages`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/InlineMessage) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/InlineMessage) · Verified 1.5.1 (2026-09-12)
 
 An inline message component for displaying contextual feedback messages.
 
@@ -185,7 +185,7 @@ import { InlineMessageGroup } from '@mezzanine-ui/react';
 
 This is because warning and error messages typically require user action to resolve and should not be directly dismissed.
 
-> Implementation note: The close button is rendered internally using the `ClearActions` component, which still exists in the source tree in 1.4.1 but is **not exported** from the `@mezzanine-ui/react` package entrypoint. This is an internal detail — do not import or use `ClearActions` directly. Interact with the close button exclusively through the `onClose` prop.
+> Implementation note: The close button is rendered internally using the `ClearActions` component, which still ships as a real component in `packages/react/src/ClearActions` but is **not exported** from the `@mezzanine-ui/react` package entrypoint (only via sub-path `@mezzanine-ui/react/ClearActions`). This is an internal detail — do not import or use `ClearActions` directly here. Interact with the close button exclusively through the `onClose` prop.
 
 ---
 

@@ -1,17 +1,17 @@
 ---
 name: using-mezzanine-ui-react
-description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.4.1). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Defines the component-selection contract (a UI-concept-to-component reverse index — status chips are Badge not Tag, segmented controls are RadioGroup type="segment" not Buttons — plus the rule that needing a className override of background/color/border means the wrong component was chosen) and the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, picking which component to use, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
+description: React / Next.js Mezzanine-UI skill — create, edit, or style JSX components with @mezzanine-ui/react (1.5.1). Covers Button, TextField, Select, Table, Modal, Form, DatePicker, Tabs, Navigation, Typography, Icon, Drawer, Upload, Toggle, design tokens, theming, and CalendarConfigProvider. Defines the component-selection contract (a UI-concept-to-component reverse index — status chips are Badge not Tag, segmented controls are RadioGroup type="segment" not Buttons — plus the rule that needing a className override of background/color/border means the wrong component was chosen) and the page layout padding contract (PageHeader / PageFooter / Section ship their own padding — page containers must not add horizontal padding). Use when working on *.tsx, *.scss files with @mezzanine-ui/react imports, building React forms, laying out a page skeleton, picking which component to use, or configuring Mezzanine styles in a React codebase. Trigger — React, Next.js, tsx, JSX, mezzanine-ui/react, add mezzanine component, build form, create page UI, page layout, container padding, 版面對不齊, 雙層 padding, design tokens, mzn, 該用哪個元件, 選元件, tag vs badge, chip, status chip, 狀態標籤, 狀態晶片, segmented control, 分段切換, 排序切換, 覆寫元件樣式. For Angular projects use the sibling using-mezzanine-ui-ng skill instead.
 ---
 
 # Mezzanine-UI Design System
 
 **Core principle: All frontend development MUST prefer the Mezzanine-UI design system.**
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）。
-> 元件文件的 `Verified` 標記：64 份為 `1.4.1`（2026-07-01），`AutoComplete.md` 已核到 `1.4.2`。版本歷史於 2026-08-14 逐版重新核對；
+> Baseline: `@mezzanine-ui/react` `1.5.1` · `@mezzanine-ui/core` `1.2.1` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）。
+> 元件文件的 `Verified` 標記：68 份現役元件皆已核到 `1.5.1`（2026-09-12）。`Switch.md` 刻意不標 `Verified` —— 該元件已不存在於原始碼（真正的開關元件是 `Toggle`）。
 > 名稱／型別／預設值對原始碼的比對狀態見 [RECONCILIATION.md](../../RECONCILIATION.md)（尚有未分類的殘差）。
 >
-> **已有更新版本**：`@mezzanine-ui/react@1.4.2` 已發布（含 `AutoComplete` 的 `caseSensitive` 新 prop 與預設比對行為變更），本 skill 尚未涵蓋 —— 見〈更新版本存在〉。
+> **Last verified**: 2026-09-12
 >
 > Check latest version: `npm view @mezzanine-ui/react versions` or see [GitHub Releases](https://github.com/Mezzanine-UI/mezzanine/releases).
 
@@ -186,7 +186,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 Mezzanine **沒有**提供負責頁面 gutter 的容器元件 — `Layout` / `Layout.Main` 是 app shell（Navigation + 面板），內部只有 flex / min-width / overflow，**零 padding、也沒有任何 padding 相關 prop**。所以 gutter 一定要由頁面自己處理，結構固定為三層：
 
 ```tsx
-// ContentHeader 已於 1.4.1 從主入口移除，但 PageHeader 仍要求它作為必要子元件 → sub-path 匯入
+// ContentHeader 從未在主入口匯出（sub-path only，見下方〈元件移除／未匯出狀況〉），但 PageHeader 仍要求它作為必要子元件 → sub-path 匯入
 import { PageHeader, PageFooter, Breadcrumb, Button, Table } from '@mezzanine-ui/react';
 import ContentHeader from '@mezzanine-ui/react/ContentHeader';
 import styles from './page.module.scss';
@@ -346,12 +346,60 @@ export default function ProductListPage(): JSX.Element {
 
 ---
 
+## What's New in v1.5.1
+
+> 涵蓋 1.4.3 – 1.5.1（4 個 release）累積變更。**1.5.1 本身只修正一個 Storybook-only 缺陷**（`TabsSize` story 的 `activeKey` 對不到任何 tab，因為共用的 item 陣列被包成 Fragment，`flattenChildren` 會把 Fragment 自己的 key 疊加到每個子項上，`<TabItem key="0">` 因此被併成 `"0.0"`）——**`Tabs` 元件本體未變動**，實測 1.5.0 → 1.5.1 已發布套件僅 `package.json` 有差異（跟著 bump `core@1.2.1`）。真正的實質變更在 **1.5.0**。
+
+### 無障礙（Accessibility）大修 — 1.5.0
+
+- **`Modal` / `MediaPreviewModal`** — 新增 `useFocusTrap` hook（已列入元件索引），實作真正的 dialog focus model：開啟時把焦點移入對話框（第一個可聚焦元素；若沒有可聚焦元素，改聚焦內容容器本身，靠新加的 `tabIndex={-1}`）、`Tab` / `Shift+Tab` 只在對話框內循環、關閉時把焦點還原到開啟前的元素，並且能感知巢狀 dialog。鍵盤使用者不會再 Tab 出對話框、跑到背後的頁面；對話框現在也標記 `aria-modal`。
+- **`Tooltip`** — 內容現在可被指標、鍵盤、輔助科技存取：render-prop payload 新增 `onFocus` / `onBlur`（focus 開啟、blur 關閉），內容節點帶上 `role="tooltip"` 與穩定的 `useId`，接到觸發元素的 `aria-describedby`。純 icon 的 `Button` 上的 tooltip 文字，現在鍵盤操作與螢幕報讀器也讀得到，不再只有滑鼠 hover 才有。新的 focus 觸發**只在 `:focus-visible`（鍵盤聚焦）才開啟**，瀏覽器給 `<button>` 的 mousedown focus 不會觸發——避免點擊 icon-only 按鈕後 tooltip 卡在畫面上蓋住別的東西（例如 Table row action 的 dropdown）。仍符合 WCAG 2.1 SC 1.4.13。
+- **`Button`** — icon-only 模式下會把呼叫端自己的 `ref` 與 tooltip 的 `ref` 組合起來，傳入自己的 ref 不會再讓 tooltip 失效。
+- **`Navigation`** — 移除無效的 `menuitem` role（改正確標示群組／葉節點），每個導覽控制項現在都能正確向輔助科技播報。
+- **`Table`** — icon-only 與 dropdown 的 row-action 按鈕補上 accessible name；row-action 選單維持在可視範圍內（原本最後一欄或水平捲動時會被裁切在右邊界，且沒有可調整的 prop）。
+- **`Dropdown`** — 加上 floating-ui 的 `shift` middleware（依 floating-ui 建議排在 `flip` 之後），選單貼近視窗右邊界時會被推回可視範圍而非被裁切。**新增 API**：`shift?: boolean`。
+- **`TextField`** — 原生 input 的 ARIA 語意保留不被覆蓋。
+- **`InlineMessage`** — 呼叫端傳入的 DOM props 會被展開到根節點。
+- **`ContentHeader`** — 返回鈕文字改為可翻譯。
+- **`PageFooter`** — 不再渲染沒有名稱的空按鈕。
+
+### `DateRangePicker` 正確性與效能 — 1.5.0
+
+- Hover 預覽不再洗掉已提交的範圍——先選起點、移動游標（哪怕只是切換月份讓游標劃過某個 cell）再點終點，過去會把起點丟掉、重新開始選取。`RangeCalendar` 現在讀已提交值而非被 hover 污染的 `calendarValue`，來判斷這次點擊該開始還是結束範圍。
+- Hover 高亮預覽與點擊防呆邏輯現在問的是同一個問題，預覽不會再顯示一個下一次點擊就會被拒絕的範圍。
+- 大範圍不再卡頓數秒——停用日期掃描原本不管有沒有真的設 disabled-date predicate、每次 render 都逐日重掃六次（每個時間粒度各一次），20 年範圍每次 render 約 524ms，年份打錯（例如透過輸入框打出 `4026`）可以卡到 50 秒。掃描邏輯移到 `RangeCalendar`，只在真的有 predicate 時才跑、依當前粒度單位跳步，並設有掃描步數上限（超過上限就回報「找不到停用日期」，讓過長範圍維持可操作而非整個凍結）。**該步數上限是 `useRangeScan.ts` 內部常數，不是 public prop。**
+- **`RangeCalendarProps`** 新增 `previewValue`。
+- **`Calendar`** — 對齊週次掃描邏輯，修正不完整範圍時的驗證。
+
+### 其他修正 — 1.4.3 / 1.4.4
+
+- **`Form` / `TagsField`、`AutoComplete`、`Dropdown`、`Pagination`、`DatePicker` / `TimePicker`**（1.4.3）— 修正一整類 CJK IME bug：按 Enter 確認注音／拼音候選字時，不再誤觸發送出／選取／確認動作。靠 `core@1.2.0` 新增的共用 `isImeComposing` helper（同時把 Safari 的 `keyCode 229` 也視為 composing 中）。
+- **`Notifier` / `Message`**（1.4.4）— 修正短時間內連發多則訊息會靜默合併成一則的問題：auto-key 過去只取 `Date.now()`（毫秒解析度），同一毫秒建立的多個 notifier 會撞 key、被當成「更新」而非新增；現在 auto-key 在時鐘沒走的情況下會往下跳號，維持單調遞增。
+- **`Table`**（1.4.4）— `loading` 期間不再把偽造的 `{ key: idx }` placeholder row 塞進 consumer 的 record callback（`column.render` / `actions.render` / `rowState` / `getCheckboxProps` / `rowExpandable` / `expandedRowRender` / `isRowDisabled`），避免這些 callback 存取不存在的欄位丟出 `TypeError`；`record` 在 row / cell 型別上改為 optional，並且 placeholder row 不再借用真實 row key（不會再被誤判為選取中／可展開，或被 `Draggable` 包住）。
+
+### 新公開 API 一覽（1.4.3 – 1.5.1）
+
+| API | 說明 |
+| --- | --- |
+| `Dropdown` → `shift?: boolean` | floating-ui `shift` middleware，見上 |
+| `RangeCalendarProps` → `previewValue` | 見上 |
+| `Navigation` → `collapseToggleLabel` | 收合按鈕的可翻譯 label，隨 1.5.0 a11y 修正一併補上 |
+
+> `maxRangeScanSteps` **不是** public API——它是 `useRangeScan.ts` 內的常數，從未被匯出，不要當成 prop 使用或寫進呼叫端程式碼。
+
+**相依套件版本**：`@mezzanine-ui/core` `1.2.1`、`@mezzanine-ui/system` `1.0.2`、`@mezzanine-ui/icons` `1.0.2`（三個相依皆為**精確釘版**，非 `>=`）。core 由 `1.2.0`（1.4.3 起要求）bump 到 `1.2.1`（1.5.1 起要求）。
+
+<details>
+<summary>Previous: What's New in v1.4.2</summary>
+
 ## What's New in v1.4.2
 
 - **`AutoComplete`** — 選項比對預設從**大小寫敏感改為不敏感**（先前比對 RegExp 漏了 `i` flag，輸入 `vir` 找不到 `Virginia`）。新增 `caseSensitive?: boolean`（預設 `false`）供退回舊行為；`addable` 模式的重複檢查（`isSameOptionName()`）也一併尊重這個 flag，避免對只差大小寫的既有選項再提供「建立」動作。**這是行為變更，倚賴舊行為的專案升級後需明確傳 `caseSensitive`。**
 - **`Dropdown`** — option `mousedown` 時保留 trigger focus，修正 `AutoComplete` 篩選文字在 blur 時被清空。純內部修正，無 API 變更。
 
-> 1.4.2 只動到 `AutoComplete` 家族與 `Dropdown` 內部事件處理，其餘元件文件的 `Verified 1.4.1` 標記仍然成立。
+> 1.4.2 只動到 `AutoComplete` 家族與 `Dropdown` 內部事件處理。（此段為 1.4.2 當時的敘述；自 1.5.1 同步起，全部 68 份現役元件文件皆已標 `Verified 1.5.1`。）
+
+</details>
 
 ---
 
@@ -852,7 +900,7 @@ document.documentElement.setAttribute('data-density', 'compact');
 When Mezzanine-UI releases a new version, use the `/sync-mezzanine-ui` command to refresh all skill content:
 
 ```
-/sync-mezzanine-ui react 1.4.2
+/sync-mezzanine-ui react 1.5.1
 ```
 
 This orchestrates a team of agents to:

@@ -4,9 +4,9 @@
 >
 > **Storybook**: `Data Entry/Toggle`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Toggle) · Verified 1.5.1 (2026-09-12)
 
-> Toggle is the successor of the removed Switch component (removed in 1.4.1). Migrate `Switch` usages to `Toggle` — public API is intentionally aligned (checked / defaultChecked / disabled / onChange), with new `label`, `supportingText`, and `size` additions.
+> Toggle replaced `Switch` at `1.0.0-canary.3`, when `src/Switch/` was deleted and `src/Toggle/` created; `Switch` then lingered as an alias re-export of Toggle until `1.0.0` dropped it. Neither step happened in 1.4.1, and `Switch` was never marked `@deprecated`. Migrate `Switch` usages to `Toggle` — public API is intentionally aligned (checked / defaultChecked / disabled / onChange), with new `label`, `supportingText`, and `size` additions.
 
 A toggle switch component for turning a single option on or off. Supports controlled and uncontrolled modes with optional label and supporting text.
 
@@ -26,18 +26,20 @@ import type { ToggleProps } from '@mezzanine-ui/react';
 
 ## Toggle Props
 
-Extends `NativeElementPropsWithoutKeyAndRef<'div'>`.
+Extends `Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'onChange'>` — native `onChange` is excluded because Toggle defines its own `onChange` with the `ChangeEventHandler<HTMLInputElement>` signature shown below.
 
 | Property          | Type                      | Default | Description                              |
 | ----------------- | ------------------------- | ------- | ---------------------------------------- |
 | `checked`         | `boolean`                 | -       | Checked state (controlled mode)           |
 | `defaultChecked`  | `boolean`                 | `-`     | Initial checked state (uncontrolled mode)|
-| `disabled`        | `boolean`                 | `false` | Whether disabled                         |
+| `disabled`        | `boolean`                 | `-`\*   | Whether disabled                         |
 | `inputProps`      | `Omit<NativeElementPropsWithoutKeyAndRef<'input'>, 'checked' \| 'defaultChecked' \| 'disabled' \| 'onChange' \| 'placeholder' \| 'type' \| 'value' \| 'aria-disabled' \| 'aria-checked'>` | - | Native input attributes (excluding controlled props) |
 | `label`           | `string`                  | -       | Label text displayed beside toggle       |
 | `onChange`        | `ChangeEventHandler<HTMLInputElement>` | - | Change event handler |
 | `size`            | `'main' \| 'sub'`        | `'main'` | Toggle size                              |
 | `supportingText`  | `string`                  | -       | Helper text displayed below label        |
+
+\* `disabled` has no hardcoded default in source — the actual destructuring is `disabled = disabledFromFormControl`, where `disabledFromFormControl` comes from `useContext(FormControlContext)`. When Toggle is rendered inside a form control wrapper (e.g. a `FormField`) that sets a disabled state, every nested `Toggle` inherits it automatically without needing an explicit `disabled` prop; outside such a context it behaves as not disabled.
 
 ---
 

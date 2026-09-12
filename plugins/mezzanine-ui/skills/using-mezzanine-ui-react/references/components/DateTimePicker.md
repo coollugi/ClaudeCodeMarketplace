@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-datetimepicker--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateTimePicker) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateTimePicker) · Verified 1.5.1 (2026-09-12)
 
 A date-time picker that allows selecting both date and time simultaneously. Must be used with `CalendarContext`. Internally composed of `DatePickerCalendar`, `TimePickerPanel`, and `PickerTriggerWithSeparator`.
 
@@ -76,7 +76,7 @@ import type { DateTimePickerProps } from '@mezzanine-ui/react';
 | `disableOnDoublePrev` | `boolean`                               | -        | Disable double arrow prev |
 | `disableOnNext`       | `boolean`                               | -        | Disable next             |
 | `disableOnPrev`       | `boolean`                               | -        | Disable prev             |
-| `displayMonthLocale`  | `string`                                | -        | Month display locale     |
+| `displayMonthLocale`  | `string`                                | `locale` (from `CalendarContext`) | Month display locale |
 | `fadeProps`            | `FadeProps`                             | -        | Fade animation props     |
 | `isDateDisabled`      | `(date: DateType) => boolean`           | -        | Date disable check       |
 | `isHalfYearDisabled`  | `(date: DateType) => boolean`           | -        | Half-year disable check  |
@@ -114,8 +114,8 @@ import type { DateTimePickerProps } from '@mezzanine-ui/react';
 | `inputLeftProps`   | `Omit<NativeInputProps, ...>` | -  | Props passed to the date input |
 | `inputRightProps`  | `Omit<NativeInputProps, ...>` | -  | Props passed to the time input |
 | `onClear`          | `MouseEventHandler` | -      | Clear callback           |
-| `placeholderLeft`  | `string`           | -       | Date field placeholder   |
-| `placeholderRight` | `string`           | -       | Time field placeholder   |
+| `placeholderLeft`  | `string`           | `formatDate` | Date field placeholder |
+| `placeholderRight` | `string`           | `formatTime` | Time field placeholder |
 | `prefix`           | `ReactNode`        | -       | Prefix element           |
 | `readOnly`         | `boolean`          | -       | Whether read-only        |
 | `required`         | `boolean`          | `false` | Whether required         |

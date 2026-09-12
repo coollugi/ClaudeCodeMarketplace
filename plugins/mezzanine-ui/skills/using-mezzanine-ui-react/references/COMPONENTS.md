@@ -2,7 +2,7 @@
 
 Complete component API reference documentation.
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-07-01.
+> Baseline: `@mezzanine-ui/react` `1.5.1` · `@mezzanine-ui/core` `1.2.1` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-09-12.
 
 ## Table of Contents
 
@@ -215,6 +215,9 @@ import { HomeIcon, SettingIcon } from '@mezzanine-ui/icons';
 | Prop                   | Type      | Default | Description                              |
 | ---------------------- | --------- | ------- | ---------------------------------------- |
 | `exactActivatedMatch`  | `boolean` | `false` | Strict pathname matching for active state |
+| `collapseToggleLabel`  | `string`  | -       | **New in 1.5.0.** Accessible/translatable label for the collapse-toggle control, part of the 1.5.0 a11y pass |
+
+> **v1.5.0 a11y fixes**: the invalid `menuitem` role is dropped from navigation options and option categories (groups/leaves are now labelled correctly instead), so every navigation control announces itself to assistive tech.
 
 ---
 
@@ -315,6 +318,8 @@ import { PageFooter } from '@mezzanine-ui/react';
 <PageFooter>Footer content</PageFooter>
 ```
 
+> **v1.5.0 a11y fix**: no longer renders unnamed empty buttons.
+
 ---
 
 ## Data Display Components
@@ -346,6 +351,10 @@ const data = [
 | `rowState` | `TableRowState \| ((rowData: T) => TableRowState \| undefined)` | -       | Row-level semantic styling: `'added'` \| `'deleted'` \| `'disabled'` |
 
 > **v1.1.0 SSR fix**: Row height is now resolved via `useIsomorphicLayoutEffect` instead of `useMemo`, eliminating hydration mismatches in Next.js / Remix apps.
+>
+> **v1.4.4 fix**: `loading` rows no longer feed fabricated placeholder records into consumer callbacks (`column.render` / `actions.render` / `rowState` / `getCheckboxProps` / `rowExpandable` / `expandedRowRender` / `isRowDisabled`) — `record` is now optional in those callback signatures while loading.
+>
+> **v1.5.0 a11y fix**: icon-only / dropdown row-action buttons now have accessible names, and the row-action menu (via `Dropdown`'s new `shift`, see [Dropdown](#dropdown)) stays inside the viewport instead of being clipped in the last column or after horizontal scroll.
 
 ---
 
@@ -509,6 +518,8 @@ import { Tooltip, Button } from '@mezzanine-ui/react';
 | -------------------- | ---------------------------- | ------- | ------------------------------------- |
 | `offsetMainAxis`     | `number`                     | -       | Offset distance along main axis       |
 
+> **v1.5.0 a11y overhaul**: content is now reachable by keyboard and assistive tech, not just mouse hover. The render-prop payload gains `onFocus` / `onBlur`, and the content node emits `role="tooltip"` with a stable `useId` wired to the trigger's `aria-describedby`. Opens only on `:focus-visible` (keyboard focus) — not on the mousedown-focus browsers give a `<button>` — so clicking an icon-only trigger no longer leaves the tooltip stuck open.
+
 ---
 
 ### Pagination
@@ -573,20 +584,22 @@ Groups multiple Section components with consistent spacing.
 ```tsx
 import { SectionGroup, Section } from '@mezzanine-ui/react';
 
-// ContentHeader is removed from the main entry as of v1.4.1 — pass title directly to Section or compose a custom header element
+// ContentHeader has never been exported from the main entry (always sub-path only) — pass title directly to Section or compose a custom header element
 <SectionGroup direction="vertical">
   <Section title="Section 1">Content 1</Section>
   <Section title="Section 2">Content 2</Section>
 </SectionGroup>
 ```
 
-> **Note (v1.4.1)**: `ContentHeader` is removed from the main entry. Pass `title` directly to `Section` or compose a custom header element. `Section` / `PageHeader` still require `ContentHeader` internally — import it via the `@mezzanine-ui/react/ContentHeader` sub-path when composing with those two components.
+> **Note (corrected)**: `ContentHeader` has **never** been exported from the main entry — it is not a removal, it has always been sub-path only (verified across every tag from `0.0.1` through `1.5.1`). Import it via the `@mezzanine-ui/react/ContentHeader` sub-path; `Section` / `PageHeader` require it internally.
 
 ---
 
-### ⚠️ ContentHeader *(已移除 v1.4.1)*
+### ContentHeader *(sub-path only — 從未在主入口匯出)*
 
-**Removed in v1.4.1** (deprecated since v1.1.0): No longer exported from the main entry. Use `PageHeader` + `Section` or custom elements for section headers. Still importable via `@mezzanine-ui/react/ContentHeader` sub-path — required internally by `Section`/`PageHeader`.
+**Not removed, not deprecated.** `ContentHeader` source still exists (`src/ContentHeader/`) and has never had an `@deprecated` marker — it simply was never re-exported from the main `@mezzanine-ui/react` entry, from `0.0.1` all the way to `1.5.1`. Import via `@mezzanine-ui/react/ContentHeader` sub-path. `Section` / `PageHeader` still require it internally as a child.
+
+> **v1.5.0 a11y fix**: the back-button label is now translatable.
 
 ---
 
@@ -648,6 +661,8 @@ import { SearchIcon } from '@mezzanine-ui/icons';
 <TextField prefix={<SearchIcon />} placeholder="Search" />
 ```
 
+> **v1.5.0 a11y fix**: keeps native ARIA input semantics on the underlying control instead of overriding them.
+
 ---
 
 ### Toggle
@@ -662,15 +677,21 @@ import { Toggle } from '@mezzanine-ui/react';
 
 ---
 
-### ⚠️ Switch *(已移除 v1.4.1)*
+### ⚠️ Switch *(已移除 @ 1.0.0-canary.3)*
 
-**Removed in v1.4.1** (deprecated since v1.1.0): Use Toggle component instead.
+**Genuinely removed** — the only component in this list that actually is. It left in two stages: the source directory (`src/Switch/`) was deleted at `1.0.0-canary.3` and replaced by `Toggle`, after which `Switch` survived only as an alias re-export in `src/index.ts`; `1.0.0` dropped that alias too. There was never a formal `@deprecated` notice at either step. Use `Toggle` instead — see the "元件移除／未匯出狀況" table in `../SKILL.md` (a previous version of this doc incorrectly dated this to v1.4.1).
 
 ```tsx
+// ❌ No longer resolves — the alias was dropped in 1.0.0
 import { Switch } from '@mezzanine-ui/react';
-
 <Switch checked={enabled} onChange={setEnabled} />
+
+// ✅ Use Toggle
+import { Toggle } from '@mezzanine-ui/react';
+<Toggle checked={enabled} onChange={setEnabled} />
 ```
+
+> The hook `useSwitchControlValue` is unrelated and still ships — it is still exported from the main entry in 1.5.1. Its name is not evidence that the component exists.
 
 ---
 
@@ -1020,6 +1041,8 @@ import { Modal, ModalHeader, ModalFooter, ModalBodyForVerification, Button } fro
 </Modal>
 ```
 
+> **v1.5.0**: implements the dialog focus model behind `role="dialog"` via the new `useFocusTrap` hook (see [Hooks](#hooks) below) — moves focus into the dialog on open, cycles `Tab` / `Shift+Tab` within it, restores focus to the previously focused element on close, and is aware of nested dialogs. The dialog is also now announced as modal (`aria-modal`). Same model applies to `MediaPreviewModal`. No prop-level API change.
+
 ---
 
 ### Message
@@ -1078,6 +1101,8 @@ import { InlineMessage, InlineMessageGroup } from '@mezzanine-ui/react';
   ]}
 />
 ```
+
+> **v1.5.0 a11y fix**: caller-provided DOM props are now spread onto the root element.
 
 ---
 
@@ -1275,6 +1300,8 @@ import {
 <RangeCalendar value={dateRange} onChange={setDateRange} />
 ```
 
+> **v1.5.0**: `RangeCalendarProps` gains `previewValue` — `RangeCalendar` now reads the committed range (not the hover-polluted internal calendar value) to decide whether a click starts or closes a range, fixing `DateRangePicker` hover previews that used to wipe out an already-selected start date. The disabled-date scan used for range validation was also moved into `RangeCalendar`, runs only when a `disabledDate` predicate is supplied, and is capped by an internal step limit (`maxRangeScanSteps` in `useRangeScan.ts` — **not a public prop**) to avoid multi-second freezes on very large or mistyped ranges.
+
 ---
 
 ### TimePanel
@@ -1304,15 +1331,15 @@ import type { Notifier } from '@mezzanine-ui/react';
 
 > The following are internal components, exported only for advanced customization.
 
-### ⚠️ ClearActions *(已移除 v1.4.1)*
+### ClearActions *(sub-path only — 從未在主入口匯出)*
 
-**Removed in v1.4.1** (deprecated since v1.1.0): ClearActions component is no longer exported. Implement close/clear buttons using a composition pattern.
+**Not removed, not deprecated.** `ClearActions` source still exists (`src/ClearActions/`) and has never had an `@deprecated` marker — it simply was never re-exported from the main entry, from `0.0.1` through `1.5.1`. Import via `@mezzanine-ui/react/ClearActions` sub-path when needed.
 
 ---
 
-### ⚠️ Scrollbar *(已移除 v1.4.1)*
+### Scrollbar *(sub-path only — 從未在主入口匯出)*
 
-**Removed in v1.4.1** (deprecated since v1.1.0): Scrollbar component is no longer exported. Use native scrolling or CSS custom scrollbar styles.
+**Not removed, not deprecated.** `Scrollbar` source still exists (`src/Scrollbar/`) and has never had an `@deprecated` marker — it simply was never re-exported from the main entry, from `0.0.1` through `1.5.1`. Import via `@mezzanine-ui/react/Scrollbar` sub-path, or use native scrolling / custom CSS scrollbar styles.
 
 ---
 
@@ -1355,9 +1382,14 @@ import {
 <Dropdown flip sameWidth open={open}>
   <DropdownItem value="option1">Option 1</DropdownItem>
 </Dropdown>
+
+// v1.5.0+: opt-in viewport-aware shift (cross-axis only, for menus near a left/right edge)
+<Dropdown flip shift open={open}>
+  <DropdownItem value="option1">Option 1</DropdownItem>
+</Dropdown>
 ```
 
-> **v1.2.0**: New opt-in `flip?: boolean` prop (default `false`). **v1.4.0**: enter-transition direction now follows the placement floating-ui actually resolves to after a flip.
+> **v1.2.0**: New opt-in `flip?: boolean` prop (default `false`). **v1.4.0**: enter-transition direction now follows the placement floating-ui actually resolves to after a flip. **v1.5.0**: New opt-in `shift?: boolean` prop (default `false`) — floating-ui `shift` middleware, ordered after `flip`; slides the menu along the cross axis to stay inside the viewport (e.g. `Table`'s last-column row-action menu, which enables it internally).
 
 ---
 
@@ -1405,6 +1437,7 @@ import {
 | `useCalendarModeStack`         | Calendar mode stack management       |
 | `useDateRangeCalendarControls` | DateRangePicker calendar controls    |
 | `useDateRangePickerValue`      | DateRangePicker value management     |
+| `useFocusTrap`                 | **New in 1.5.0.** Dialog focus-trap model — moves focus in on open, cycles Tab/Shift+Tab within the container, restores focus on close; used internally by `Modal` / `MediaPreviewModal` |
 | `useModalContainer`            | Modal container management           |
 | `useMultipleDatePickerValue`   | MultipleDatePicker value management  |
 | `usePagination`                | Pagination state management          |

@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Foundation/Typography`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Typography) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Typography) · Verified 1.5.1 (2026-09-12)
 
 Typography component for consistent text styling.
 
@@ -91,7 +91,7 @@ type TypographyComponent =
 | `caption`              | 12px      | 400         | Caption text         |
 | `caption-highlight`    | 12px      | 600         | Emphasized caption   |
 | `annotation`           | 10px      | 400         | Annotation           |
-| `annotation-highlight` | 10px      | 500         | Emphasized annotation |
+| `annotation-highlight` | 10px      | 600         | Emphasized annotation |
 
 ### Functional
 
@@ -225,6 +225,8 @@ import { Typography } from '@mezzanine-ui/react';
   This is a long text that will show ellipsis when it exceeds the width...
 </Typography>
 ```
+
+> When `ellipsis` is `true` **and** `children` is a plain string, the component also sets a native `title` attribute to the full text (so hovering shows the untruncated string as a browser tooltip). This does not happen when `children` is a React element/fragment — `title` is only derived from string children.
 
 ### Custom Element
 

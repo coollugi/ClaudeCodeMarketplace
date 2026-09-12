@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/Textarea`
 >
-> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Textarea) | Verified 1.4.1 (2026-07-01)
+> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Textarea) | Verified 1.5.1 (2026-09-12)
 
 Multi-line text input component for entering longer text content.
 
@@ -25,6 +25,7 @@ import type { TextareaProps } from '@mezzanine-ui/react';
 
 | Property            | Type                                              | Default     | Description                      |
 | ------------------- | ------------------------------------------------- | ----------- | -------------------------------- |
+| `className`         | `string`                                          | -           | Applied to the outer `TextField` wrapper (not the `<textarea>` itself) — distinct from `textareaClassName` below |
 | `resize`            | `'none' \| 'both' \| 'horizontal' \| 'vertical'` | `'none'`    | Resize behavior                  |
 | `textareaClassName` | `string`                                          | -           | Textarea element className       |
 | `textareaRef`       | `Ref<HTMLTextAreaElement>`                         | -           | Textarea element ref             |

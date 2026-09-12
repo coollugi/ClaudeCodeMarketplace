@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Foundation/Icon`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Icon) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Icon) · Verified 1.5.1 (2026-09-12)
 
 An icon component for displaying SVG icons provided by `@mezzanine-ui/icons`.
 

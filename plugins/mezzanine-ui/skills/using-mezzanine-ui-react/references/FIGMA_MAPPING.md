@@ -2,7 +2,7 @@
 
 Maps Figma design file components to React code.
 
-> Baseline: `@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-07-01.
+> Baseline: `@mezzanine-ui/react` `1.5.1` · `@mezzanine-ui/core` `1.2.1` · `@mezzanine-ui/system` / `@mezzanine-ui/icons` `1.0.2`. Last verified: 2026-09-12.
 
 ## Table of Contents
 
@@ -140,14 +140,14 @@ curl -s -H "X-Figma-Token: $MEZZANINE_FIGMA_TOKEN" \
 
 ## UI Component Mapping
 
-### Deprecation Notice
+### Deprecation Notice (corrected)
 
-The following components have been removed in v1.4.1 (deprecated since v1.1.0) and are no longer available from the main entry:
+Only **one** of these four is actually removed. `ClearActions` / `ContentHeader` / `Scrollbar` still ship — they have simply never been exported from the main `@mezzanine-ui/react` entry (sub-path only, from `0.0.1` through `1.5.1`), and have no `@deprecated` marker. A previous version of this doc incorrectly grouped all four as "removed in v1.4.1"; that date/grouping was wrong.
 
-- **ClearActions**: Removed. Implement close/clear buttons using a composition pattern.
-- **ContentHeader**: Removed. Use `PageHeader` + `Section` or custom header elements instead.
-- **Scrollbar**: Removed. Native browser scrolling is now the standard.
-- **Switch**: Removed. Use **Toggle** component instead.
+- **ClearActions**: **Not removed.** Still exists (`src/ClearActions/`), sub-path only — `@mezzanine-ui/react/ClearActions`.
+- **ContentHeader**: **Not removed.** Still exists (`src/ContentHeader/`), sub-path only — `@mezzanine-ui/react/ContentHeader`. Required internally by `PageHeader` / `Section`.
+- **Scrollbar**: **Not removed.** Still exists (`src/Scrollbar/`), sub-path only — `@mezzanine-ui/react/Scrollbar`.
+- **Switch**: **Genuinely removed** — at `1.0.0-canary.3`, replaced by `Toggle`. Use **Toggle** instead.
 
 ---
 
@@ -239,9 +239,9 @@ Figma 裡叫 **`Segmented Control`**，程式碼裡是 **`Radio` 的 `segment` �
 | `Segmented Control / Page / Text/Dense/Selected`  | `<Radio type="segment">`（選中，由 group 控制）   |
 | `Segmented Control Set / Text/Sub/2/Text Only`    | `<RadioGroup type="segment" size="sub">` 兩個選項 |
 
-### Switch *(已移除 v1.4.1)*
+### Switch *(已移除 @ 1.0.0-canary.3)*
 
-⚠️ Switch component has been removed in v1.4.1 (deprecated since v1.1.0). Use Toggle instead.
+⚠️ Switch component was removed at `1.0.0-canary.3`, replaced by Toggle. Use Toggle instead.
 
 | Figma Variant              | React Props                              |
 | -------------------------- | ---------------------------------------- |

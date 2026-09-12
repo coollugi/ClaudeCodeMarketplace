@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/TextField`
 >
-> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/TextField) | Verified 1.4.1 (2026-07-01)
+> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/TextField) | Verified 1.5.1 (2026-09-12)
 
 Text input field container component providing a unified input box appearance. It is the underlying component for Input, Select, and other components.
 
@@ -36,6 +36,7 @@ import type {
 | ----------- | ----------------------------------------------------------- | -------- | ----------------------------- | ---------------------- |
 | `active`    | `boolean`                                                   | `false`  | TextFieldBaseProps            | Whether active state   |
 | `children`  | `ReactNode \| ((paddingInfo: TextFieldPaddingInfo) => ReactNode)` | **required** | TextFieldBaseProps      | Content or function    |
+| `className` | `string`                                                    | -        | TextFieldBaseProps            | Additional class name applied to the root element |
 | `clearable` | `boolean`                                                   | `false`  | TextFieldBaseProps            | Whether clearable      |
 | `forceShowClearable` | `boolean`                                          | `false`  | TextFieldBaseProps            | Force clear button visibility (ignore value check) |
 | `hideSuffixWhenClearable` | `boolean`                                     | `false`  | TextFieldBaseProps            | Hide suffix and overlay clear icon at suffix position |
@@ -47,8 +48,28 @@ import type {
 | `prefix`    | `ReactNode`                                                 | -        | TextFieldAffixProps           | Prefix content         |
 | `suffix`    | `ReactNode`                                                 | -        | TextFieldAffixProps           | Suffix content         |
 | `typing`    | `boolean`                                                   | -        | TextFieldInteractiveStateProps | Whether typing         |
-| `disabled`  | `boolean`                                                   | `false`  | TextFieldInteractiveStateProps | Whether disabled       |
-| `readonly`  | `boolean`                                                   | `false`  | TextFieldInteractiveStateProps | Whether read-only      |
+| `disabled`  | `boolean`                                                   | `-`      | TextFieldInteractiveStateProps | Whether disabled (no destructuring default — literal `true` required to enter the "disabled" variant) |
+| `readonly`  | `boolean`                                                   | `-`      | TextFieldInteractiveStateProps | Whether read-only (no destructuring default — literal `true` required to enter the "readonly" variant) |
+
+---
+
+## ARIA Role (重要 — keeps ARIA input semantics on the native control)
+
+`TextField` is only a **visual frame** around a native control passed in via `children` (an `<input>`, `<textarea>`, etc.). Since 1.5.0, the host `<div>` derives a fallback ARIA `role` for itself:
+
+- `role="button"` when an `onClick` prop is given
+- `role="textbox"` otherwise (the default)
+
+This fallback is only correct when the wrapper `<div>` itself is meant to be the interactive control (no nested native input). Any component that nests a real `<input>`/`<textarea>` inside `TextField` — and therefore forwards naming props such as `aria-label` to that inner element — **must pass `role="presentation"` explicitly** to `TextField` so the ARIA semantics stay on the native control (which already has the correct role and naming behavior). Otherwise the wrapper `<div>` claims an ARIA input role it can never correctly name, which fails the axe `aria-input-field-name` rule.
+
+```tsx
+// ✅ Wrapping a real <input> — suppress the wrapper's own ARIA role
+<TextField role="presentation">
+  <input type="text" aria-label="Search" />
+</TextField>
+```
+
+`role` itself is not a dedicated `TextFieldProps` field — it is accepted through the native `<div>` props inherited by `TextFieldBaseProps`, and any explicit `role` passed by the caller takes precedence over the computed fallback.
 
 ---
 
@@ -248,7 +269,7 @@ When `hideSuffixWhenClearable` is `true`, the clear icon **overlays the suffix p
 
 This pattern is useful when suffix and clear icon should share the same space (e.g., DatePicker calendar icon / clear icon toggle).
 
-> Note: `ClearActions` is still used internally by `TextField` in 1.4.1 (not removed). This is an internal implementation detail; the clear button is controlled via the `clearable` prop and `onClear` callback.
+> Note: `ClearActions` is no longer exported from the `@mezzanine-ui/react` package root as of this release, but it is still used internally by `TextField` (imported via relative path, not the public entry) — it has not been deleted. This is an internal implementation detail; the clear button is controlled via the `clearable` prop and `onClear` callback.
 
 ---
 

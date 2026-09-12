@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-autocomplete--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.4.2 (2026-08-14)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AutoComplete) · Verified 1.5.1 (2026-09-12)
 >
 > ⚠️ **1.4.2 行為變更**：選項比對的預設從**大小寫敏感改為不敏感**。先前的比對 RegExp 漏了 `i` flag，
 > 輸入 `vir` 找不到 `Virginia`；1.4.2 修正後預設不分大小寫，並新增 `caseSensitive` prop 供退回舊行為。

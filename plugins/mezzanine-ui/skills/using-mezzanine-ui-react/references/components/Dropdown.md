@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Internal/Dropdown`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Dropdown) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Dropdown) · Verified 1.5.1 (2026-09-12)
 
 A low-level dropdown component for displaying option lists. Typically used as the internal implementation of higher-level components like Select and AutoComplete, but can also be used independently with Button or Input. Supports flat list, grouped, and tree structures, with built-in scrolling, loading states, keyboard shortcuts, and action buttons.
 
@@ -63,8 +63,8 @@ Extends `DropdownItemSharedProps`.
 
 | Property                  | Type                                                                       | Default     | Description                                                                     |
 | ------------------------- | -------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------- |
-| `children`                | `ReactElement<ButtonProps> \| ReactElement<InputProps>`                    | -           | Trigger element (Button or Input)                                               |
-| `options`                 | `DropdownOption[]`                                                         | `[]`        | Option list (structure varies by `type`)                                        |
+| `children`                | `ReactElement<ButtonProps> \| ReactElement<InputProps>`                    | **required** | Trigger element (Button or Input)                                               |
+| `options`                 | `DropdownOption[]`                                                         | **required** | Option list (structure varies by `type`)                                        |
 | `type`                    | `DropdownType`                                                             | `'default'` | Dropdown type: `'default'` (flat) / `'grouped'` / `'tree'`                     |
 | `mode`                    | `DropdownMode`                                                             | `'single'`  | Selection mode: `'single'` / `'multiple'`                                       |
 | `value`                   | `string \| string[]`                                                      | -           | Selected value(s)                                                               |
@@ -80,6 +80,7 @@ Extends `DropdownItemSharedProps`.
 | `customWidth`             | `number \| string`                                                        | -           | Custom dropdown width (takes priority over `sameWidth`)                         |
 | `sameWidth`               | `boolean`                                                                  | `false`     | Whether to match trigger element width                                          |
 | `flip`                    | `boolean`                                                                  | `false`     | Enable floating-ui `flip` middleware; flips to the opposite side (main-axis only) when the dropdown would overflow the viewport |
+| `shift`                   | `boolean`                                                                  | `false`     | **New in 1.5.0.** Enable floating-ui `shift` middleware; slides the dropdown along the cross axis to stay inside the viewport instead of being clipped (used internally by `Table`'s row-action menu, which sits in the last column near the viewport edge) |
 | `maxHeight`               | `number \| string`                                                        | -           | Max height of dropdown list (enables scrolling when set)                        |
 | `minWidth`                | `number \| string`                                                        | spacing token `size-container-tiny` | Override the default min-width; pass `0` to remove constraint |
 | `zIndex`                  | `number \| string`                                                        | `-`         | z-index                                                                         |
@@ -532,11 +533,33 @@ function FlippingDropdown() {
 
 > `flip` flips the dropdown to the opposite side along the main axis (e.g. `bottom-start` → `top-start`) when it would overflow the viewport. It is main-axis only (no `shift`/`crossAxis`), so a `sameWidth` menu stays horizontally aligned with its anchor. Off by default to preserve existing placement behavior.
 
+### Viewport-aware Shift
+
+```tsx
+import { Dropdown, Button } from '@mezzanine-ui/react';
+
+function ShiftingDropdown() {
+  return (
+    <Dropdown
+      options={options}
+      onSelect={handleSelect}
+      flip
+      shift
+    >
+      <Button>Near a corner</Button>
+    </Dropdown>
+  );
+}
+```
+
+> `shift` (1.5.0+) slides the dropdown along the cross axis so it stays inside the viewport instead of being clipped — `flip` only swaps sides on the main axis, so an anchor near a viewport edge (e.g. a row action in a table's last column) can still lose part of its menu without `shift`. When both `flip` and `shift` are enabled, they are ordered per the floating-ui guidance (`flip` before `shift` for `-start`/`-end` placements, reversed otherwise) — the same ordering `Tooltip` follows. Off by default to preserve existing placement behavior.
+
 ---
 
 ## Behavior Notes
 
 - **Empty status with `loadingPosition='bottom'`**: When `loadingPosition='bottom'` is set and `status='empty'`, the empty status always renders as full-area regardless of `loadingPosition`, ensuring it is visible.
+- **`shift` middleware (1.5.0+)**: see [Viewport-aware Shift](#viewport-aware-shift) above. `Table`'s dropdown-type row actions enable `shift` internally for exactly this reason — see `Table.md`'s Behavior Notes.
 
 ---
 

@@ -1,14 +1,14 @@
 # ContentHeader Component
 
-> ⚠️ **REMOVED in 1.4.1** (deprecated in 1.1.0) — This component is no longer exported from the `@mezzanine-ui/react` main entry. Import it via the sub-path `@mezzanine-ui/react/ContentHeader` if still needed.
+> **Note**: Not exported from the `@mezzanine-ui/react` main entry — import it via the sub-path `@mezzanine-ui/react/ContentHeader`.
 >
-> **⚠️ Important Caveat**: Although removed, ContentHeader **remains internally required** by [`Section`](Section.md) (via `contentHeader` prop) and [`PageHeader`](PageHeader.md) (as a required child). Both components enforce this via runtime type validation. Until a replacement API is introduced, continue using ContentHeader via sub-path import when composing pages with Section or PageHeader. Do not use ContentHeader standalone in new code.
+> **Important**: ContentHeader **remains internally required** by [`Section`](Section.md) (via `contentHeader` prop) and [`PageHeader`](PageHeader.md) (as a required child). Both components enforce this via runtime type validation. Continue using ContentHeader via sub-path import when composing pages with Section or PageHeader.
 
-> **Category**: Internal (removed in 1.4.1)
+> **Category**: Internal (sub-path only)
 >
-> **Storybook**: `Internal/ContentHeader` (removed in 1.4.1)
+> **Storybook**: `Internal/ContentHeader`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/ContentHeader) · **Removed** in 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/ContentHeader) · Verified 1.5.1 (2026-09-12)
 
 Content header component for displaying title, description, filters, and action buttons.
 
@@ -27,7 +27,9 @@ import type { ContentHeaderProps } from '@mezzanine-ui/react/ContentHeader';
 | Property         | Type                                      | Default    | Description                     |
 | ---------------- | ----------------------------------------- | ---------- | ------------------------------- |
 | `actions`        | `ButtonProps[]`                           | -          | Action button configuration     |
+| `backButtonLabel` | `string`                                 | `'Back'`   | Accessible name (`aria-label`) for the back button. It renders as a bare chevron with no visible text, so this is the only thing a screen reader announces — translate it along with the rest of the interface. |
 | `children`       | `ContentHeaderChild[]`                    | -          | Child elements                  |
+| `className`      | `string`                                  | -          | Custom CSS class name           |
 | `description`    | `string`                                  | -          | Description text                |
 | `filter`         | `FilterProps`                             | -          | Filter component configuration  |
 | `onBackClick`    | `() => void`                              | -          | Back button click (only available when `size='main'`; `never` when `size='sub'`) |

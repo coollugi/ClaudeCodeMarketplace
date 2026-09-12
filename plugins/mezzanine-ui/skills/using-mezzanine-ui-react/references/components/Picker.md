@@ -4,7 +4,7 @@
 >
 > **Live Examples**: 此元件在 Storybook 沒有獨立頁面（內部基底元件），請直接參考各 Picker 家族元件的 Storybook 頁面。
 >
-> **Source**: Verified 1.4.1 (2026-07-01) — Internal module. Directory exists at [packages/react/src/Picker](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Picker); there is no single `Picker.tsx` entry. Verified against PickerTrigger.tsx, PickerTriggerWithSeparator.tsx, RangePickerTrigger.tsx, usePickerValue.ts, usePickerDocumentEventClose.ts, and useTabKeyClose.ts.
+> **Source**: Verified 1.5.1 (2026-09-12) — Internal module. Directory exists at [packages/react/src/Picker](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Picker); there is no single `Picker.tsx` entry. Table content below was last independently verified against PickerTrigger.tsx, PickerTriggerWithSeparator.tsx, RangePickerTrigger.tsx, usePickerValue.ts, usePickerDocumentEventClose.ts, and useTabKeyClose.ts in a prior pass. **Note**: this upgrade's source payload only captured the `Picker/index.ts` barrel (hook/component re-exports), not the individual sub-file bodies, so the flagged prop-level diffs for this component could not be independently re-verified this round — a follow-up source fetch of the individual files is recommended before trusting any further edits here.
 
 Internal shared Picker base components and Hooks, used by picker components such as DatePicker, DateRangePicker, TimePicker, TimeRangePicker, DateTimePicker, etc. Not recommended for direct use, but can be referenced or composed when building custom pickers.
 

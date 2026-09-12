@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Others/Anchor`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Anchor) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Anchor) · Verified 1.5.1 (2026-09-12)
 
 Anchor navigation component for in-page section navigation with automatic hash tracking.
 
@@ -32,7 +32,7 @@ import type { AnchorProps, AnchorGroupProps } from '@mezzanine-ui/react';
 | Property       | Type                                                          | Description          |
 | -------------- | ------------------------------------------------------------- | -------------------- |
 | `autoScrollTo` | `boolean`                                                     | Auto-scroll on click |
-| `children`     | `string \| ReactElement<AnchorProps> \| Array<string \| ReactElement<AnchorProps>>` | Child anchors or text (actual constraint: `AnchorPropsWithChildren`) |
+| `children`     | `string \| ReactElement<AnchorPropsWithChildren, typeof Anchor> \| Array<string \| ReactElement<AnchorPropsWithChildren, typeof Anchor>>` | Child anchors or text |
 | `disabled`     | `boolean`                                                     | Whether disabled     |
 | `href`         | `string`                                                      | Link target          |
 | `onClick`      | `() => void`                                                  | Click callback       |

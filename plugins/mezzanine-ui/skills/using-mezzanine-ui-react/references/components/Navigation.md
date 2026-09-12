@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Navigation/Navigation`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Navigation) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Navigation) · Verified 1.5.1 (2026-09-12)
 
 Side navigation component supporting expand/collapse, multi-level, categories, search, and more.
 
@@ -111,7 +111,7 @@ Navigation 系列在 runtime 透過 `isValidElement` + `switch (child.type)` 檢
 | Property          | Type                              | Default | Description              |
 | ----------------- | --------------------------------- | ------- | ------------------------ |
 | `activatedPath`   | `string[]`                        | -       | Current activated path   |
-| `children`        | `NavigationChildren`              | -       | Children                 |
+| `children`        | `NavigationChildren`              | `[]`    | Children                 |
 | `collapsed`       | `boolean`                         | `false` | Whether collapsed        |
 | `exactActivatedMatch` | `boolean`                     | `false` | When true, href must match the current pathname exactly to be activated; when false, any href that is a prefix of the current pathname will be activated |
 | `filter`          | `boolean`                         | -       | Whether to show search   |
@@ -158,11 +158,12 @@ Navigation 系列在 runtime 透過 `isValidElement` + `switch (child.type)` 檢
 
 > Extends `NativeElementPropsWithoutKeyAndRef<'header'>`.
 
-| Property       | Type           | Default    | Description                              |
-| -------------- | -------------- | ---------- | ---------------------------------------- |
-| `children`     | `ReactNode`    | -          | Header content (usually a Logo icon)     |
-| `title`        | `string`       | (required) | Title text                               |
-| `onBrandClick` | `() => void`   | -          | Brand area (Logo + title) click callback |
+| Property              | Type           | Default               | Description                              |
+| --------------------- | -------------- | --------------------- | ---------------------------------------- |
+| `children`            | `ReactNode`    | -                     | Header content (usually a Logo icon)     |
+| `collapseToggleLabel` | `string`       | `'Toggle navigation'` | **New in 1.5.0.** Accessible name (`aria-label`) for the collapse/expand toggle button. The toggle renders only an icon, so this is the only thing a screen reader can announce for it — translate it along with the rest of your interface. |
+| `title`               | `string`       | (required)            | Title text                               |
+| `onBrandClick`        | `() => void`   | -                     | Brand area (Logo + title) click callback |
 
 **Brand Area Rendering**: The brand area is rendered as a `<button>` element when `onBrandClick` is provided, allowing for interactive behavior. When no callback is provided, it renders as a `<span>`.
 
@@ -384,6 +385,11 @@ import { SettingIcon, HelpIcon } from '@mezzanine-ui/icons';
 | `Navigation / Multi-level`      | Nested `<NavigationOption>`              |
 
 ---
+
+## Behavior Notes
+
+- **Collapsed overflow menu (1.5.0+)**: when `collapsed` is true and the top-level items (`NavigationOption` / `NavigationOptionCategory` children) don't all fit within the available height, Navigation automatically hides the overflow and appends a `···` (`DotHorizontalIcon`) button at the end of the list. Clicking it opens a flyout menu containing the hidden items, with up to 3 levels of nested sub-menus. This is computed automatically via a `ResizeObserver` — there is no prop to control it, and it only applies while collapsed.
+- **`menuitem` ARIA role removed (1.5.0+)**: a side navigation is a set of links, not a menu widget, so per the ARIA Authoring Practices Guide it must not claim `role="menuitem"` (which additionally requires a `menu`/`menubar`/`group` ancestor that Navigation does not render). Navigation options now render with no explicit `role` when rendered as an anchor (the native `link` role already applies) and `role="button"` when rendered as a `<div>` (an activatable control driven by Enter/Space). This affects `NavigationOption` and the internal overflow-menu's option rendering.
 
 ---
 

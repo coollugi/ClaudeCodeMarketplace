@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Others/Alert Banner`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AlertBanner) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/AlertBanner) · Verified 1.5.1 (2026-09-12)
 
 Alert banner component for displaying important system-level notifications. Supports both component-based and imperative APIs. Internally based on `createNotifier`, with sorting rules: non-info first, newest first. Renders using Portal `alert` level.
 
@@ -31,12 +31,13 @@ Extends `Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children' | 'title'>`.
 
 | Property   | Type                  | Default | Description              |
 | ---------- | --------------------- | ------- | ------------------------ |
-| `actions`  | `AlertBannerAction[]` | -       | Action buttons (max 2)   |
-| `closable` | `boolean`             | `true`  | Whether closable         |
-| `icon`     | `IconDefinition`      | -       | Custom icon              |
-| `message`  | `string`              | -       | Required, message content |
-| `onClose`  | `() => void`          | -       | Close callback           |
-| `severity` | `AlertBannerSeverity` | -       | Required, severity level |
+| `actions`       | `AlertBannerAction[]` | -       | Action buttons (max 2)   |
+| `closable`      | `boolean`             | `true`  | Whether closable         |
+| `disablePortal` | `boolean`             | `false` | **Internal use only** — disables Portal rendering, used internally by grouped rendering. Not intended for direct app usage. |
+| `icon`          | `IconDefinition`      | -       | Custom icon              |
+| `message`       | `string`              | -       | Required, message content |
+| `onClose`       | `() => void`          | -       | Close callback           |
+| `severity`      | `AlertBannerSeverity` | -       | Required, severity level |
 
 ---
 

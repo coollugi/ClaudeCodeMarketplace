@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/data-entry-daterangepicker--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateRangePicker) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateRangePicker) · Verified 1.5.1 (2026-09-12)
 
 A date range picker for selecting start and end dates. Must be used with `CalendarContext`. Internally composed of `DateRangePickerCalendar` and `RangePickerTrigger`.
 
@@ -148,6 +148,34 @@ interface CalendarQuickSelectOption {
 
 ---
 
+## Hooks
+
+`DateRangePicker` is built on two exported hooks. Most consumers never need to call these directly — they exist for building a custom trigger/calendar pairing.
+
+### `useDateRangePickerValue(props: UseDateRangePickerValueProps)`
+
+Manages the from/to input values, calendar value, hover preview, and clear behavior.
+
+| Property                 | Type                                              | Default | Description |
+| ------------------------- | -------------------------------------------------- | ------- | ------------ |
+| `format`                  | `string`                                          | -       | Required. Format pattern for the inputs (e.g. `'YYYY-MM-DD'`) |
+| `hasDisabledDateInRange`  | `(start: DateType, end: DateType) => boolean`     | -       | **Deprecated.** `DateRangePicker` no longer supplies this — deciding whether a range covers a disabled unit moved into `RangeCalendar`'s shared scan. Still honoured for external callers of this hook. |
+| `inputFromRef`            | `RefObject<HTMLInputElement \| null>`             | -       | Required. Ref for the 'from' input element |
+| `inputToRef`              | `RefObject<HTMLInputElement \| null>`             | -       | Required. Ref for the 'to' input element |
+| `mode`                    | `DateRangePickerCalendarProps['mode']`            | -       | Calendar mode |
+| `onChange`                | `(value?: RangePickerValue) => void`              | -       | Fired when the range is complete |
+| `value`                   | `RangePickerValue`                                | -       | Controlled value |
+
+Returns `{ calendarValue, checkIsInRange, committedCalendarValue, hoverValue, hoverFromValue, hoverToValue, inputFromValue, inputToValue, onCalendarChange, onCalendarHover, onChange, onClear, onFromBlur, onFromFocus, onHoverClear, onInputFromChange, onInputToChange, onToBlur, onToFocus, value }`.
+
+> `committedCalendarValue` holds only what the user has actually committed (no hover preview mixed in) — anything deciding *how far the selection has got* should read this rather than `calendarValue`, which folds the hovered date into its second slot.
+
+### `useDateRangeCalendarControls(referenceDate: DateType, mode: CalendarMode)`
+
+Low-level hook that drives the two side-by-side calendar panes' reference dates and prev/next navigation. Returns `{ currentMode, onFirstNext, onFirstPrev, onMonthControlClick, onSecondNext, onSecondPrev, onYearControlClick, popModeStack, referenceDates, updateFirstReferenceDate, updateSecondReferenceDate }`.
+
+---
+
 ## Usage Examples
 
 ### Basic Usage
@@ -274,6 +302,10 @@ function BasicExample() {
 ## Behavior Notes
 
 - **Suffix overlay when clearable**: When `clearable` is true, the clear icon overlays the calendar suffix icon. The calendar icon is hidden while the clear button is visible.
+- **Hover preview no longer pollutes the committed range (1.5.0+)**: hovering a second date while picking previews the range without mutating what has actually been committed. Internally, `RangeCalendar` paints from a `previewValue` kept separate from `value`; the click handler and the highlight/disabled-range check both read only the committed anchors, so a half-finished range can no longer be mistaken for a finished one mid-hover.
+- **Disabled-date scan is capped internally (1.5.0+)**: when `isDateDisabled` (or the week/month/quarter/year/half-year equivalents) is supplied, `RangeCalendar` walks every unit between the two anchors once to decide whether the range crosses a disabled unit — this same check gates both the in-range highlight and whether a click completes the range, so hovering never highlights a range that a click would then reject. The walk is capped at an internal, non-configurable limit of 4,000 units (`maxRangeScanSteps` in `useRangeScan`, not exported from the package) — a scan that hits the cap is treated as `'incomplete'` and the range is withheld from highlighting/selection rather than assumed clear. With no disabled-date predicate supplied for the active mode, no scan runs at all and every range is treated as clear.
+
+  `maxRangeScanSteps` is an internal implementation detail, not a public prop of `DateRangePicker`, `DateRangePickerCalendar`, or `RangeCalendar` — it is not re-exported from `@mezzanine-ui/react`.
 
 ---
 

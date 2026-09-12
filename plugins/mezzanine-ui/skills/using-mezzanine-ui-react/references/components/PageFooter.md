@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Navigation/PageFooter`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/PageFooter) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/PageFooter) · Verified 1.5.1 (2026-09-12)
 
 Page footer component for displaying page-level action buttons and auxiliary information.
 
@@ -89,6 +89,20 @@ type PageFooterActions = SingleButtonAction | TwoButtonsAction;
 | Property     | Type     | Description        |
 | ------------ | -------- | ------------------ |
 | `annotation` | `string` | Information text   |
+
+---
+
+## Annotation Area Rendering (重要 — 空值不再長出空按鈕)
+
+自 `@mezzanine-ui/react@1.5.0` 起，annotation 區域在對應資料缺失時**完全不渲染**，不會再出現沒有文字的空按鈕：
+
+| `type`          | 觸發不渲染的條件                | 說明                                                        |
+| --------------- | -------------------------------- | ----------------------------------------------------------- |
+| `'standard'`     | 未提供 `supportingActionName`    | 不再渲染沒有文字的 supporting action 按鈕                    |
+| `'overflow'`     | 未提供 `dropdownProps`           | 不再渲染沒有掛載選單的 icon-only 按鈕                        |
+| `'information'`  | 未提供 `annotation`              | annotation 區域維持空白，不渲染任何文字                      |
+
+`overflow` 類型另外會為 `dropdownProps` 補上預設值：未指定 `options` 時預設 `[]`，未指定 `placement` 時預設 `'top'`。
 
 ---
 

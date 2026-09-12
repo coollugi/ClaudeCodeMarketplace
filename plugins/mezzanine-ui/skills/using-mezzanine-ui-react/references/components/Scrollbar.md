@@ -1,13 +1,12 @@
 # Scrollbar Component
 
-> ⚠️ **REMOVED from the public API in 1.4.1** (deprecated in 1.1.0) — This component is no longer exported from the `@mezzanine-ui/react` package entrypoint.
-> It **still exists in the source tree** (`packages/react/src/Scrollbar`, based on OverlayScrollbars) and is used internally by Dropdown and Cascader panels — only the public export was dropped. It was never part of the intended public API, so do not import it directly in application code.
+> **Note**: Not exported from the `@mezzanine-ui/react` main entrypoint — import it via sub-path (`@mezzanine-ui/react/Scrollbar`). It ships as a real, functional component (based on OverlayScrollbars) and is used internally by Dropdown and Cascader panels; it simply isn't re-exported from the package barrel, so application code must use the sub-path import shown below.
 
-> **Category**: Internal (removed)
+> **Category**: Internal (sub-path only)
 >
-> **Storybook**: `Internal/Scrollbar` (removed in 1.4.1)
+> **Storybook**: `Internal/Scrollbar`
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Scrollbar) · **Removed** in 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Scrollbar) · Verified 1.5.1 (2026-09-12)
 
 Custom scrollbar component providing consistent scrollbar styles across browsers. Based on OverlayScrollbars.
 

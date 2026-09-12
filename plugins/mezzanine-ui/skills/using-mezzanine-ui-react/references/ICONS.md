@@ -2,7 +2,7 @@
 
 Complete icon library list, based on `@mezzanine-ui/icons` `1.x` (1.0.2).
 
-**Last verified**: 2026-07-01
+**Last verified**: 2026-09-12 (against `@mezzanine-ui/react` `1.5.1` baseline; `@mezzanine-ui/icons` itself remains `1.0.2`, unchanged)
 
 > Source: [GitHub](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/icons/src)
 

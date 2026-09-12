@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-time-panel--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/TimePanel) · Verified 1.5.1 (2026-09-12)
 
 Time panel component for selecting time. Must be used with CalendarContext.
 
@@ -36,13 +36,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ## Import
 
 ```tsx
-import { TimePanel, TimePanelAction, TimePanelColumn } from '@mezzanine-ui/react';
-import type { TimePanelProps, TimePanelActionProps, TimePanelColumnProps } from '@mezzanine-ui/react';
+import { TimePanel, TimePanelColumn } from '@mezzanine-ui/react';
+import type { TimePanelProps, TimePanelColumnProps } from '@mezzanine-ui/react';
 ```
+
+> **Correction**: an earlier version of this doc referenced a `TimePanelAction` component and `TimePanelActionProps` type. **Neither exists** in `@mezzanine-ui/react` (verified against the package's `TimePanel/index.d.ts` and top-level `index.d.ts` — there is no `TimePanelAction` export anywhere in the package). The footer's Cancel/Ok buttons are rendered internally via a non-exported `CalendarFooterActions` component; see below.
 
 ---
 
 ## TimePanel Props
+
+> Extends `Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'value' | 'onChange' | 'children'>` — native `<div>` attributes such as `className`, `id`, and `style` are accepted and applied to the host element; only `value`, `onChange`, and `children` are redefined with TimePanel-specific signatures below.
 
 | Property     | Type                      | Default | Description          |
 | ------------ | ------------------------- | ------- | -------------------- |
@@ -144,29 +148,21 @@ interface TimePanelColumnProps {
 
 ---
 
-## TimePanelAction
+## Footer Buttons (Cancel / Ok)
 
-"This moment" button component for the time panel. Extends `Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children'>`. `ref` (forwardRef) points to `HTMLDivElement`.
+TimePanel's footer is **not** a separate importable component — it is rendered internally via a non-exported `CalendarFooterActions` component (also used by `Calendar`), wired directly to the `onCancel` / `onConfirm` props:
 
 ```tsx
-interface TimePanelActionProps
-  extends Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'children'> {
-  onClick?: VoidFunction;
-}
+// Approximate internal wiring (CalendarFooterActions is not exported)
+<CalendarFooterActions
+  actions={{
+    secondaryButtonProps: { children: 'Cancel', onClick: onCancel },
+    primaryButtonProps: { children: 'Ok', onClick: onConfirm },
+  }}
+/>
 ```
 
-| Property  | Type           | Default | Description                    |
-| --------- | -------------- | ------- | ------------------------------ |
-| `onClick` | `VoidFunction` | -       | "This moment" click callback   |
-
----
-
-## "This Moment" Button Behavior
-
-When clicking the "This moment" button:
-1. Gets the current time
-2. Adjusts to the nearest selectable value based on step settings
-3. Calls the onChange callback
+Both buttons are plain click callbacks — clicking "Cancel" simply invokes `onCancel`, and "Ok" invokes `onConfirm`. **There is no built-in "jump to current time" behavior**: `onConfirm`/`onCancel` do not read or compute the current time, adjust it to the nearest step, or call `onChange` on your behalf — the consumer's own handler is responsible for whatever behavior a "confirm" click should have.
 
 ---
 

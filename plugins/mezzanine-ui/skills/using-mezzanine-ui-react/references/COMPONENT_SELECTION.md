@@ -1,6 +1,6 @@
 # 元件選用指引（UI 概念 → 元件）
 
-> 對照版本：`@mezzanine-ui/react` `1.4.1` · `@mezzanine-ui/core` `1.1.0`。Last verified: 2026-08-14。
+> 對照版本：`@mezzanine-ui/react` `1.5.1` · `@mezzanine-ui/core` `1.2.1`。Last verified: 2026-09-12。
 >
 > 這份文件回答的問題是：**「我知道我要做的 UI 長什麼樣，但不知道它在 Mezzanine 叫什麼。」**
 > 速查表在 [SKILL.md → 元件選用](../SKILL.md#元件選用必讀--先用ui-概念反查元件名)，這裡是完整版與理由。
@@ -190,7 +190,7 @@ Mezzanine 的元件名反映**實作結構**，不是使用者概念：
 
 補充一個色階事實（`packages/system/src/palette/typings.ts`）：`TextTone` 有 `error-strong` / `warning-strong` / `info-strong`，**但沒有 `success-strong`**（只有 `IconTone` 有）。所以純文字綠固定卡在 `text/success` = green-500 `#139F62`，對白底對比 **3.41:1**，低於 WCAG AA 的 4.5:1，**在型別範圍內換不掉**。這是另一個該用 `dot-*` 的理由。
 
-### `Switch` 已於 1.4.1 從公開 API 移除
+### `Switch` 已於 1.0.0-canary.3 從公開 API 移除（更正：舊版本文件誤標為 1.4.1）
 
 開關一律用 `Toggle`。公開 API 刻意對齊（`checked` / `defaultChecked` / `disabled` / `onChange`），另新增 `label` / `supportingText` / `size`。
 

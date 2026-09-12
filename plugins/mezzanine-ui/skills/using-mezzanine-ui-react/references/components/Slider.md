@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Entry/Slider`
 >
-> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Slider) · Verified 1.4.1 (2026-07-01)
+> **Source Verification**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Slider) · Verified 1.5.1 (2026-09-12)
 
 Slider component for selecting values within a numeric range. Supports single value and range modes.
 
@@ -44,7 +44,7 @@ Extends `Omit<NativeElementPropsWithoutKeyAndRef<'div'>, 'defaultChecked' | 'def
 
 | Property     | Type                   | Default | Description          |
 | ------------ | ---------------------- | ------- | -------------------- |
-| `disabled`   | `boolean`              | `false` | Whether disabled     |
+| `disabled`   | `boolean`              | `-`     | Whether disabled (no destructuring default in source — falsy/undefined behaves as not disabled) |
 | `innerRef`   | `Ref<HTMLDivElement>`  | -       | Inner div element ref |
 | `max`        | `number`               | `100`   | Maximum value        |
 | `min`        | `number`               | `0`     | Minimum value        |

@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Display/Table`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Table)  · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Table)  · Verified 1.5.1 (2026-09-12)
 
 High-performance data table component supporting virtual scrolling, column resizing, fixed columns, row selection, sorting, expandable rows, drag-and-drop reordering, pinning, toggleable columns, collectable columns, and more.
 
@@ -683,6 +683,13 @@ function AnimatedTable() {
 | `Table / With Actions`    | `<Table actions={...}>`      |
 | `Table / Loading`         | `<Table loading>`            |
 | `Table / Zebra`           | `<Table zebraStriping>`      |
+
+---
+
+## Behavior Notes
+
+- **Row-action accessible names (1.5.0+)**: for an action rendered `iconType="icon-only"`, `TableActionItemButton['name']` is used as the button's `aria-label` (icon-only buttons otherwise render with no visible text, so without this the button had no accessible name). For `TableActionItemDropdown`, `name` is always applied as the trigger button's `aria-label`, since the dropdown trigger is icon-only by default (`DotHorizontalIcon`).
+- **Row-action dropdown menu stays inside the viewport (1.5.0+)**: the internal `Dropdown` used to render a `type: 'dropdown'` action item now sets `shift` in addition to the existing `flip`/`placement`. Row actions sit in the table's last column, so the menu routinely opens against the right edge of the viewport; `flip` only swaps sides along the main axis, so without `shift` the menu could still be clipped. No props changed — this is internal to `TableActionsCell`.
 
 ---
 

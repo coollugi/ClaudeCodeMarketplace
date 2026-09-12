@@ -4,7 +4,7 @@
 >
 > **Storybook**: `Data Display/Section`
 >
-> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Section) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Section) · Verified 1.5.1 (2026-09-12)
 >
 > **Migration Note**: Module resolution fix changed barrel file extension from `.tsx` → `.ts`. No API changes.
 
@@ -13,7 +13,7 @@ Section container component for composing `ContentHeader`, `FilterArea`, `Tab`, 
 > **Aliases** — Panel · Fieldset · Well · Card（作為頁面區塊時）· 區塊 · 卡片式區塊 · Figma `Section / *`
 > **Not for** — 圖文卡片／商品卡（用 [`Card`](Card.md) 家族）。`Section` 自帶 16px 內距與底色，**不要再幫它補 padding**，外側 gutter 由 page body wrapper 提供。
 
-> **ContentHeader note**: `ContentHeader` is removed in 1.4.1 (deprecated since 1.1.0) because it is no longer exported from the `@mezzanine-ui/react` main entry. However, it **remains internally required** by Section's `contentHeader` prop — runtime validation rejects any other component type. Import `ContentHeader` via the sub-path `@mezzanine-ui/react/ContentHeader` and continue using it as shown in the examples below. See [ContentHeader.md](ContentHeader.md) for details.
+> **ContentHeader note**: `ContentHeader` is not exported from the `@mezzanine-ui/react` main entry and never has been — verified against the published `src/index.ts` of every release from 1.0.0 through 1.5.1. It is not removed, and it carries no `@deprecated` marker in source. However, it **remains internally required** by Section's `contentHeader` prop — runtime validation rejects any other component type. Import `ContentHeader` via the sub-path `@mezzanine-ui/react/ContentHeader` and continue using it as shown in the examples below. See [ContentHeader.md](ContentHeader.md) for details.
 
 ## Import
 

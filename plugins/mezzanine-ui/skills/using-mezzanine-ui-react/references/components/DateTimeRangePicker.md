@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/story/data-entry-datetimerangepicker--playground) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateTimeRangePicker) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/DateTimeRangePicker) · Verified 1.5.1 (2026-09-12)
 
 A date-time range picker that combines two DateTimePickers to select start and end date-times. Must be used with `CalendarContext`. The direction icon switches between `LongTailArrowRightIcon` / `LongTailArrowDownIcon` based on the `direction` prop.
 
@@ -72,7 +72,7 @@ import type {
 | `disableOnDoublePrev`  | `boolean`                                      | -               | Disable double arrow prev |
 | `disableOnNext`        | `boolean`                                      | -               | Disable next             |
 | `disableOnPrev`        | `boolean`                                      | -               | Disable prev             |
-| `displayMonthLocale`   | `string`                                       | -               | Month display locale     |
+| `displayMonthLocale`   | `string`                                       | `locale` (from `CalendarContext`, resolved inside each inner `DateTimePicker`) | Month display locale |
 | `error`                | `boolean`                                      | `false`         | Error state              |
 | `fadeProps`             | `FadeProps`                                    | -               | Fade animation props     |
 | `formatDate`           | `string`                                       | Depends on mode | Date display format      |

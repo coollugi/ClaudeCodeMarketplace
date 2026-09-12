@@ -4,7 +4,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/story/data-entry-timerangepicker--playground) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/TimeRangePicker) · Verified 1.5.1 (2026-09-12)
 
 Time range picker for selecting start and end times. Uses RangePickerTrigger to provide dual inputs with a TimePickerPanel panel. Must be used with `CalendarContext`.
 

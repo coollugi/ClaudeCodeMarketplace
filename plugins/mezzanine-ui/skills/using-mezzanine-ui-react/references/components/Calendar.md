@@ -6,7 +6,7 @@
 >
 > **Live Examples**: [View in Storybook](https://storybook.mezzanine-ui.org/react/?path=/docs/internal-calendar--docs) — 當行為不確定時，Storybook 的互動範例為權威參考。
 >
-> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Calendar) · Verified 1.4.1 (2026-07-01)
+> **Source**: [GitHub Source Code](https://github.com/Mezzanine-UI/mezzanine/tree/main/packages/react/src/Calendar) · Verified 1.5.1 (2026-09-12)
 
 Calendar component for displaying and selecting dates. Requires `CalendarConfigProvider` (which provides `CalendarContext`). Supports six modes: day, week, month, year, quarter, and half-year.
 
@@ -135,8 +135,8 @@ import type { CalendarLocale } from '@mezzanine-ui/react/Calendar';
 | `disableOnDoublePrev`   | `boolean`                                                          | -       | Disable year fast-backward           |
 | `disableOnNext`         | `boolean`                                                          | -       | Disable month fast-forward           |
 | `disableOnPrev`         | `boolean`                                                          | -       | Disable month fast-backward          |
-| `displayMonthLocale`    | `string`                                                           | -       | Month display localization           |
-| `displayWeekDayLocale`  | `string`                                                           | -       | Weekday display localization         |
+| `displayMonthLocale`    | `string`                                                           | `locale` (from `CalendarContext`) | Month display localization |
+| `displayWeekDayLocale`  | `string`                                                           | `locale` (from `CalendarContext`) | Weekday display localization |
 | `isDateDisabled`        | `(date: DateType) => boolean`                                      | -       | Date disabled check                  |
 | `isDateInRange`         | `(date: DateType) => boolean`                                      | -       | Date range check                     |
 | `isHalfYearDisabled`    | `(date: DateType) => boolean`                                      | -       | Half-year disabled check             |
@@ -368,6 +368,7 @@ function useRangeCalendarControls(
 | `firstCalendarRef`   | `RefObject<HTMLDivElement \| null>`                        | -        | Ref for the first calendar     |
 | `mode`               | `CalendarMode`                                            | `'day'`  | Display mode                   |
 | `onChange`           | `(value: [DateType, DateType \| undefined]) => void`       | -        | Date range selection callback  |
+| `previewValue`       | `DateType`                                                | -        | **New in 1.5.0.** The date currently under the pointer, used to preview the range the user is about to complete. Kept separate from `value` on purpose — see [Behavior Notes](#behavior-notes). |
 | `quickSelect`        | `Pick<CalendarQuickSelectProps, 'activeId' \| 'options'>` | -        | Quick select options           |
 | `referenceDate`      | `DateType`                                                | **required** | Reference date             |
 | `secondCalendarRef`  | `RefObject<HTMLDivElement \| null>`                        | -        | Ref for the second calendar    |
@@ -383,8 +384,8 @@ function useRangeCalendarControls(
 | `disableOnPrev`         | `boolean`                                                        | -       | Disable month fast-backward    |
 | `disabledMonthSwitch`   | `boolean`                                                        | -       | Disable Month calendar button click |
 | `disabledYearSwitch`    | `boolean`                                                        | -       | Disable Year calendar button click  |
-| `displayMonthLocale`    | `string`                                                         | -       | Month display localization     |
-| `displayWeekDayLocale`  | `string`                                                         | -       | Weekday display localization   |
+| `displayMonthLocale`    | `string`                                                         | `locale` (from `CalendarContext`) | Month display localization |
+| `displayWeekDayLocale`  | `string`                                                         | `locale` (from `CalendarContext`) | Weekday display localization |
 | `isDateDisabled`        | `(date: DateType) => boolean`                                    | -       | Date disabled check            |
 | `isDateInRange`         | `(date: DateType) => boolean`                                    | -       | Date range check               |
 | `isHalfYearDisabled`    | `(date: DateType) => boolean`                                    | -       | Half-year disabled check       |
@@ -404,6 +405,24 @@ function useRangeCalendarControls(
 | `onWeekHover`           | `(date: DateType) => void`                                       | -       | Week hover callback            |
 | `onYearHover`           | `(date: DateType) => void`                                       | -       | Year hover callback            |
 | `renderAnnotations`     | `(date: DateType) => { value: string; color?: TypographyColor }` | -       | Custom date annotations        |
+
+---
+
+## CalendarCell Props
+
+`CalendarCell` is the low-level per-cell building block used internally by `CalendarDays`/`CalendarWeeks`/`CalendarMonths`/etc. You may use it to compose your own calendar. Extends all native `<div>` props.
+
+| Property         | Type           | Default | Description                              |
+| ----------------- | -------------- | ------- | ----------------------------------------- |
+| `active`          | `boolean`      | -       | Apply active styles if true               |
+| `disabled`        | `boolean`      | -       | Apply disabled styles if true             |
+| `isRangeEnd`      | `boolean`      | -       | Apply range-end styles if true            |
+| `isRangeStart`    | `boolean`      | -       | Apply range-start styles if true          |
+| `isWeekend`       | `boolean`      | -       | Apply weekend styles if true              |
+| `mode`            | `CalendarMode` | `'day'` | Applies mode-specific styles              |
+| `role`            | `string`       | -       | The `role` attribute for accessibility    |
+| `today`           | `boolean`      | -       | Apply today styles if true                |
+| `withAnnotation`  | `boolean`      | -       | Apply annotation styles if true           |
 
 ---
 
@@ -471,6 +490,11 @@ import { CalendarConfigProviderDayjs } from '@mezzanine-ui/react/Calendar';
 ```
 
 ---
+
+## Behavior Notes
+
+- **`RangeCalendar` hover preview no longer pollutes the committed selection (1.5.0+)**: the second calendar cell under the pointer is painted via `previewValue`, kept separate from `value`. Anything deciding *how far the selection has got* (the click handler, the in-range highlight, the disabled-range check) reads only the committed `value`, so a half-finished range can never be mistaken for a finished one while hovering.
+- **`RangeCalendar` disabled-range scan (1.5.0+)**: when an `is*Disabled` predicate is supplied for the active `mode`, `RangeCalendar` walks every unit between the two range anchors once — using the displayed calendar's own week/month/quarter/year alignment (e.g. week-mode snaps to each week's first date via `displayWeekDayLocale`, not a raw day-by-day walk) — to decide whether the range crosses a disabled unit. That single check gates both the in-range highlight and whether a click completes the range, so hovering never highlights a range a click would then reject. The walk is capped internally at 4,000 units; a scan that hits the cap is treated as incomplete and the range is withheld from highlighting/selection rather than assumed clear. This cap is an internal implementation detail (not a public prop, not exported from the package). With no disabled-date predicate supplied, no scan runs and every range is clear.
 
 ---
 
